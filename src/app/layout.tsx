@@ -23,7 +23,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={spaceGrotesk.variable}>
       <body
-        className={`${spaceGrotesk.variable} font-sans bg-[#050505] text-neutral-50 antialiased overflow-x-hidden`}
+        className={`${spaceGrotesk.variable} font-sans bg-[#f4ecde] text-zinc-950 antialiased overflow-x-hidden`}
       >
         <Navbar />
         <SmoothScroller>{children}</SmoothScroller>

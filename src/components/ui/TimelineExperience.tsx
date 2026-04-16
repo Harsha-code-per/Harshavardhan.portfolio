@@ -1,68 +1,116 @@
-const timelineMilestones = [
-  {
-    year: "2025",
-    title: "Intelligent UAV Research & Full-Stack Engineering",
-    highlights: [
-      'Publication: "Development of an IoT-based UAV Platform for intelligent 360* Aerial Security Surveillance".',
-      'ResPro Labs Internship: "Engineered a scalable Employee Management System (EMS). Executed complex SQL architecture for real-time reporting and optimized HR data processes."',
-    ],
-  },
-  {
-    year: "2024 - Present",
-    title: "B.Tech Artificial Intelligence & Data Science",
-    highlights: [
-      "R.M.K. College of Engineering And Technology.",
-      "Focused on bridging AI model training with full-stack web deployment.",
-    ],
-  },
-  {
-    year: "2021 - 2023",
-    title: "Academic Foundation",
-    highlights: ["Velankanni Public School (Biology and Maths HSC - 86.2%)."],
-  },
-] as const;
+"use client";
+
+import { useRef } from "react";
+import { useGSAP } from "@gsap/react";
+import { publications } from "@/data/publications";
+import { workExperience } from "@/data/work";
+import { gsap, setupGsap } from "@/lib/gsap";
+
+type JourneyMilestone = {
+  year: string;
+  title: string;
+  highlights: string[];
+};
+
+const journeyMilestones: JourneyMilestone[] = [
+  ...workExperience.map((work) => ({
+    year: work.period,
+    title: `${work.role} · ${work.organization}`,
+    highlights: [work.overview, ...work.outcomes],
+  })),
+  ...publications.map((publication) => ({
+    year: publication.year,
+    title: publication.title,
+    highlights: [publication.publisher, publication.summary],
+  })),
+];
 
 export function TimelineExperience() {
+  setupGsap();
+
+  const sectionRef = useRef<HTMLElement | null>(null);
+  const progressRef = useRef<HTMLSpanElement | null>(null);
+
+  useGSAP(
+    () => {
+      const items = gsap.utils.toArray<HTMLElement>("[data-journey-item]");
+
+      gsap.from(items, {
+        opacity: 0,
+        y: 44,
+        stagger: 0.12,
+        duration: 0.74,
+        ease: "power2.out",
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top 75%",
+        },
+      });
+
+      if (progressRef.current) {
+        gsap.fromTo(
+          progressRef.current,
+          { scaleY: 0, transformOrigin: "top center" },
+          {
+            scaleY: 1,
+            ease: "none",
+            scrollTrigger: {
+              trigger: sectionRef.current,
+              start: "top 70%",
+              end: "bottom 25%",
+              scrub: true,
+            },
+          }
+        );
+      }
+    },
+    { scope: sectionRef }
+  );
+
   return (
-    <section className="relative px-6 pb-20 pt-10 md:px-10 lg:px-16">
+    <section id="journey" ref={sectionRef} className="relative bg-[#f4ecde] px-6 py-20 md:px-10 lg:px-16">
       <div className="mx-auto w-full max-w-6xl">
-        <div className="mb-8">
-          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-600 dark:text-slate-400">
-            Experience Timeline
+        <div className="mb-10">
+          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-violet-600/75">
+            Journey Timeline
           </p>
-          <h2 className="mt-3 text-3xl font-bold tracking-tight text-slate-900 dark:text-white md:text-4xl">
+          <h2 className="mt-3 text-[clamp(1.8rem,4vw,3.3rem)] font-black uppercase tracking-tight text-zinc-900">
             Milestones in AI & Engineering
           </h2>
         </div>
 
-        <div className="space-y-6">
-          {timelineMilestones.map((milestone, index) => {
-            const isLast = index === timelineMilestones.length - 1;
+        <div className="relative space-y-6">
+          <span className="absolute left-[108px] top-7 hidden h-[calc(100%-3.5rem)] w-px bg-violet-200/50 md:block" />
+          <span
+            ref={progressRef}
+            className="absolute left-[108px] top-7 hidden h-[calc(100%-3.5rem)] w-px bg-violet-600/60 md:block"
+          />
+          {journeyMilestones.map((milestone, index) => {
+            const isLast = index === journeyMilestones.length - 1;
 
             return (
               <article
+                data-journey-item
                 key={`${milestone.year}-${milestone.title}`}
-                className="grid grid-cols-1 gap-3 md:grid-cols-[180px_1fr] md:gap-8"
+                className="grid grid-cols-1 gap-3 md:grid-cols-[220px_1fr] md:gap-8"
               >
                 <div className="md:pt-7">
-                  <p className="text-xl font-extrabold tracking-tight text-slate-900 dark:text-white md:text-2xl">
+                  <p className="text-xl font-extrabold tracking-tight text-zinc-900 md:text-2xl">
                     {milestone.year}
                   </p>
                 </div>
 
-                <div className="relative rounded-2xl border border-slate-200/70 bg-white/60 p-6 shadow-lg shadow-slate-900/5 backdrop-blur-xl transition duration-300 hover:-translate-y-0.5 hover:border-slate-400/80 dark:border-white/10 dark:bg-white/5 dark:hover:border-white/25 md:p-7">
-                  <span className="absolute -left-1.5 top-8 hidden h-3 w-3 rounded-full border border-slate-300 bg-white dark:border-white/20 dark:bg-slate-900 md:block" />
+                <div className="relative rounded-2xl border border-[#e3d2bc] bg-white/85 p-6 backdrop-blur-xl transition duration-300 hover:-translate-y-0.5 hover:border-violet-300/45 md:p-7">
+                  <span className="absolute -left-[117px] top-8 hidden h-3.5 w-3.5 rounded-full border border-violet-300/45 bg-[#f4ecde] md:block" />
                   {!isLast ? (
-                    <span className="absolute -left-px top-11 hidden h-[calc(100%+1.5rem)] w-px bg-slate-300/70 dark:bg-white/20 md:block" />
+                    <span className="absolute -left-px top-11 hidden h-[calc(100%+1.5rem)] w-px bg-violet-300/30 md:hidden" />
                   ) : null}
 
-                  <h3 className="text-xl font-bold text-slate-900 dark:text-white">
-                    {milestone.title}
-                  </h3>
+                  <h3 className="text-xl font-bold text-zinc-900">{milestone.title}</h3>
 
                   <div className="mt-4 space-y-2">
                     {milestone.highlights.map((highlight) => (
-                      <p key={highlight} className="text-sm leading-relaxed text-slate-600 dark:text-slate-300">
+                      <p key={highlight} className="text-sm leading-relaxed text-zinc-700">
                         {highlight}
                       </p>
                     ))}
@@ -76,4 +124,3 @@ export function TimelineExperience() {
     </section>
   );
 }
-

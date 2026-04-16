@@ -5,11 +5,10 @@ type BadgeProps = HTMLAttributes<HTMLSpanElement>;
 export function Badge({ className, children, ...props }: BadgeProps) {
   return (
     <span
-      className={`inline-flex items-center rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-medium uppercase tracking-wide text-neutral-100 ${className ?? ""}`}
+      className={`inline-flex items-center rounded-full border border-[#e0d1bc] bg-[#f9f4eb] px-3 py-1 text-xs font-medium uppercase tracking-wide text-zinc-700 ${className ?? ""}`}
       {...props}
     >
       {children}
     </span>
   );
 }
-

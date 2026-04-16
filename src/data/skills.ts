@@ -1,29 +1,35 @@
-// src/data/skills.ts
-
 export type SkillCategory = {
   title: string;
+  description: string;
   technologies: string[];
 };
 
-export const engineeringSkills: SkillCategory[] = [
+export const skillCategories: SkillCategory[] = [
   {
     title: "Frontend & Architecture",
-    technologies: ["Next.js", "React", "TypeScript", "Tailwind CSS", "shadcn/ui", "Aceternity UI"],
+    description: "Design systems, app architecture, and high-quality production interfaces.",
+    technologies: ["Next.js", "React", "TypeScript", "Tailwind CSS", "shadcn/ui", "App Router"],
   },
   {
-    title: "WebGL & Motion Engineering",
-    technologies: ["Three.js", "React Three Fiber", "GSAP", "Framer Motion", "Lenis Smooth Scroll"],
+    title: "Motion & Immersive UI",
+    description: "Narrative-driven motion systems and high-fidelity visual choreography.",
+    technologies: ["GSAP", "ScrollTrigger", "Framer Motion", "Lenis", "SplitType", "Spline"],
   },
   {
     title: "Backend, AI & Real-Time",
-    technologies: ["Python", "Java","C++", "WebRTC", "REST API Integration"],
+    description: "Practical AI pipelines and secure real-time product capabilities.",
+    technologies: ["Python", "Java", "C++", "Machine Learning", "REST APIs", "WebRTC"],
   },
   {
     title: "Systems & Dev Workflow",
-    technologies: ["Arch Linux", "Bash/Zsh", "Git"],
+    description: "Reliable execution environments and disciplined shipping workflows.",
+    technologies: ["Arch Linux", "Git", "Bash/Zsh", "CI/CD", "Debugging"],
   },
   {
-    title: "Domain Knowledge",
-    technologies: ["Artificial Intelligence", "Data Science", "Machine Learning"],
-  }
+    title: "Cloud & Product Delivery",
+    description: "Translating engineering effort into recruiter-visible outcomes.",
+    technologies: ["Performance Optimization", "SEO Fundamentals", "Accessibility", "Analytics Thinking"],
+  },
 ];
+
+export const engineeringSkills = skillCategories;

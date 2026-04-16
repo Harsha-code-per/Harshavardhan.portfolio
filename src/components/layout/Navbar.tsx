@@ -1,59 +1,70 @@
 "use client";
 
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useGSAP } from "@gsap/react";
-import { gsap, ScrollTrigger } from "gsap/all";
-
-gsap.registerPlugin(ScrollTrigger, useGSAP);
+import { ScrollTrigger, setupGsap } from "@/lib/gsap";
 
 const navigationItems = [
-  "About",
-  "Work",
-  "Projects",
-  "Skills",
-  "Journey",
-  "Research",
-  "Sports",
-  "Contact",
+  { label: "Home", id: "hero" },
+  { label: "About", id: "about" },
+  { label: "Work", id: "work" },
+  { label: "Projects", id: "projects" },
+  { label: "Skills", id: "skills" },
+  { label: "Journey", id: "journey" },
+  { label: "Research", id: "research" },
+  { label: "Sports", id: "sports" },
+  { label: "Contact", id: "contact" },
 ] as const;
 
 export function Navbar() {
+  setupGsap();
+
   const pathname = usePathname();
   const router = useRouter();
   const [activeSection, setActiveSection] = useState("hero");
 
-  const scrollToTop = () => {
-    if (pathname !== "/") {
-      router.push("/");
+  const normalizedPath = useMemo(() => {
+    if (!pathname) {
+      return "/";
+    }
+
+    if (pathname.length > 1 && pathname.endsWith("/")) {
+      return pathname.slice(0, -1);
+    }
+
+    return pathname;
+  }, [pathname]);
+
+  const isHomePage = normalizedPath === "/";
+
+  const scrollToSection = (id: string) => {
+    if (!isHomePage) {
+      router.push(id === "hero" ? "/" : `/#${id}`);
       return;
     }
 
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
-
-  const scrollToSection = (id: string) => {
-    if (pathname !== "/") {
-      router.push(`/#${id}`);
+    if (id === "hero") {
+      window.scrollTo({ top: 0, behavior: "auto" });
       return;
     }
 
     const element = document.getElementById(id);
     if (element) {
-      element.scrollIntoView({ behavior: "smooth" });
+      window.history.replaceState(null, "", `#${id}`);
+      element.scrollIntoView({ behavior: "auto", block: "start" });
     }
   };
 
   useEffect(() => {
-    if (pathname !== "/") {
+    if (!isHomePage) {
       return;
     }
 
     const syncFromHash = () => {
       const hashSection = window.location.hash.replace("#", "");
-      const nextSection = hashSection || "hero";
       requestAnimationFrame(() => {
-        setActiveSection(nextSection);
+        setActiveSection(hashSection || "hero");
       });
     };
 
@@ -63,19 +74,15 @@ export function Navbar() {
     return () => {
       window.removeEventListener("hashchange", syncFromHash);
     };
-  }, [pathname]);
+  }, [isHomePage]);
 
   useGSAP(
     () => {
-      if (pathname !== "/") {
+      if (!isHomePage) {
         return;
       }
 
-      const sectionIds = [
-        "hero",
-        ...navigationItems.map((item) => item.toLowerCase()),
-      ];
-
+      const sectionIds = navigationItems.map((item) => item.id);
       const triggers = sectionIds
         .map((id) => {
           const section = document.getElementById(id);
@@ -97,42 +104,45 @@ export function Navbar() {
         triggers.forEach((trigger) => trigger.kill());
       };
     },
-    { dependencies: [pathname] }
+    { dependencies: [isHomePage] }
   );
 
-  const highlightedSection = pathname === "/" ? activeSection : "";
-
   return (
-    <header className="fixed top-0 left-0 w-full p-8 z-50 flex justify-between items-center mix-blend-difference text-white pointer-events-none">
-      <button
-        type="button"
-        onClick={scrollToTop}
-        className="pointer-events-auto font-bold tracking-tight"
-        aria-label="Go to landing page"
-      >
-        Harshavardhan K
-      </button>
-      <nav className="pointer-events-auto flex gap-6 text-sm uppercase tracking-widest">
-        {navigationItems.map((item) => {
-          const sectionId = item.toLowerCase();
-          const isActive = highlightedSection === sectionId;
+    <header className="fixed top-0 left-0 z-50 w-full px-4 py-4 md:px-8 md:py-5">
+      <div className="pointer-events-none mx-auto flex w-full max-w-7xl items-center justify-between gap-3 rounded-2xl bg-white/70 backdrop-blur-xl border border-neutral-200/50 shadow-[0_8px_30px_rgb(0,0,0,0.04)] text-neutral-600 px-4 py-3 md:px-6">
+        <button
+          type="button"
+          onClick={() => scrollToSection("hero")}
+          className="pointer-events-auto text-sm text-zinc-950 font-bold tracking-tight md:text-base"
+          aria-label="Go to landing page"
+        >
+          Harshavardhan K
+        </button>
+        <nav className="pointer-events-auto hidden gap-4 text-[0.68rem] uppercase tracking-[0.15em] lg:flex xl:gap-5 xl:text-xs xl:tracking-[0.18em]">
+          {navigationItems.map((item) => {
+            const isActive = isHomePage
+              ? activeSection === item.id
+              : (item.id === "hero" && normalizedPath === "/") ||
+                normalizedPath === `/${item.id}`;
 
-          return (
-            <button
-              type="button"
-              key={item}
-              onClick={() => scrollToSection(sectionId)}
-              className={
-                isActive
-                  ? "text-white font-bold opacity-100 transition"
-                  : "text-neutral-500 hover:text-white opacity-50 transition"
-              }
-            >
-              {item}
-            </button>
-          );
-        })}
-      </nav>
+            return (
+              <button
+                type="button"
+                key={item.id}
+                onClick={() => scrollToSection(item.id)}
+                className={
+                  isActive
+                    ? "text-zinc-950 font-semibold opacity-100"
+                    : "text-neutral-500 hover:text-zinc-900 transition-colors"
+                }
+                aria-label={`Navigate to ${item.label}`}
+              >
+                {item.label}
+              </button>
+            );
+          })}
+        </nav>
+      </div>
     </header>
   );
 }

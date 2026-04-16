@@ -43,7 +43,7 @@ export function ContactForm() {
     <form onSubmit={handleSubmit} className="w-full">
       <div className="space-y-5">
         <div className="space-y-2">
-          <label htmlFor="name" className="text-sm font-medium text-slate-300">
+          <label htmlFor="name" className="text-sm font-medium text-zinc-700">
             Name
           </label>
           <input
@@ -52,12 +52,12 @@ export function ContactForm() {
             type="text"
             required
             placeholder="Your name"
-            className="w-full rounded-xl border border-white/15 bg-white/5 px-4 py-3 text-sm text-slate-100 outline-none transition placeholder:text-slate-400 focus:border-cyan-300/50 focus:ring-2 focus:ring-cyan-400/30"
+            className="w-full rounded-xl border border-[#e5d5bf] bg-[#fbf7ef] px-4 py-3 text-sm text-zinc-800 outline-none transition placeholder:text-zinc-400 focus:border-violet-300/60 focus:ring-2 focus:ring-violet-300/30"
           />
         </div>
 
         <div className="space-y-2">
-          <label htmlFor="email" className="text-sm font-medium text-slate-300">
+          <label htmlFor="email" className="text-sm font-medium text-zinc-700">
             Email
           </label>
           <input
@@ -66,12 +66,12 @@ export function ContactForm() {
             type="email"
             required
             placeholder="you@example.com"
-            className="w-full rounded-xl border border-white/15 bg-white/5 px-4 py-3 text-sm text-slate-100 outline-none transition placeholder:text-slate-400 focus:border-cyan-300/50 focus:ring-2 focus:ring-cyan-400/30"
+            className="w-full rounded-xl border border-[#e5d5bf] bg-[#fbf7ef] px-4 py-3 text-sm text-zinc-800 outline-none transition placeholder:text-zinc-400 focus:border-violet-300/60 focus:ring-2 focus:ring-violet-300/30"
           />
         </div>
 
         <div className="space-y-2">
-          <label htmlFor="message" className="text-sm font-medium text-slate-300">
+          <label htmlFor="message" className="text-sm font-medium text-zinc-700">
             Message
           </label>
           <textarea
@@ -80,7 +80,7 @@ export function ContactForm() {
             required
             rows={6}
             placeholder="Tell me about your idea..."
-            className="w-full resize-none rounded-xl border border-white/15 bg-white/5 px-4 py-3 text-sm text-slate-100 outline-none transition placeholder:text-slate-400 focus:border-cyan-300/50 focus:ring-2 focus:ring-cyan-400/30"
+            className="w-full resize-none rounded-xl border border-[#e5d5bf] bg-[#fbf7ef] px-4 py-3 text-sm text-zinc-800 outline-none transition placeholder:text-zinc-400 focus:border-violet-300/60 focus:ring-2 focus:ring-violet-300/30"
           />
         </div>
       </div>
@@ -88,7 +88,7 @@ export function ContactForm() {
       <button
         type="submit"
         disabled={isPending}
-        className="mt-6 inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-cyan-500 px-5 text-sm font-semibold text-black transition hover:bg-cyan-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300 disabled:cursor-not-allowed disabled:opacity-70"
+        className="mt-6 inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-violet-600 px-5 text-sm font-semibold text-white transition hover:bg-violet-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-300 disabled:cursor-not-allowed disabled:opacity-70"
       >
         {isPending ? (
           <>
