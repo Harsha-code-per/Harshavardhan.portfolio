@@ -38,6 +38,8 @@ export default function SmoothScroller({ children }: SmoothScrollerProps) {
       options={{
         lerp: 0.1,
         duration: 1.2,
+        smoothWheel: true,
+        // Lenis v1 uses `syncTouch`; false is equivalent to disabling smoothTouch.
         syncTouch: false,
         touchMultiplier: 2,
         autoResize: true,

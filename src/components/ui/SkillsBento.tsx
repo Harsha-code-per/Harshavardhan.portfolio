@@ -220,7 +220,7 @@ export function SkillsBento() {
     <section
       id="skills"
       ref={sectionRef}
-      className="flex min-h-screen w-full flex-col items-center justify-center px-6 py-24 md:px-8"
+      className="flex min-h-[100dvh] w-full flex-col items-center justify-center px-[clamp(1.5rem,5vw,4rem)] py-24"
       style={{ background: "var(--bg-base)" }}
     >
       <h2 className="text-gradient-violet mb-4 text-center text-[clamp(3rem,7vw,6rem)] font-black leading-[0.95] tracking-[-0.02em]">

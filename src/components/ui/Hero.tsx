@@ -50,13 +50,13 @@ export function Hero() {
     <section
       id="hero"
       ref={container}
-      className="relative w-full h-screen overflow-hidden bg-[#050505] text-white"
+      className="relative w-full h-[100dvh] overflow-hidden bg-[#050505] text-white"
     >
       <div className="absolute inset-0 w-full h-full z-0">
         <HeroScene />
       </div>
       <div className="absolute inset-0 w-full h-full z-10 flex items-center pointer-events-none">
-        <div className="flex flex-col justify-center px-8 lg:px-16 z-10 h-full relative pointer-events-none max-w-2xl">
+        <div className="flex flex-col justify-start pt-32 lg:justify-center lg:pt-0 px-6 lg:px-16 z-10 h-full relative pointer-events-none w-full lg:w-[50vw] max-w-2xl">
           <p className="text-cyan-400 text-xs md:text-sm tracking-widest uppercase mb-4 flex items-center gap-4 pointer-events-auto opacity-0 hero-anim">
             <span className="w-6 h-[1px] bg-cyan-400"></span>
             AI Engineer <span className="text-cyan-400/50">&bull;</span> Full-Stack Architect
@@ -65,7 +65,7 @@ export function Hero() {
           <h1
             ref={titleRef}
             id="hero-title"
-            className="text-5xl md:text-6xl lg:text-[4rem] xl:text-[4.5rem] font-black uppercase leading-[0.9] tracking-tighter w-full text-zinc-100 pointer-events-auto [clip-path:polygon(0_0,100%_0,100%_100%,0_100%)]"
+            className="text-[clamp(3rem,6vw,5.5rem)] font-black uppercase leading-[0.9] tracking-tighter w-full text-zinc-100 pointer-events-auto [clip-path:polygon(0_0,100%_0,100%_100%,0_100%)]"
           >
             CRAFTING
             <br />
@@ -74,7 +74,7 @@ export function Hero() {
             EXPERIENCES.
           </h1>
 
-          <p className="mt-6 text-neutral-400 text-base md:text-lg max-w-lg font-light pointer-events-auto opacity-0 hero-anim">
+          <p className="mt-6 text-neutral-400 text-[clamp(1rem,1.5vw,1.25rem)] w-[90%] max-w-[600px] font-light pointer-events-auto opacity-0 hero-anim">
             I build <span className="text-white font-medium">AI-powered systems</span> and design{" "}
             <span className="text-purple-400 font-medium">cinematic web interfaces</span>  where deep engineering meets visual storytelling.
           </p>

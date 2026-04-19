@@ -119,7 +119,7 @@ export function MaskedAbout() {
     <section
       id="about"
       ref={sectionRef}
-      className="relative flex min-h-screen w-full items-center justify-center overflow-visible px-4 py-14 md:px-8"
+      className="relative flex min-h-[100dvh] w-full items-center justify-center overflow-visible px-[clamp(1.5rem,5vw,4rem)] py-14"
       style={{ background: "var(--bg-base)" }}
     >
       <div
