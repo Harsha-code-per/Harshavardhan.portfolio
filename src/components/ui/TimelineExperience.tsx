@@ -2,9 +2,10 @@
 
 import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
+import { motion } from "framer-motion";
 import { publications } from "@/data/publications";
 import { workExperience } from "@/data/work";
-import { gsap, setupGsap } from "@/lib/gsap";
+import { ScrollTrigger, gsap, setupGsap } from "@/lib/gsap";
 
 type JourneyMilestone = {
   year: string;
@@ -29,98 +30,283 @@ export function TimelineExperience() {
   setupGsap();
 
   const sectionRef = useRef<HTMLElement | null>(null);
-  const progressRef = useRef<HTMLSpanElement | null>(null);
+  const spineRef = useRef<HTMLSpanElement | null>(null);
 
   useGSAP(
     () => {
       const items = gsap.utils.toArray<HTMLElement>("[data-journey-item]");
 
-      gsap.from(items, {
-        opacity: 0,
-        y: 44,
-        stagger: 0.12,
-        duration: 0.74,
-        ease: "power2.out",
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top 75%",
-        },
-      });
-
-      if (progressRef.current) {
+      /* ── Animated spine line that draws as user scrolls ─────── */
+      if (spineRef.current) {
         gsap.fromTo(
-          progressRef.current,
-          { scaleY: 0, transformOrigin: "top center" },
+          spineRef.current,
+          { height: "0%" },
           {
-            scaleY: 1,
+            height: "100%",
             ease: "none",
             scrollTrigger: {
               trigger: sectionRef.current,
-              start: "top 70%",
-              end: "bottom 25%",
-              scrub: true,
+              start: "top 60%",
+              end: "bottom 40%",
+              scrub: 0.5,
+              invalidateOnRefresh: true,
             },
           }
         );
       }
+
+      /* ── Staggered reveal for each milestone ───────────────── */
+      items.forEach((item, index) => {
+        const card = item.querySelector<HTMLElement>("[data-journey-card]");
+        const dot = item.querySelector<HTMLElement>("[data-milestone-dot]");
+        const title = item.querySelector<HTMLElement>("[data-journey-title]");
+        const copy = item.querySelectorAll<HTMLElement>("[data-journey-copy]");
+
+        /* Entrance animation: alternating slide direction */
+        gsap.fromTo(
+          item,
+          {
+            x: index % 2 === 0 ? -40 : 40,
+            opacity: 0,
+          },
+          {
+            x: 0,
+            opacity: 1,
+            duration: 0.8,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: item,
+              start: "top 85%",
+              invalidateOnRefresh: true,
+            },
+          }
+        );
+
+        /* Active milestone state on scroll */
+        ScrollTrigger.create({
+          trigger: item,
+          start: "top center",
+          end: "bottom center",
+          invalidateOnRefresh: true,
+          onEnter: () => activateMilestone(card, dot, title, copy),
+          onEnterBack: () => activateMilestone(card, dot, title, copy),
+          onLeave: () => resetMilestone(card, dot, title, copy),
+          onLeaveBack: () => resetMilestone(card, dot, title, copy),
+        });
+      });
+
+      /* ── Heading reveal ────────────────────────────────────── */
+      gsap.from("[data-journey-heading]", {
+        opacity: 0,
+        y: 24,
+        stagger: 0.1,
+        duration: 0.65,
+        ease: "power2.out",
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top 75%",
+          invalidateOnRefresh: true,
+        },
+      });
+
+      const refreshFrame = requestAnimationFrame(() => {
+        ScrollTrigger.refresh();
+      });
+
+      return () => {
+        cancelAnimationFrame(refreshFrame);
+      };
     },
-    { scope: sectionRef }
+    { scope: sectionRef, dependencies: [] }
   );
 
   return (
-    <section id="journey" ref={sectionRef} className="relative bg-[#f4ecde] px-6 py-20 md:px-10 lg:px-16">
+    <section
+      id="journey"
+      ref={sectionRef}
+      className="relative px-6 py-24 md:px-10 lg:px-16"
+      style={{ background: "var(--bg-base)" }}
+    >
       <div className="mx-auto w-full max-w-6xl">
-        <div className="mb-10">
-          <p className="text-xs font-semibold uppercase tracking-[0.24em] text-violet-600/75">
+        <div className="mb-12">
+          <p
+            data-journey-heading
+            className="text-xs font-semibold uppercase tracking-[0.24em] text-[var(--accent-primary-light)]"
+          >
             Journey Timeline
           </p>
-          <h2 className="mt-3 text-[clamp(1.8rem,4vw,3.3rem)] font-black uppercase tracking-tight text-zinc-900">
+          <h2
+            data-journey-heading
+            className="mt-3 text-[clamp(1.8rem,4vw,3.3rem)] font-black uppercase tracking-tight text-[var(--text-primary)]"
+          >
             Milestones in AI & Engineering
           </h2>
+          <p
+            data-journey-heading
+            className="mt-3 max-w-2xl text-sm leading-relaxed text-[var(--text-secondary)] md:text-base"
+          >
+            Key chapters in my engineering journey — from academic foundations to production delivery.
+          </p>
         </div>
 
-        <div className="relative space-y-6">
-          <span className="absolute left-[108px] top-7 hidden h-[calc(100%-3.5rem)] w-px bg-violet-200/50 md:block" />
+        <div className="relative space-y-8">
+          {/* Background spine line */}
+          <span className="absolute left-8 top-8 hidden h-[calc(100%-4rem)] w-px bg-[var(--border-default)] md:block" />
+          {/* Animated progress spine */}
           <span
-            ref={progressRef}
-            className="absolute left-[108px] top-7 hidden h-[calc(100%-3.5rem)] w-px bg-violet-600/60 md:block"
+            ref={spineRef}
+            className="absolute left-8 top-8 hidden h-0 w-px md:block"
+            style={{
+              background:
+                "linear-gradient(to bottom, var(--accent-primary), var(--accent-tertiary))",
+              boxShadow: "0 0 8px var(--accent-primary-glow)",
+            }}
           />
-          {journeyMilestones.map((milestone, index) => {
-            const isLast = index === journeyMilestones.length - 1;
 
-            return (
-              <article
-                data-journey-item
-                key={`${milestone.year}-${milestone.title}`}
-                className="grid grid-cols-1 gap-3 md:grid-cols-[220px_1fr] md:gap-8"
+          {journeyMilestones.map((milestone, index) => (
+            <article
+              data-journey-item
+              key={`${milestone.year}-${milestone.title}`}
+              className="relative ml-16 grid grid-cols-1 gap-3 lg:ml-24"
+              style={{ opacity: 0 }}
+            >
+              <motion.div
+                data-journey-card
+                className="card-glass relative rounded-2xl p-6"
+                whileHover={{
+                  scale: 1.01,
+                  boxShadow: "0 0 30px var(--accent-primary-glow)",
+                }}
+                transition={{ duration: 0.3 }}
               >
-                <div className="md:pt-7">
-                  <p className="text-xl font-extrabold tracking-tight text-zinc-900 md:text-2xl">
+                {/* Milestone dot */}
+                <span
+                  data-milestone-dot
+                  className="absolute -left-10 top-7 hidden h-3.5 w-3.5 rounded-full md:block"
+                  style={{
+                    background: "var(--border-default)",
+                    transition: "all 0.35s ease",
+                  }}
+                />
+
+                <div className="flex items-center gap-3">
+                  <p className="font-mono text-[0.8rem] uppercase tracking-wide text-[var(--accent-primary-light)]">
                     {milestone.year}
                   </p>
+                  <span className="h-px flex-1 bg-[var(--border-default)]" />
+                  <span className="font-mono text-xs text-[var(--text-muted)]">
+                    #{String(index + 1).padStart(2, "0")}
+                  </span>
                 </div>
 
-                <div className="relative rounded-2xl border border-[#e3d2bc] bg-white/85 p-6 backdrop-blur-xl transition duration-300 hover:-translate-y-0.5 hover:border-violet-300/45 md:p-7">
-                  <span className="absolute -left-[117px] top-8 hidden h-3.5 w-3.5 rounded-full border border-violet-300/45 bg-[#f4ecde] md:block" />
-                  {!isLast ? (
-                    <span className="absolute -left-px top-11 hidden h-[calc(100%+1.5rem)] w-px bg-violet-300/30 md:hidden" />
-                  ) : null}
+                <h3
+                  data-journey-title
+                  className="mt-3 text-[1.1rem] font-bold text-[var(--text-primary)] transition-colors duration-300"
+                >
+                  {milestone.title}
+                </h3>
 
-                  <h3 className="text-xl font-bold text-zinc-900">{milestone.title}</h3>
-
-                  <div className="mt-4 space-y-2">
-                    {milestone.highlights.map((highlight) => (
-                      <p key={highlight} className="text-sm leading-relaxed text-zinc-700">
-                        {highlight}
-                      </p>
-                    ))}
-                  </div>
+                <div className="mt-4 space-y-2">
+                  {milestone.highlights.map((highlight) => (
+                    <p
+                      key={highlight}
+                      data-journey-copy
+                      className="text-sm leading-[1.7] text-[var(--text-secondary)] transition-colors duration-300"
+                    >
+                      {highlight}
+                    </p>
+                  ))}
                 </div>
-              </article>
-            );
-          })}
+              </motion.div>
+            </article>
+          ))}
         </div>
       </div>
     </section>
   );
+}
+
+function activateMilestone(
+  card: HTMLElement | null,
+  dot: HTMLElement | null,
+  title: HTMLElement | null,
+  copy: NodeListOf<HTMLElement>
+) {
+  if (card) {
+    gsap.to(card, {
+      borderColor: "var(--accent-primary)",
+      boxShadow: "0 0 34px var(--accent-primary-glow)",
+      duration: 0.35,
+      ease: "power2.out",
+    });
+  }
+
+  if (dot) {
+    gsap.to(dot, {
+      scale: 1.6,
+      backgroundColor: "var(--accent-primary)",
+      boxShadow: "0 0 22px var(--accent-primary-glow)",
+      duration: 0.35,
+      ease: "power2.out",
+    });
+  }
+
+  if (title) {
+    gsap.to(title, {
+      color: "var(--accent-primary-light)",
+      duration: 0.3,
+      ease: "power2.out",
+    });
+  }
+
+  if (copy.length > 0) {
+    gsap.to(copy, {
+      color: "var(--text-primary)",
+      duration: 0.3,
+      stagger: 0.03,
+      ease: "power2.out",
+    });
+  }
+}
+
+function resetMilestone(
+  card: HTMLElement | null,
+  dot: HTMLElement | null,
+  title: HTMLElement | null,
+  copy: NodeListOf<HTMLElement>
+) {
+  if (card) {
+    gsap.to(card, {
+      borderColor: "var(--border-default)",
+      boxShadow: "0 0 0 rgba(0, 0, 0, 0)",
+      duration: 0.3,
+      ease: "power2.out",
+    });
+  }
+
+  if (dot) {
+    gsap.to(dot, {
+      scale: 1,
+      backgroundColor: "var(--border-default)",
+      boxShadow: "0 0 0 rgba(0, 0, 0, 0)",
+      duration: 0.3,
+      ease: "power2.out",
+    });
+  }
+
+  if (title) {
+    gsap.to(title, {
+      color: "var(--text-primary)",
+      duration: 0.3,
+      ease: "power2.out",
+    });
+  }
+
+  if (copy.length > 0) {
+    gsap.to(copy, {
+      color: "var(--text-secondary)",
+      duration: 0.3,
+      ease: "power2.out",
+    });
+  }
 }

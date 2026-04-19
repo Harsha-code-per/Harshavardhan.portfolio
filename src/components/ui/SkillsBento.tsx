@@ -11,66 +11,97 @@ import {
   SiFramer,
   SiGit,
   SiJavascript,
+  SiNextdotjs,
   SiNodedotjs,
   SiPython,
   SiReact,
   SiTypescript,
+  SiGreensock,
+  SiThreedotjs,
 } from "react-icons/si";
+import {
+  FaJava,
+  FaCog,
+  FaRocket,
+  FaSearch,
+  FaUniversalAccess,
+  FaChartLine,
+  FaBug,
+  FaTerminal,
+  FaCode,
+  FaBolt,
+  FaVideo,
+} from "react-icons/fa";
 import { skillCategories } from "@/data/skills";
-import { gsap, setupGsap } from "@/lib/gsap";
+import { ScrollTrigger, gsap, setupGsap } from "@/lib/gsap";
 
+/* Proper icon mapping — no fallback to generic JS icon */
 const techIcons: Record<string, IconType> = {
-  "Next.js": SiJavascript,
+  "Next.js": SiNextdotjs,
   React: SiReact,
   TypeScript: SiTypescript,
   "Tailwind CSS": SiCss,
-  "shadcn/ui": SiCss,
-  "App Router": SiJavascript,
-  GSAP: SiJavascript,
-  ScrollTrigger: SiJavascript,
+  "shadcn/ui": SiReact,
+  "App Router": SiNextdotjs,
+  GSAP: SiGreensock,
+  ScrollTrigger: SiGreensock,
   "Framer Motion": SiFramer,
-  Lenis: SiJavascript,
-  SplitType: SiJavascript,
-  Spline: SiJavascript,
+  Lenis: FaRocket,
+  SplitType: FaCode,
+  Spline: SiThreedotjs,
   Python: SiPython,
-  Java: SiJavascript,
+  Java: FaJava,
   "C++": SiCplusplus,
   "Machine Learning": SiPython,
   "REST APIs": SiNodedotjs,
-  WebRTC: SiJavascript,
+  WebRTC: FaVideo,
   "Arch Linux": SiArchlinux,
   Git: SiGit,
-  "Bash/Zsh": SiJavascript,
-  "CI/CD": SiGit,
-  Debugging: SiJavascript,
-  "Performance Optimization": SiJavascript,
-  "SEO Fundamentals": SiJavascript,
-  Accessibility: SiJavascript,
-  "Analytics Thinking": SiJavascript,
+  "Bash/Zsh": FaTerminal,
+  "CI/CD": FaCog,
+  Debugging: FaBug,
+  "Performance Optimization": FaBolt,
+  "SEO Fundamentals": FaSearch,
+  Accessibility: FaUniversalAccess,
+  "Analytics Thinking": FaChartLine,
 };
+
+const cardAccents = [
+  "var(--accent-primary)",
+  "var(--accent-tertiary)",
+  "var(--accent-secondary)",
+  "var(--accent-primary-light)",
+  "var(--accent-tertiary-light)",
+];
 
 function SkillCard({
   title,
   description,
   technologies,
+  accent,
+  isLarge,
 }: {
   title: string;
   description: string;
   technologies: string[];
+  accent: string;
+  isLarge: boolean;
 }) {
   const x = useMotionValue(0);
   const y = useMotionValue(0);
 
-  const rotateX = useTransform(y, [-70, 70], [9, -9]);
-  const rotateY = useTransform(x, [-70, 70], [-10, 10]);
+  const rotateX = useTransform(y, [-100, 100], [6, -6]);
+  const rotateY = useTransform(x, [-100, 100], [-6, 6]);
 
-  const smoothRotateX = useSpring(rotateX, { damping: 18, stiffness: 160 });
-  const smoothRotateY = useSpring(rotateY, { damping: 18, stiffness: 160 });
+  const smoothRotateX = useSpring(rotateX, { damping: 25, stiffness: 200 });
+  const smoothRotateY = useSpring(rotateY, { damping: 25, stiffness: 200 });
 
   return (
     <motion.article
       data-skill-card
-      className="group relative overflow-hidden rounded-2xl border border-[#dccdb9] bg-white p-7 shadow-[0_16px_45px_-30px_rgba(68,48,31,0.45)] md:p-8"
+      className={`card-glass group relative overflow-hidden p-6 lg:p-8 ${
+        isLarge ? "md:col-span-2" : ""
+      }`}
       style={{
         rotateX: smoothRotateX,
         rotateY: smoothRotateY,
@@ -85,26 +116,64 @@ function SkillCard({
         x.set(0);
         y.set(0);
       }}
-      whileHover={{ scale: 1.02 }}
+      whileHover={{
+        scale: 1.02,
+        boxShadow: `0 0 50px color-mix(in srgb, ${accent} 25%, transparent)`,
+        borderColor: accent,
+      }}
       transition={{ duration: 0.25, ease: "easeOut" }}
     >
-      <div className="pointer-events-none absolute -right-12 -top-16 h-40 w-40 rounded-full bg-gradient-to-br from-amber-100/70 to-transparent" />
-      <h3 className="relative z-10 mb-2 text-lg font-semibold text-zinc-900">{title}</h3>
-      <p className="relative z-10 mb-5 text-sm leading-relaxed text-zinc-600">{description}</p>
-      <ul className="relative z-10 grid grid-cols-2 gap-2.5">
-        {technologies.map((item) => {
-          const Icon = techIcons[item] ?? SiJavascript;
+      {/* Accent glow on hover */}
+      <div
+        className="pointer-events-none absolute -right-8 -top-8 h-32 w-32 rounded-full opacity-0 blur-3xl transition-opacity duration-500 group-hover:opacity-30"
+        style={{ background: accent }}
+      />
 
+      <div className="flex items-center gap-3">
+        <span
+          className="inline-block h-1 w-5 rounded-full"
+          style={{ background: accent }}
+        />
+        <p
+          className="font-mono text-[0.68rem] uppercase tracking-[0.22em]"
+          style={{ color: accent }}
+        >
+          {title}
+        </p>
+      </div>
+
+      <p className="mt-4 text-sm leading-relaxed text-[var(--text-secondary)]">
+        {description}
+      </p>
+
+      {/* Icon row */}
+      <div className="mt-5 flex flex-wrap gap-3">
+        {technologies.slice(0, isLarge ? 6 : 4).map((item) => {
+          const Icon = techIcons[item] ?? SiJavascript;
           return (
-            <li
-              key={item}
-              className="flex items-center gap-2 rounded-lg border border-neutral-200 bg-[#f9f5ef] px-2.5 py-2 text-xs font-medium text-zinc-700"
+            <div
+              key={`icon-${item}`}
+              className="group/icon relative"
+              title={item}
             >
-              <Icon className="h-3.5 w-3.5 text-violet-600" />
-              <span className="truncate">{item}</span>
-            </li>
+              <Icon
+                className="h-7 w-7 text-[var(--text-muted)] transition-colors duration-300 group-hover/icon:text-[var(--accent-primary-light)]"
+              />
+            </div>
           );
         })}
+      </div>
+
+      {/* Tech list */}
+      <ul className={`mt-5 grid gap-2 ${isLarge ? "grid-cols-3" : "grid-cols-2"}`}>
+        {technologies.map((item) => (
+          <li
+            key={item}
+            className="rounded-lg border border-[var(--border-default)] bg-[var(--bg-elevated)] px-2.5 py-2 text-xs font-medium text-[var(--text-primary)] transition-colors hover:border-[var(--border-hover)]"
+          >
+            <span className="truncate">{item}</span>
+          </li>
+        ))}
       </ul>
     </motion.article>
   );
@@ -117,41 +186,59 @@ export function SkillsBento() {
 
   useGSAP(
     () => {
-      gsap.from("[data-skill-card]", {
+      const cards = gsap.utils.toArray<HTMLElement>("[data-skill-card]");
+      if (cards.length === 0) {
+        return;
+      }
+
+      gsap.from(cards, {
         opacity: 0,
-        y: 48,
-        stagger: 0.14,
-        duration: 0.8,
+        y: 60,
+        scale: 0.95,
+        stagger: 0.1,
+        duration: 0.9,
         ease: "power3.out",
         scrollTrigger: {
           trigger: sectionRef.current,
           start: "top 75%",
+          invalidateOnRefresh: true,
         },
       });
+
+      const refreshFrame = requestAnimationFrame(() => {
+        ScrollTrigger.refresh();
+      });
+
+      return () => {
+        cancelAnimationFrame(refreshFrame);
+      };
     },
-    { scope: sectionRef }
+    { scope: sectionRef, dependencies: [] }
   );
 
   return (
     <section
       id="skills"
       ref={sectionRef}
-      className="flex min-h-screen w-full flex-col items-center justify-center bg-[#f6ecdc] px-6 py-24 md:px-8"
+      className="flex min-h-screen w-full flex-col items-center justify-center px-6 py-24 md:px-8"
+      style={{ background: "var(--bg-base)" }}
     >
-      <h2 className="mb-6 text-center text-xs uppercase tracking-[0.34em] text-violet-600/75">
+      <h2 className="text-gradient-violet mb-4 text-center text-[clamp(3rem,7vw,6rem)] font-black leading-[0.95] tracking-[-0.02em]">
         Skills
       </h2>
-      <p className="mb-14 max-w-3xl text-center text-[clamp(1.8rem,5vw,3.65rem)] font-black uppercase leading-[0.95] tracking-[-0.02em] text-zinc-900">
-        ENGINEERING ARSENAL
+      <p className="mb-14 max-w-3xl text-center text-sm uppercase tracking-[0.28em] text-[var(--text-secondary)] md:text-base">
+        Engineering Arsenal
       </p>
 
       <div className="grid w-full max-w-7xl grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {skillCategories.map((card) => (
+        {skillCategories.map((card, index) => (
           <SkillCard
             key={card.title}
             title={card.title}
             description={card.description}
-            technologies={card.technologies.slice(0, 6)}
+            technologies={card.technologies}
+            accent={cardAccents[index % cardAccents.length]}
+            isLarge={index === 0}
           />
         ))}
       </div>

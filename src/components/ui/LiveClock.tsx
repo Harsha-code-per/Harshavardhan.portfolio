@@ -2,7 +2,11 @@
 
 import { useEffect, useState } from "react";
 
-export function LiveClock() {
+interface LiveClockProps {
+  size?: "sm" | "lg";
+}
+
+export function LiveClock({ size = "sm" }: LiveClockProps) {
   const [time, setTime] = useState<Date | null>(null);
 
   useEffect(() => {
@@ -28,9 +32,36 @@ export function LiveClock() {
       })
     : "--:--:-- --";
 
+  const formattedDate = time
+    ? time.toLocaleDateString("en-US", {
+        weekday: "short",
+        month: "short",
+        day: "numeric",
+      })
+    : "";
+
+  if (size === "lg") {
+    return (
+      <div className="flex flex-col items-end gap-0.5">
+        <span
+          className="font-mono text-base tracking-[0.18em] tabular-nums"
+          style={{ color: "var(--text-primary)" }}
+        >
+          {formattedTime}
+        </span>
+        <span
+          className="font-mono text-[10px] uppercase tracking-[0.3em]"
+          style={{ color: "var(--text-muted)" }}
+        >
+          {formattedDate} · IST
+        </span>
+      </div>
+    );
+  }
+
   return (
-    <div className="absolute bottom-0 right-0 z-50 flex h-[5.5rem] w-[18.75rem] items-center justify-center bg-white text-center pointer-events-none md:h-24 md:w-[21.5rem]">
-      <span className="text-2xl font-semibold tracking-[0.04em] text-[#4a3527] md:text-3xl">
+    <div className="rounded-md border border-[var(--border-default)] bg-[color:rgba(17,17,24,0.72)] px-3 py-1.5">
+      <span className="font-mono text-xs tracking-[0.22em] text-[var(--text-muted)]">
         {formattedTime}
       </span>
     </div>

@@ -1,16 +1,16 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { useGSAP } from "@gsap/react";
 import { workExperience } from "@/data/work";
-import { gsap, setupGsap } from "@/lib/gsap";
-import { Badge } from "@/components/ui/badge";
+import { ScrollTrigger, gsap, setupGsap } from "@/lib/gsap";
 
 export function WorkShowcase() {
   setupGsap();
 
   const sectionRef = useRef<HTMLElement | null>(null);
   const stageRef = useRef<HTMLDivElement | null>(null);
+  const [activeIndex, setActiveIndex] = useState(0);
 
   useGSAP(
     () => {
@@ -20,7 +20,13 @@ export function WorkShowcase() {
       }
 
       cards.forEach((card, index) => {
-        gsap.set(card, { zIndex: cards.length - index });
+        gsap.set(card, {
+          zIndex: index + 1,
+          yPercent: index === 0 ? 0 : 100,
+          opacity: index === 0 ? 1 : 0,
+          scale: index === 0 ? 1 : 0.95,
+          transformOrigin: "center center",
+        });
       });
 
       if (cards.length === 1) {
@@ -37,107 +43,252 @@ export function WorkShowcase() {
         return;
       }
 
+      /* Use a more conservative scroll distance */
+      const scrollPerCard = window.innerHeight * 1.2;
+      const totalScroll = scrollPerCard * (cards.length - 1);
+
       const timeline = gsap.timeline({
         scrollTrigger: {
           trigger: stageRef.current,
           start: "top top+=96",
-          end: `+=${cards.length * 120}%`,
+          end: () => `+=${Math.max(totalScroll, 800)}`,
           scrub: 0.8,
           pin: true,
+          pinSpacing: true,
+          pinType: "transform",
+          invalidateOnRefresh: true,
           anticipatePin: 1,
+          onUpdate: (self) => {
+            const idx = Math.min(
+              Math.floor(self.progress * cards.length),
+              cards.length - 1
+            );
+            setActiveIndex(idx);
+          },
         },
       });
 
       cards.slice(0, -1).forEach((card, index) => {
         const nextCard = cards[index + 1];
+        const currentInner = card.querySelectorAll("[data-work-animate]");
+        const nextInner = nextCard.querySelectorAll("[data-work-animate]");
+        const position = index;
 
+        /* Current card exits up with slight rotation */
         timeline
           .to(
             card,
             {
-              yPercent: -115,
-              rotateZ: -4,
-              opacity: 0.14,
-              ease: "none",
+              yPercent: -30,
+              opacity: 0,
+              scale: 0.92,
+              duration: 0.5,
+              ease: "power2.inOut",
+              overwrite: "auto",
             },
-            index
+            position
           )
+          .to(
+            currentInner,
+            {
+              opacity: 0,
+              y: -18,
+              duration: 0.3,
+              stagger: 0.03,
+              overwrite: "auto",
+            },
+            position
+          );
+
+        /* Next card enters from below */
+        timeline
           .fromTo(
             nextCard,
             {
-              scale: 0.96,
-              opacity: 0.78,
+              yPercent: 100,
+              opacity: 0,
+              scale: 0.95,
             },
             {
+              yPercent: 0,
               scale: 1,
               opacity: 1,
-              ease: "none",
+              duration: 0.6,
+              ease: "power2.out",
+              overwrite: "auto",
             },
-            index
+            position + 0.15
+          )
+          .fromTo(
+            nextInner,
+            { opacity: 0, y: 28 },
+            {
+              opacity: 1,
+              y: 0,
+              duration: 0.4,
+              stagger: 0.05,
+              overwrite: "auto",
+            },
+            position + 0.28
           );
       });
+
+      const refreshFrame = requestAnimationFrame(() => {
+        ScrollTrigger.refresh();
+      });
+
+      return () => {
+        cancelAnimationFrame(refreshFrame);
+      };
     },
-    { scope: sectionRef }
+    { scope: sectionRef, dependencies: [] }
   );
 
+  const accentColors = [
+    "var(--accent-primary)",
+    "var(--accent-secondary)",
+    "var(--accent-tertiary)",
+  ];
+
   return (
-    <section id="work" ref={sectionRef} className="bg-[#f4ecde] px-6 py-20 md:px-10 lg:px-16">
+    <section
+      id="work"
+      ref={sectionRef}
+      className="relative isolate px-6 py-20 md:px-10 lg:px-16"
+      style={{ background: "var(--bg-base)" }}
+    >
       <div className="mx-auto w-full max-w-7xl">
-        <p className="text-xs uppercase tracking-[0.3em] text-violet-600/75">Work</p>
-        <h2 className="mt-3 text-[clamp(1.9rem,4.8vw,3.8rem)] font-black uppercase leading-[0.95] tracking-tight text-zinc-900">
-          Real-World Engineering Experience
+        <p className="text-xs uppercase tracking-[0.3em] text-[var(--accent-primary-light)]">
+          Work
+        </p>
+        <h2 className="mt-3 text-[clamp(1.9rem,4.8vw,3.8rem)] font-black uppercase leading-[0.95] tracking-tight text-[var(--text-primary)]">
+          Real-World Engineering
         </h2>
-        <p className="mt-4 max-w-3xl text-sm leading-relaxed text-zinc-600 md:text-base">
+        <p className="mt-4 max-w-3xl text-sm leading-relaxed text-[var(--text-secondary)] md:text-base">
           Scroll through each chapter to see progression from problem framing to
           production outcomes.
         </p>
 
-        <div ref={stageRef} className="relative mt-10 h-[72vh] md:h-[78vh]">
-          {workExperience.map((work) => (
+        {/* ── Progress dots ──────────────────────────────────────── */}
+        <div className="mt-6 flex items-center gap-2">
+          {workExperience.map((_, index) => (
+            <span
+              key={index}
+              className="h-2 rounded-full transition-all duration-300"
+              style={{
+                width: activeIndex === index ? "24px" : "8px",
+                background:
+                  activeIndex === index
+                    ? accentColors[index % accentColors.length]
+                    : "var(--border-hover)",
+              }}
+            />
+          ))}
+          <span className="ml-2 font-mono text-xs text-[var(--text-muted)]">
+            {String(activeIndex + 1).padStart(2, "0")}/
+            {String(workExperience.length).padStart(2, "0")}
+          </span>
+        </div>
+
+        <div ref={stageRef} className="relative mt-8 h-[70vh] md:h-[76vh]">
+          {workExperience.map((work, index) => (
             <article
               key={`${work.period}-${work.role}`}
               data-work-card
-              className="absolute inset-0 rounded-3xl border border-[#e2d0b8] bg-white/95 p-7 shadow-[0_24px_60px_-40px_rgba(84,58,35,0.5)] backdrop-blur-lg md:p-8"
+              className="card-glass absolute inset-0 rounded-3xl p-7 md:p-8"
             >
-              <div className="grid h-full grid-cols-1 gap-6 md:grid-cols-[1.2fr_0.8fr]">
+              <div
+                className="grid h-full grid-cols-1 gap-6 md:grid-cols-[1.2fr_0.8fr]"
+                style={{
+                  borderLeft: `3px solid ${accentColors[index % accentColors.length]}`,
+                  paddingLeft: "1rem",
+                }}
+              >
                 <div>
-                  <p className="text-xs uppercase tracking-[0.24em] text-violet-600/70">
+                  <p
+                    data-work-animate
+                    className="text-xs uppercase tracking-[0.24em] text-[var(--text-secondary)]"
+                  >
                     {work.period}
                   </p>
-                  <h3 className="mt-3 text-2xl font-bold text-zinc-900">{work.role}</h3>
-                  <p className="mt-1 text-sm text-zinc-600">
+                  <h3
+                    data-work-animate
+                    className="mt-3 text-2xl font-bold text-[var(--text-primary)]"
+                  >
+                    {work.organization}
+                  </h3>
+                  <p
+                    data-work-animate
+                    className="mt-1 text-sm text-[var(--text-secondary)]"
+                  >
+                    {work.role}
+                  </p>
+                  <p
+                    data-work-animate
+                    className="mt-1 text-sm text-[var(--text-secondary)]"
+                  >
                     {work.organization} · {work.location}
                   </p>
-                  <p className="mt-5 text-sm leading-relaxed text-zinc-700 md:text-base">
+                  <p
+                    data-work-animate
+                    className="mt-5 text-sm leading-relaxed text-[var(--text-secondary)] md:text-base"
+                  >
                     {work.overview}
                   </p>
 
                   <ul className="mt-5 space-y-2">
                     {work.outcomes.map((outcome) => (
-                      <li key={outcome} className="text-sm text-zinc-700">
-                        {outcome}
+                      <li
+                        key={outcome}
+                        data-work-animate
+                        className="text-sm text-[var(--text-secondary)]"
+                      >
+                        <span className="mr-2 text-[var(--accent-primary-light)]">
+                          →
+                        </span>
+                        <span>{outcome}</span>
                       </li>
                     ))}
                   </ul>
                 </div>
 
-                <div className="flex h-full flex-col justify-between rounded-2xl border border-[#eadbc6] bg-[#f9f4eb] p-5">
+                <div className="card-glass flex h-full flex-col justify-between rounded-2xl p-5">
                   <div>
-                    <p className="text-[0.65rem] uppercase tracking-[0.22em] text-violet-600/70">
+                    <p
+                      data-work-animate
+                      className="text-[0.65rem] uppercase tracking-[0.22em] text-[var(--accent-tertiary)]"
+                    >
                       Core Stack
                     </p>
                     <div className="mt-3 flex flex-wrap gap-2.5">
                       {work.technologies.map((technology) => (
-                        <Badge key={technology}>{technology}</Badge>
+                        <span
+                          key={technology}
+                          data-work-animate
+                          className="rounded-full border px-3 py-1 text-xs"
+                          style={{
+                            background: "var(--bg-elevated)",
+                            borderColor: "var(--border-default)",
+                            color: "var(--text-secondary)",
+                          }}
+                        >
+                          {technology}
+                        </span>
                       ))}
                     </div>
                   </div>
-                  <div className="mt-5 rounded-xl border border-[#e9dbc8] bg-white px-4 py-3">
-                    <p className="text-[0.65rem] uppercase tracking-[0.2em] text-zinc-500">
+                  <div className="mt-5 rounded-xl border border-[var(--border-default)] bg-[var(--bg-elevated)] px-4 py-3">
+                    <p
+                      data-work-animate
+                      className="text-[0.65rem] uppercase tracking-[0.2em] text-[var(--text-muted)]"
+                    >
                       Outcome Focus
                     </p>
-                    <p className="mt-1 text-sm text-zinc-700">
-                      Recruiter-facing delivery clarity and measurable execution.
+                    <p
+                      data-work-animate
+                      className="mt-1 text-sm text-[var(--text-secondary)]"
+                    >
+                      Production-grade delivery with measurable engineering impact.
                     </p>
                   </div>
                 </div>

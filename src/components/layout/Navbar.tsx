@@ -1,147 +1,250 @@
 "use client";
 
-import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { useLenis } from "@studio-freight/react-lenis";
 import { useGSAP } from "@gsap/react";
-import { ScrollTrigger, setupGsap } from "@/lib/gsap";
+import { AnimatePresence, motion } from "framer-motion";
+import { Menu, X } from "lucide-react";
+import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
+import { ScrollTrigger, gsap, setupGsap } from "@/lib/gsap";
 
 const navigationItems = [
-  { label: "Home", id: "hero" },
   { label: "About", id: "about" },
   { label: "Work", id: "work" },
   { label: "Projects", id: "projects" },
   { label: "Skills", id: "skills" },
   { label: "Journey", id: "journey" },
   { label: "Research", id: "research" },
-  { label: "Sports", id: "sports" },
   { label: "Contact", id: "contact" },
 ] as const;
 
 export function Navbar() {
   setupGsap();
-
+  const lenis = useLenis();
   const pathname = usePathname();
   const router = useRouter();
-  const [activeSection, setActiveSection] = useState("hero");
-
-  const normalizedPath = useMemo(() => {
-    if (!pathname) {
-      return "/";
-    }
-
-    if (pathname.length > 1 && pathname.endsWith("/")) {
-      return pathname.slice(0, -1);
-    }
-
-    return pathname;
-  }, [pathname]);
-
-  const isHomePage = normalizedPath === "/";
+  const navRef = useRef<HTMLElement | null>(null);
+  const overlayRef = useRef<HTMLDivElement | null>(null);
+  const progressRef = useRef<HTMLDivElement | null>(null);
+  const [activeSection, setActiveSection] = useState("about");
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const isHomePage = pathname === "/";
 
   const scrollToSection = (id: string) => {
     if (!isHomePage) {
-      router.push(id === "hero" ? "/" : `/#${id}`);
+      router.push(`/#${id}`);
+      setIsMenuOpen(false);
       return;
     }
 
-    if (id === "hero") {
-      window.scrollTo({ top: 0, behavior: "auto" });
-      return;
+    const target = `#${id}`;
+    if (lenis) {
+      lenis.scrollTo(target, { offset: -88 });
+    } else {
+      document
+        .getElementById(id)
+        ?.scrollIntoView({ behavior: "smooth", block: "start" });
     }
-
-    const element = document.getElementById(id);
-    if (element) {
-      window.history.replaceState(null, "", `#${id}`);
-      element.scrollIntoView({ behavior: "auto", block: "start" });
-    }
+    setIsMenuOpen(false);
   };
 
+  /* ── Scroll state ──────────────────────────────────────────────── */
   useEffect(() => {
-    if (!isHomePage) {
-      return;
-    }
+    const onScroll = () => {
+      setIsScrolled(window.scrollY > 60);
 
-    const syncFromHash = () => {
-      const hashSection = window.location.hash.replace("#", "");
-      requestAnimationFrame(() => {
-        setActiveSection(hashSection || "hero");
-      });
+      /* Update progress bar */
+      if (progressRef.current) {
+        const docHeight =
+          document.documentElement.scrollHeight - window.innerHeight;
+        const progress = docHeight > 0 ? window.scrollY / docHeight : 0;
+        progressRef.current.style.transform = `scaleX(${progress})`;
+      }
     };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
-    syncFromHash();
-    window.addEventListener("hashchange", syncFromHash);
-
-    return () => {
-      window.removeEventListener("hashchange", syncFromHash);
-    };
-  }, [isHomePage]);
-
+  /* ── Active section tracker ────────────────────────────────────── */
   useGSAP(
     () => {
       if (!isHomePage) {
         return;
       }
 
-      const sectionIds = navigationItems.map((item) => item.id);
-      const triggers = sectionIds
-        .map((id) => {
-          const section = document.getElementById(id);
+      const triggers: ScrollTrigger[] = [];
+
+      const initFrame = requestAnimationFrame(() => {
+        navigationItems.forEach((item) => {
+          const section = document.getElementById(item.id);
           if (!section) {
-            return null;
+            return;
           }
 
-          return ScrollTrigger.create({
-            trigger: section,
-            start: "top center",
-            end: "bottom center",
-            onEnter: () => setActiveSection(id),
-            onEnterBack: () => setActiveSection(id),
-          });
-        })
-        .filter((trigger): trigger is ScrollTrigger => trigger !== null);
+          triggers.push(
+            ScrollTrigger.create({
+              trigger: section,
+              start: "top 55%",
+              end: "bottom 45%",
+              invalidateOnRefresh: true,
+              onEnter: () => setActiveSection(item.id),
+              onEnterBack: () => setActiveSection(item.id),
+            })
+          );
+        });
+
+        ScrollTrigger.refresh();
+      });
 
       return () => {
+        cancelAnimationFrame(initFrame);
         triggers.forEach((trigger) => trigger.kill());
       };
     },
-    { dependencies: [isHomePage] }
+    { scope: navRef, dependencies: [isHomePage] }
+  );
+
+  /* ── Mobile menu animations ────────────────────────────────────── */
+  useGSAP(
+    () => {
+      const overlay = overlayRef.current;
+      if (!overlay || !isMenuOpen) {
+        return;
+      }
+
+      const links =
+        overlay.querySelectorAll<HTMLElement>("[data-mobile-link]");
+      if (links.length === 0) {
+        return;
+      }
+
+      gsap.fromTo(
+        links,
+        { y: 36, opacity: 0 },
+        {
+          y: 0,
+          opacity: 1,
+          stagger: 0.08,
+          duration: 0.7,
+          ease: "power3.out",
+        }
+      );
+    },
+    { scope: overlayRef, dependencies: [isMenuOpen] }
   );
 
   return (
-    <header className="fixed top-0 left-0 z-50 w-full px-4 py-4 md:px-8 md:py-5">
-      <div className="pointer-events-none mx-auto flex w-full max-w-7xl items-center justify-between gap-3 rounded-2xl bg-white/70 backdrop-blur-xl border border-neutral-200/50 shadow-[0_8px_30px_rgb(0,0,0,0.04)] text-neutral-600 px-4 py-3 md:px-6">
+    <header
+      ref={navRef}
+      className={`fixed left-0 top-0 z-[1000] w-full border-b border-transparent px-4 py-5 transition-all duration-300 ${
+        isScrolled
+          ? "nav-scrolled border-[var(--border-default)]"
+          : "bg-transparent"
+      }`}
+    >
+      <div className="mx-auto flex w-full max-w-7xl items-center justify-between">
         <button
           type="button"
-          onClick={() => scrollToSection("hero")}
-          className="pointer-events-auto text-sm text-zinc-950 font-bold tracking-tight md:text-base"
-          aria-label="Go to landing page"
+          onClick={() => {
+            if (isHomePage && lenis) {
+              lenis.scrollTo(0);
+            } else {
+              router.push("/");
+            }
+          }}
+          className="font-mono text-lg tracking-[0.18em] text-[var(--accent-primary-light)] transition-opacity hover:opacity-80"
+          aria-label="Go to top"
         >
-          Harshavardhan K
+          HV
         </button>
-        <nav className="pointer-events-auto hidden gap-4 text-[0.68rem] uppercase tracking-[0.15em] lg:flex xl:gap-5 xl:text-xs xl:tracking-[0.18em]">
-          {navigationItems.map((item) => {
-            const isActive = isHomePage
-              ? activeSection === item.id
-              : (item.id === "hero" && normalizedPath === "/") ||
-                normalizedPath === `/${item.id}`;
 
-            return (
+        <nav className="hidden items-center gap-1 lg:flex">
+          {navigationItems.map((item) => (
+            <div key={item.id} className="relative px-3 py-1">
               <button
                 type="button"
-                key={item.id}
+                data-cursor="hover"
                 onClick={() => scrollToSection(item.id)}
-                className={
-                  isActive
-                    ? "text-zinc-950 font-semibold opacity-100"
-                    : "text-neutral-500 hover:text-zinc-900 transition-colors"
-                }
-                aria-label={`Navigate to ${item.label}`}
+                className={`relative z-10 text-sm font-medium uppercase tracking-[0.16em] transition-colors duration-200 ${
+                  activeSection === item.id
+                    ? "text-[var(--text-primary)]"
+                    : "text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
+                }`}
               >
                 {item.label}
               </button>
-            );
-          })}
+              {/* Animated active indicator pill */}
+              <AnimatePresence>
+                {activeSection === item.id && (
+                  <motion.span
+                    layoutId="nav-active-pill"
+                    className="absolute inset-0 rounded-full"
+                    style={{
+                      background: "var(--accent-primary-subtle)",
+                      border: "1px solid var(--accent-primary)",
+                    }}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{
+                      type: "spring",
+                      stiffness: 400,
+                      damping: 30,
+                    }}
+                  />
+                )}
+              </AnimatePresence>
+            </div>
+          ))}
         </nav>
+
+        <button
+          type="button"
+          className="text-[var(--text-primary)] lg:hidden"
+          onClick={() => setIsMenuOpen((open) => !open)}
+          aria-label="Toggle menu"
+        >
+          {isMenuOpen ? <X size={22} /> : <Menu size={22} />}
+        </button>
+      </div>
+
+      {/* ── Scroll progress bar ────────────────────────────────── */}
+      <div
+        ref={progressRef}
+        className="absolute bottom-0 left-0 h-[2px] w-full origin-left"
+        style={{
+          background:
+            "linear-gradient(to right, var(--accent-primary), var(--accent-tertiary))",
+          transform: "scaleX(0)",
+        }}
+      />
+
+      {/* ── Mobile overlay ─────────────────────────────────────── */}
+      <div
+        ref={overlayRef}
+        className={`fixed inset-0 z-[990] flex flex-col items-center justify-center gap-8 bg-[var(--bg-base)] transition-opacity duration-300 lg:hidden ${
+          isMenuOpen
+            ? "pointer-events-auto opacity-100"
+            : "pointer-events-none opacity-0"
+        }`}
+      >
+        {navigationItems.map((item) => (
+          <button
+            key={item.id}
+            type="button"
+            data-mobile-link
+            onClick={() => scrollToSection(item.id)}
+            className={`text-3xl font-black uppercase tracking-[0.1em] transition-colors ${
+              activeSection === item.id
+                ? "text-[var(--accent-primary-light)]"
+                : "text-[var(--text-primary)]"
+            }`}
+          >
+            {item.label}
+          </button>
+        ))}
       </div>
     </header>
   );

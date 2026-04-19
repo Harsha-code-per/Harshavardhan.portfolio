@@ -3,7 +3,7 @@ import { HorizontalProjects } from "@/components/ui/HorizontalProjects";
 
 export default function ProjectsPage() {
   return (
-    <main className="bg-[#f4ecde] pt-24">
+    <main className="bg-[var(--bg-base)] pt-24">
       <HorizontalProjects />
       <Footer />
     </main>

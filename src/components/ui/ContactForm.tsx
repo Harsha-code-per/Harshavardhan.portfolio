@@ -43,7 +43,7 @@ export function ContactForm() {
     <form onSubmit={handleSubmit} className="w-full">
       <div className="space-y-5">
         <div className="space-y-2">
-          <label htmlFor="name" className="text-sm font-medium text-zinc-700">
+          <label htmlFor="name" className="text-sm font-medium text-[var(--text-secondary)]">
             Name
           </label>
           <input
@@ -52,12 +52,12 @@ export function ContactForm() {
             type="text"
             required
             placeholder="Your name"
-            className="w-full rounded-xl border border-[#e5d5bf] bg-[#fbf7ef] px-4 py-3 text-sm text-zinc-800 outline-none transition placeholder:text-zinc-400 focus:border-violet-300/60 focus:ring-2 focus:ring-violet-300/30"
+            className="w-full rounded-[var(--radius-md)] border border-[var(--border-default)] bg-[var(--bg-elevated)] px-[18px] py-[14px] text-sm text-[var(--text-primary)] outline-none transition placeholder:text-[var(--text-muted)] focus:border-[var(--accent-primary)] focus:shadow-[0_0_0_3px_var(--accent-primary-glow)]"
           />
         </div>
 
         <div className="space-y-2">
-          <label htmlFor="email" className="text-sm font-medium text-zinc-700">
+          <label htmlFor="email" className="text-sm font-medium text-[var(--text-secondary)]">
             Email
           </label>
           <input
@@ -66,12 +66,12 @@ export function ContactForm() {
             type="email"
             required
             placeholder="you@example.com"
-            className="w-full rounded-xl border border-[#e5d5bf] bg-[#fbf7ef] px-4 py-3 text-sm text-zinc-800 outline-none transition placeholder:text-zinc-400 focus:border-violet-300/60 focus:ring-2 focus:ring-violet-300/30"
+            className="w-full rounded-[var(--radius-md)] border border-[var(--border-default)] bg-[var(--bg-elevated)] px-[18px] py-[14px] text-sm text-[var(--text-primary)] outline-none transition placeholder:text-[var(--text-muted)] focus:border-[var(--accent-primary)] focus:shadow-[0_0_0_3px_var(--accent-primary-glow)]"
           />
         </div>
 
         <div className="space-y-2">
-          <label htmlFor="message" className="text-sm font-medium text-zinc-700">
+          <label htmlFor="message" className="text-sm font-medium text-[var(--text-secondary)]">
             Message
           </label>
           <textarea
@@ -80,7 +80,7 @@ export function ContactForm() {
             required
             rows={6}
             placeholder="Tell me about your idea..."
-            className="w-full resize-none rounded-xl border border-[#e5d5bf] bg-[#fbf7ef] px-4 py-3 text-sm text-zinc-800 outline-none transition placeholder:text-zinc-400 focus:border-violet-300/60 focus:ring-2 focus:ring-violet-300/30"
+            className="w-full resize-none rounded-[var(--radius-md)] border border-[var(--border-default)] bg-[var(--bg-elevated)] px-[18px] py-[14px] text-sm text-[var(--text-primary)] outline-none transition placeholder:text-[var(--text-muted)] focus:border-[var(--accent-primary)] focus:shadow-[0_0_0_3px_var(--accent-primary-glow)]"
           />
         </div>
       </div>
@@ -88,11 +88,20 @@ export function ContactForm() {
       <button
         type="submit"
         disabled={isPending}
-        className="mt-6 inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-violet-600 px-5 text-sm font-semibold text-white transition hover:bg-violet-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-300 disabled:cursor-not-allowed disabled:opacity-70"
+        className="mt-6 inline-flex h-12 w-full items-center justify-center gap-2 rounded-[var(--radius-md)] px-5 text-sm font-semibold text-white transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-primary-glow)] disabled:cursor-not-allowed disabled:opacity-70"
+        style={{ background: "var(--accent-primary)" }}
+        onMouseEnter={(event) => {
+          event.currentTarget.style.background = "var(--accent-primary-light)";
+          event.currentTarget.style.boxShadow = "0 0 30px var(--accent-primary-glow)";
+        }}
+        onMouseLeave={(event) => {
+          event.currentTarget.style.background = "var(--accent-primary)";
+          event.currentTarget.style.boxShadow = "none";
+        }}
       >
         {isPending ? (
           <>
-            <LoaderCircle className="h-4 w-4 animate-spin" />
+            <LoaderCircle className="h-4 w-4 animate-spin text-[var(--accent-tertiary)]" />
             Sending...
           </>
         ) : (

@@ -21,10 +21,11 @@ export function ContactSection() {
         scrollTrigger: {
           trigger: sectionRef.current,
           start: "top 75%",
+          invalidateOnRefresh: true,
         },
       });
 
-      gsap.from("[data-contact-link]", {
+      gsap.from("[data-contact-link-row]", {
         opacity: 0,
         x: -24,
         stagger: 0.1,
@@ -33,43 +34,87 @@ export function ContactSection() {
         scrollTrigger: {
           trigger: sectionRef.current,
           start: "top 66%",
+          invalidateOnRefresh: true,
         },
       });
+
+      /* Magnetic links */
+      const links = gsap.utils.toArray<HTMLElement>("[data-magnetic-link]");
+      const leaveHandlers: Array<() => void> = [];
+
+      links.forEach((element) => {
+        const onMove = (event: MouseEvent) => {
+          const rect = element.getBoundingClientRect();
+          const x = (event.clientX - rect.left - rect.width / 2) * 0.25;
+          const y = (event.clientY - rect.top - rect.height / 2) * 0.25;
+          gsap.to(element, { x, y, duration: 0.4, ease: "power2.out" });
+        };
+        const onLeave = () => {
+          gsap.to(element, {
+            x: 0,
+            y: 0,
+            duration: 0.6,
+            ease: "elastic.out(1, 0.5)",
+          });
+        };
+        element.addEventListener("mousemove", onMove);
+        element.addEventListener("mouseleave", onLeave);
+        leaveHandlers.push(() => {
+          element.removeEventListener("mousemove", onMove);
+          element.removeEventListener("mouseleave", onLeave);
+        });
+      });
+
+      return () => {
+        leaveHandlers.forEach((cleanup) => cleanup());
+      };
     },
-    { scope: sectionRef }
+    { scope: sectionRef, dependencies: [] }
   );
 
   return (
     <section
       id="contact"
       ref={sectionRef}
-      className="relative overflow-hidden bg-[#f5eddf] px-6 pb-24 pt-20 md:px-10 lg:px-16"
+      className="relative overflow-hidden pb-24 pt-20 px-6 md:px-10 lg:px-16"
+      style={{ background: "var(--bg-base)" }}
     >
-      <div className="pointer-events-none absolute -right-10 top-8 h-44 w-44 rounded-full bg-violet-200/25 blur-3xl" />
       <div
         data-contact-shell
-        className="mx-auto grid w-full max-w-7xl grid-cols-1 gap-8 rounded-3xl border border-[#e3d2bc] bg-white/92 p-7 shadow-[0_24px_62px_-40px_rgba(79,56,36,0.45)] md:grid-cols-2 md:gap-10 md:p-10"
+        className="animated-border mx-auto grid w-full max-w-7xl grid-cols-1 gap-8 rounded-3xl bg-[var(--bg-surface)] p-7 md:grid-cols-2 md:gap-10 md:p-10"
       >
         <div>
-          <p className="text-xs uppercase tracking-[0.3em] text-violet-600/75">Contact</p>
-          <h2 className="mt-3 text-[clamp(1.8rem,4.6vw,3.4rem)] font-black uppercase leading-[0.95] tracking-tight text-zinc-900">
-            {contactContent.title}
+          <p className="text-xs uppercase tracking-[0.3em] text-[var(--accent-primary-light)]">
+            Contact
+          </p>
+          <h2 className="text-gradient-violet mt-3 text-[clamp(2.5rem,5vw,5rem)] font-black leading-[0.95] tracking-tight">
+            Let&apos;s Build Something.
           </h2>
-          <p className="mt-5 text-sm leading-relaxed text-zinc-700 md:text-base">{contactContent.description}</p>
-          <p className="mt-4 text-sm text-zinc-600">{contactContent.availability}</p>
+          <p className="mt-5 text-sm leading-relaxed text-[var(--text-secondary)] md:text-base">
+            {contactContent.description}
+          </p>
+          <p className="mt-4 text-sm text-[var(--text-secondary)]">
+            {contactContent.availability}
+          </p>
 
           <div className="mt-7 space-y-3">
             {contactContent.links.map((link) => (
               <a
                 key={link.label}
-                data-contact-link
+                data-contact-link-row
+                data-magnetic-link
+                data-cursor="hover"
                 href={link.href}
                 target={link.external ? "_blank" : undefined}
                 rel={link.external ? "noreferrer" : undefined}
-                className="flex items-center justify-between rounded-xl border border-[#eadbc6] bg-[#f9f4eb] px-4 py-3 transition hover:border-violet-300/55"
+                className="group flex items-center justify-between rounded-xl border border-[var(--border-default)] bg-[var(--bg-elevated)] px-4 py-3 transition-all hover:border-[var(--accent-primary)] hover:shadow-[0_0_20px_var(--accent-primary-glow)]"
               >
-                <span className="text-sm font-medium text-zinc-900">{link.label}</span>
-                <span className="text-xs uppercase tracking-[0.14em] text-zinc-600">{link.value}</span>
+                <span className="text-base font-medium text-[var(--text-primary)]">
+                  {link.label}
+                </span>
+                <span className="text-xs uppercase tracking-[0.14em] text-[var(--text-secondary)] transition-colors group-hover:text-[var(--accent-primary-light)]">
+                  {link.value}
+                </span>
               </a>
             ))}
           </div>
