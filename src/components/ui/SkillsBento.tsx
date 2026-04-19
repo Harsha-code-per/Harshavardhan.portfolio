@@ -165,7 +165,7 @@ function SkillCard({
       </div>
 
       {/* Tech list */}
-      <ul className={`mt-5 grid gap-2 ${isLarge ? "grid-cols-3" : "grid-cols-2"}`}>
+      <ul className={`mt-5 grid gap-2 ${isLarge ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3" : "grid-cols-1 sm:grid-cols-2"}`}>
         {technologies.map((item) => (
           <li
             key={item}
@@ -220,7 +220,7 @@ export function SkillsBento() {
     <section
       id="skills"
       ref={sectionRef}
-      className="flex min-h-[100dvh] w-full flex-col items-center justify-center px-[clamp(1.5rem,5vw,4rem)] py-24"
+      className="flex min-h-[100dvh] w-full flex-col items-center justify-center px-[clamp(1rem,5vw,4rem)] py-20"
       style={{ background: "var(--bg-base)" }}
     >
       <h2 className="text-gradient-violet mb-4 text-center text-[clamp(3rem,7vw,6rem)] font-black leading-[0.95] tracking-[-0.02em]">

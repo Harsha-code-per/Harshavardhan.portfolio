@@ -119,7 +119,7 @@ export function MaskedAbout() {
     <section
       id="about"
       ref={sectionRef}
-      className="relative flex min-h-[100dvh] w-full items-center justify-center overflow-visible px-[clamp(1.5rem,5vw,4rem)] py-14"
+      className="relative flex min-h-[100dvh] w-full items-center justify-center overflow-visible px-[clamp(1rem,5vw,4rem)] py-20"
       style={{ background: "var(--bg-base)" }}
     >
       <div
@@ -163,7 +163,7 @@ export function MaskedAbout() {
             </div>
           </div>
 
-          <div className="mx-auto h-64 w-64 shrink-0 overflow-hidden rounded-full border border-[var(--border-default)] md:h-80 md:w-80 lg:h-96 lg:w-96">
+          <div className="mx-auto w-full max-w-[clamp(16rem,38vw,24rem)] shrink-0 overflow-hidden rounded-full border border-[var(--border-default)] aspect-square">
             <Image
               src={aboutContent.portrait.src}
               alt={aboutContent.portrait.alt}

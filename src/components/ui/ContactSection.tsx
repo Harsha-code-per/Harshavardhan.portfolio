@@ -76,7 +76,7 @@ export function ContactSection() {
     <section
       id="contact"
       ref={sectionRef}
-      className="relative overflow-hidden pb-24 pt-20 px-6 md:px-10 lg:px-16"
+      className="relative overflow-hidden px-[clamp(1rem,5vw,4rem)] py-20"
       style={{ background: "var(--bg-base)" }}
     >
       <div

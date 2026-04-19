@@ -124,7 +124,7 @@ export function TimelineExperience() {
     <section
       id="journey"
       ref={sectionRef}
-      className="relative px-6 py-24 md:px-10 lg:px-16"
+      className="relative px-[clamp(1rem,5vw,4rem)] py-20"
       style={{ background: "var(--bg-base)" }}
     >
       <div className="mx-auto w-full max-w-6xl">

@@ -55,8 +55,8 @@ export function Hero() {
       <div className="absolute inset-0 w-full h-full z-0">
         <HeroScene />
       </div>
-      <div className="absolute inset-0 w-full h-full z-10 flex items-center pointer-events-none">
-        <div className="flex flex-col justify-start pt-32 lg:justify-center lg:pt-0 px-6 lg:px-16 z-10 h-full relative pointer-events-none w-full lg:w-[50vw] max-w-2xl">
+      <div className="absolute inset-0 w-full h-[100dvh] z-10 flex flex-col justify-center pt-24 lg:pt-0 px-6 lg:px-16 pointer-events-none lg:max-w-[50vw]">
+        <div className="relative z-10 pointer-events-none">
           <p className="text-cyan-400 text-xs md:text-sm tracking-widest uppercase mb-4 flex items-center gap-4 pointer-events-auto opacity-0 hero-anim">
             <span className="w-6 h-[1px] bg-cyan-400"></span>
             AI Engineer <span className="text-cyan-400/50">&bull;</span> Full-Stack Architect
@@ -65,7 +65,7 @@ export function Hero() {
           <h1
             ref={titleRef}
             id="hero-title"
-            className="text-[clamp(3rem,6vw,5.5rem)] font-black uppercase leading-[0.9] tracking-tighter w-full text-zinc-100 pointer-events-auto [clip-path:polygon(0_0,100%_0,100%_100%,0_100%)]"
+            className="text-[clamp(2.5rem,5.5vw,4.5rem)] font-black uppercase leading-[0.9] tracking-tighter text-zinc-100 pointer-events-auto [clip-path:polygon(0_0,100%_0,100%_100%,0_100%)]"
           >
             CRAFTING
             <br />

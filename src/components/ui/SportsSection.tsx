@@ -54,7 +54,7 @@ export function SportsSection() {
     <section
       id="sports"
       ref={sectionRef}
-      className="relative overflow-hidden px-6 py-24 md:px-10 lg:px-16"
+      className="relative overflow-hidden px-[clamp(1rem,5vw,4rem)] py-20"
       style={{
         background: `repeating-linear-gradient(
           -45deg,

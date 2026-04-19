@@ -149,11 +149,11 @@ export function ResearchSection() {
     <section
       id="research"
       ref={sectionRef}
-      className="relative overflow-hidden px-6 py-24 md:px-10 lg:px-16"
+      className="relative overflow-hidden px-[clamp(1rem,5vw,4rem)] py-20"
       style={{ background: "var(--bg-surface)" }}
     >
       {/* Orbital decoration */}
-      <div className="pointer-events-none absolute right-20 top-16 hidden h-64 w-64 rounded-full border border-[var(--border-default)] lg:block">
+      <div className="pointer-events-none absolute right-[clamp(1rem,6vw,5rem)] top-16 hidden h-[clamp(12rem,18vw,16rem)] w-[clamp(12rem,18vw,16rem)] rounded-full border border-[var(--border-default)] lg:block">
         <span className="orbital-dot absolute left-1/2 top-1/2 h-3 w-3 rounded-full bg-[var(--accent-tertiary)] shadow-[0_0_20px_var(--accent-tertiary-glow)]" />
         <span className="orbital-dot absolute left-1/2 top-1/2 h-3 w-3 rounded-full bg-[var(--accent-primary-light)] shadow-[0_0_20px_var(--accent-primary-glow)]" />
       </div>

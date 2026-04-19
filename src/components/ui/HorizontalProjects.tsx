@@ -117,7 +117,7 @@ export function HorizontalProjects() {
         {/* ── Sticky header ──────────────────────────────────────── */}
         <div
           ref={headerRef}
-          className="absolute top-0 left-0 right-0 z-20 flex items-center justify-between px-[clamp(1.5rem,5vw,4rem)] py-6"
+          className="absolute top-0 left-0 right-0 z-20 flex items-center justify-between px-[clamp(1rem,5vw,4rem)] py-6"
         >
           <div>
             <p className="font-mono text-xs uppercase tracking-[0.3em] text-[var(--accent-primary-light)]">
@@ -160,7 +160,7 @@ export function HorizontalProjects() {
               <article
                 key={project.slug}
                 data-project-card
-                className="relative flex h-full w-screen shrink-0 flex-col justify-center overflow-hidden px-[clamp(1.5rem,5vw,4rem)]"
+                className="relative flex h-full w-screen shrink-0 flex-col justify-center overflow-hidden px-[clamp(1rem,5vw,4rem)]"
                 style={{
                   background: `linear-gradient(135deg, var(--bg-surface) 0%, color-mix(in srgb, ${accentColor} 8%, var(--bg-base)) 100%)`,
                 }}

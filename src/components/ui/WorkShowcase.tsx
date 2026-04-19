@@ -154,7 +154,7 @@ export function WorkShowcase() {
     <section
       id="work"
       ref={sectionRef}
-      className="relative isolate px-6 py-20 md:px-10 lg:px-16"
+      className="relative isolate px-[clamp(1rem,5vw,4rem)] py-20"
       style={{ background: "var(--bg-base)" }}
     >
       <div className="mx-auto w-full max-w-7xl">

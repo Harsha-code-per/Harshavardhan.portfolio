@@ -59,7 +59,7 @@ export function HeroScene() {
 
   return (
     <div className="w-full h-full absolute inset-0 z-0">
-      <Canvas camera={{ position: [10, 7, 14], fov: 45 }} className="pointer-events-auto">
+      <Canvas dpr={[1, 2]} camera={{ position: [10, 7, 14], fov: 45 }} className="pointer-events-auto">
         <SceneContent isMobile={isMobile} />
       </Canvas>
     </div>
