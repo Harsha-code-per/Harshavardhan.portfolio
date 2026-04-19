@@ -80,9 +80,7 @@ export function HorizontalProjects() {
               scrollTrigger: {
                 trigger: card,
                 start: "left 80%",
-                containerAnimation: gsap.getById
-                  ? undefined
-                  : undefined,
+                containerAnimation: undefined,
                 toggleActions: "play none none reverse",
                 invalidateOnRefresh: true,
               },

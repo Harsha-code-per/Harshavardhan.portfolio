@@ -1,6 +1,6 @@
 "use client";
 
-import { useLenis } from "@studio-freight/react-lenis";
+import { useLenis } from "lenis/react";
 import { useGSAP } from "@gsap/react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Menu, X } from "lucide-react";
@@ -15,6 +15,7 @@ const navigationItems = [
   { label: "Skills", id: "skills" },
   { label: "Journey", id: "journey" },
   { label: "Research", id: "research" },
+  { label: "Sports", id: "sports" },
   { label: "Contact", id: "contact" },
 ] as const;
 
@@ -157,7 +158,7 @@ export function Navbar() {
           className="font-mono text-lg tracking-[0.18em] text-[var(--accent-primary-light)] transition-opacity hover:opacity-80"
           aria-label="Go to top"
         >
-          HV
+          Harshavardhan K
         </button>
 
         <nav className="hidden items-center gap-1 lg:flex">

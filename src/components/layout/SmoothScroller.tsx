@@ -1,6 +1,6 @@
 "use client";
 
-import { ReactLenis } from "@studio-freight/react-lenis";
+import { ReactLenis } from "lenis/react";
 import { useEffect, useRef, type ComponentProps, type ReactNode } from "react";
 import { ScrollTrigger, gsap, setupGsap } from "@/lib/gsap";
 
@@ -8,8 +8,11 @@ type SmoothScrollerProps = {
   children: ReactNode;
 };
 
+type LenisInstance = InstanceType<typeof import("lenis").default>;
+type LenisRefApi = { lenis?: LenisInstance | null };
+
 export default function SmoothScroller({ children }: SmoothScrollerProps) {
-  const lenisRef = useRef<InstanceType<typeof import("lenis").default> | null>(null);
+  const lenisRef = useRef<LenisInstance | null>(null);
 
   useEffect(() => {
     setupGsap();
@@ -40,12 +43,13 @@ export default function SmoothScroller({ children }: SmoothScrollerProps) {
         autoResize: true,
         autoRaf: false, // we drive RAF via gsap.ticker
       }}
-      ref={(instance: any) => {
-        if (instance?.lenis) {
-          lenisRef.current = instance.lenis;
+      ref={(instance: LenisRefApi | null) => {
+        const lenis = instance?.lenis;
+        if (lenis) {
+          lenisRef.current = lenis;
 
           /* Every Lenis scroll event should update ScrollTrigger positions */
-          instance.lenis.on("scroll", () => {
+          lenis.on("scroll", () => {
             ScrollTrigger.update();
           });
         }

@@ -7,6 +7,7 @@ import { ContactSection } from "@/components/ui/ContactSection";
 import { Hero } from "@/components/ui/Hero";
 import { HorizontalProjects } from "@/components/ui/HorizontalProjects";
 import { MaskedAbout } from "@/components/ui/MaskedAbout";
+import { Preloader } from "@/components/ui/Preloader";
 import { ResearchSection } from "@/components/ui/ResearchSection";
 import { SkillsBento } from "@/components/ui/SkillsBento";
 import { SportsSection } from "@/components/ui/SportsSection";
@@ -81,6 +82,7 @@ export default function Home() {
       className="relative"
       style={{ background: "var(--bg-base)" }}
     >
+      <Preloader />
       <Hero />
       <MaskedAbout />
       <WorkShowcase />

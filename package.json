@@ -10,8 +10,8 @@
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",
-    "@splinetool/react-spline": "^4.1.0",
-    "@studio-freight/react-lenis": "^0.0.47",
+    "@react-three/drei": "^10.7.7",
+    "@react-three/fiber": "^9.6.0",
     "clsx": "^2.1.1",
     "framer-motion": "^12.38.0",
     "gsap": "^3.15.0",
@@ -25,10 +25,11 @@
     "sonner": "^2.0.7",
     "split-type": "^0.3.4",
     "tailwind-merge": "^3.5.0",
+    "three": "^0.184.0",
+    "three-stdlib": "^2.36.1",
     "zustand": "^5.0.12"
   },
   "devDependencies": {
-    "@playwright/test": "^1.59.1",
     "@tailwindcss/postcss": "^4.2.2",
     "@types/node": "^25.6.0",
     "@types/react": "^19.2.14",

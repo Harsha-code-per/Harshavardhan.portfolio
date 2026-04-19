@@ -4,7 +4,7 @@ import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import { motion } from "framer-motion";
 import { sportsEntries } from "@/data/sports";
-import { ScrollTrigger, gsap, setupGsap } from "@/lib/gsap";
+import { gsap, setupGsap } from "@/lib/gsap";
 
 export function SportsSection() {
   setupGsap();
