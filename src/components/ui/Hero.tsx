@@ -50,10 +50,14 @@ export function Hero() {
     <section
       id="hero"
       ref={container}
-      className="relative w-full h-[100dvh] bg-[#050505] text-white overflow-hidden flex flex-col pt-24 lg:pt-0"
+      className="relative w-full h-[100dvh] overflow-hidden bg-[#050505] text-white"
     >
-      <div className="flex-1 w-full max-w-[1920px] mx-auto grid grid-cols-1 lg:grid-cols-12 relative z-10 h-full">
-        <div className="lg:col-span-6 xl:col-span-5 flex flex-col justify-center px-6 lg:px-16 xl:px-24 pb-12 lg:pb-0 h-full relative z-20 pointer-events-none">
+      <div className="absolute inset-0 w-full h-full z-0 pointer-events-auto">
+        <HeroScene />
+      </div>
+
+      <div className="absolute inset-0 z-10 flex flex-col justify-center pt-24 lg:pt-0 px-8 lg:px-16 pointer-events-none w-full lg:w-[55vw] xl:w-[50vw]">
+        <div className="relative z-20 pointer-events-none">
           <p className="text-cyan-400 text-xs md:text-sm tracking-widest uppercase mb-4 flex items-center gap-4 pointer-events-auto opacity-0 hero-anim">
             <span className="w-6 h-[1px] bg-cyan-400"></span>
             AI Engineer <span className="text-cyan-400/50">&bull;</span> Full-Stack Architect
@@ -62,7 +66,7 @@ export function Hero() {
           <h1
             ref={titleRef}
             id="hero-title"
-            className="text-[clamp(2.5rem,min(5vw,6vh),4.5rem)] font-black uppercase leading-[0.9] tracking-tighter text-zinc-100 pointer-events-auto [clip-path:polygon(0_0,100%_0,100%_100%,0_100%)]"
+            className="text-[clamp(2.5rem,min(5vw,6.5vh),5rem)] font-black uppercase leading-[0.85] tracking-tighter text-zinc-100 pointer-events-auto [clip-path:polygon(0_0,100%_0,100%_100%,0_100%)]"
           >
             CRAFTING
             <br />
@@ -71,14 +75,14 @@ export function Hero() {
             EXPERIENCES.
           </h1>
 
-          <p className="mt-6 text-neutral-400 text-[clamp(1rem,1.5vw,1.25rem)] w-[90%] max-w-[600px] font-light pointer-events-auto opacity-0 hero-anim">
+          <p className="mt-6 text-neutral-400 text-[clamp(1rem,min(1.5vw,2vh),1.25rem)] max-w-[90%] font-light pointer-events-auto opacity-0 hero-anim">
             I build <span className="text-white font-medium">AI-powered systems</span> and design{" "}
-            <span className="text-purple-400 font-medium">cinematic web interfaces</span>  where deep engineering meets visual storytelling.
+            <span className="text-purple-400 font-medium">cinematic <br/>web interfaces</span>  where deep engineering meets visual storytelling.
           </p>
 
           <div className="flex flex-wrap gap-3 mt-8 pointer-events-auto opacity-0 hero-anim">
-            <span className="px-4 py-1.5 rounded-full border border-white/10 text-xs tracking-widest bg-white/5 text-neutral-300">AI / ML Engineer</span>
-            <span className="px-4 py-1.5 rounded-full border border-white/10 text-xs tracking-widest bg-white/5 text-neutral-300">Full-Stack Architect</span>
+            <span className="px-4 py-1.5 rounded-full border border-white/10 text-xs tracking-widest bg-white/5 text-neutral-300">Tech Enthusiast</span>
+            <span className="px-4 py-1.5 rounded-full border border-white/10 text-xs tracking-widest bg-white/5 text-neutral-300">Rapid Prototyper</span>
             <span className="px-4 py-1.5 rounded-full border border-white/10 text-xs tracking-widest bg-white/5 text-neutral-300">B.Tech 2028</span>
           </div>
 
@@ -90,9 +94,6 @@ export function Hero() {
               View My Work
             </button>
           </div>
-        </div>
-        <div className="absolute inset-0 lg:static lg:col-span-6 xl:col-span-7 h-full w-full z-0 lg:z-10 pointer-events-auto">
-          <HeroScene />
         </div>
       </div>
     </section>

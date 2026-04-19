@@ -6,7 +6,7 @@ import { Environment, Float, ContactShadows, OrbitControls, Center } from "@reac
 import { Model as RetroComputer } from "./RetroComputer";
 
 function SceneContent({ isMobile }: { isMobile: boolean }) {
-  const target = [0, isMobile ? -2 : -0.5, 0] as const;
+  const target = [isMobile ? 0 : 2.5, isMobile ? -2 : -0.5, 0] as const;
 
   return (
     <>
