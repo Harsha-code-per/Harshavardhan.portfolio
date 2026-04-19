@@ -50,13 +50,10 @@ export function Hero() {
     <section
       id="hero"
       ref={container}
-      className="relative w-full h-[100dvh] overflow-hidden bg-[#050505] text-white"
+      className="relative w-full h-[100dvh] bg-[#050505] text-white overflow-hidden flex flex-col pt-24 lg:pt-0"
     >
-      <div className="absolute inset-0 w-full h-full z-0">
-        <HeroScene />
-      </div>
-      <div className="absolute inset-0 w-full h-[100dvh] z-10 flex flex-col justify-center pt-24 lg:pt-0 px-6 lg:px-16 pointer-events-none lg:max-w-[50vw]">
-        <div className="relative z-10 pointer-events-none">
+      <div className="flex-1 w-full max-w-[1920px] mx-auto grid grid-cols-1 lg:grid-cols-12 relative z-10 h-full">
+        <div className="lg:col-span-6 xl:col-span-5 flex flex-col justify-center px-6 lg:px-16 xl:px-24 pb-12 lg:pb-0 h-full relative z-20 pointer-events-none">
           <p className="text-cyan-400 text-xs md:text-sm tracking-widest uppercase mb-4 flex items-center gap-4 pointer-events-auto opacity-0 hero-anim">
             <span className="w-6 h-[1px] bg-cyan-400"></span>
             AI Engineer <span className="text-cyan-400/50">&bull;</span> Full-Stack Architect
@@ -65,7 +62,7 @@ export function Hero() {
           <h1
             ref={titleRef}
             id="hero-title"
-            className="text-[clamp(2.5rem,5.5vw,4.5rem)] font-black uppercase leading-[0.9] tracking-tighter text-zinc-100 pointer-events-auto [clip-path:polygon(0_0,100%_0,100%_100%,0_100%)]"
+            className="text-[clamp(2.5rem,min(5vw,6vh),4.5rem)] font-black uppercase leading-[0.9] tracking-tighter text-zinc-100 pointer-events-auto [clip-path:polygon(0_0,100%_0,100%_100%,0_100%)]"
           >
             CRAFTING
             <br />
@@ -93,6 +90,9 @@ export function Hero() {
               View My Work
             </button>
           </div>
+        </div>
+        <div className="absolute inset-0 lg:static lg:col-span-6 xl:col-span-7 h-full w-full z-0 lg:z-10 pointer-events-auto">
+          <HeroScene />
         </div>
       </div>
     </section>

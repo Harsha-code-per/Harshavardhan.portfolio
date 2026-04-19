@@ -1,14 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Canvas, useThree } from "@react-three/fiber";
+import { Canvas } from "@react-three/fiber";
 import { Environment, Float, ContactShadows, OrbitControls, Center } from "@react-three/drei";
 import { Model as RetroComputer } from "./RetroComputer";
 
 function SceneContent({ isMobile }: { isMobile: boolean }) {
-  const { viewport } = useThree();
-  const dynamicX = isMobile ? 0 : viewport.width / 4;
-  const target = [dynamicX, isMobile ? -2 : -0.5, 0] as const;
+  const target = [0, isMobile ? -2 : -0.5, 0] as const;
 
   return (
     <>
@@ -58,7 +56,7 @@ export function HeroScene() {
   }, []);
 
   return (
-    <div className="w-full h-full absolute inset-0 z-0">
+    <div className="w-full h-full">
       <Canvas dpr={[1, 2]} camera={{ position: [10, 7, 14], fov: 45 }} className="pointer-events-auto">
         <SceneContent isMobile={isMobile} />
       </Canvas>
