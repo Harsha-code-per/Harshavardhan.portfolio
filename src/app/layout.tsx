@@ -4,6 +4,7 @@ import { Toaster } from "sonner";
 import CustomCursor from "@/components/layout/CustomCursor";
 import { Navbar } from "@/components/layout/Navbar";
 import SmoothScroller from "@/components/layout/SmoothScroller";
+import { Preloader } from "@/components/ui/Preloader";
 import "./globals.css";
 
 const spaceGrotesk = Space_Grotesk({
@@ -73,6 +74,7 @@ export default function RootLayout({
       <body
         className={`${spaceGrotesk.variable} grain-overlay bg-[#0a0a0f] text-[#f8fafc] font-sans antialiased overflow-x-hidden`}
       >
+        <Preloader />
         <CustomCursor />
         <Navbar />
         <SmoothScroller>{children}</SmoothScroller>

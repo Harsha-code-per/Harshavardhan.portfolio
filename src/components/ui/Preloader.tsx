@@ -1,63 +1,104 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useProgress } from "@react-three/drei";
 import { useGSAP } from "@gsap/react";
 import { gsap } from "@/lib/gsap";
 
-const quotes = [
-  "Initializing WebGL Engine...",
-  "Compiling Shaders...",
-  "Loading Neural Pathways...",
-  "Constructing Digital Interfaces...",
-  "Ready."
-];
-
 export function Preloader() {
   const { progress } = useProgress();
-  const [quoteIndex, setQuoteIndex] = useState(0);
+  const [timeIsUp, setTimeIsUp] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
+  const preloaderRef = useRef<HTMLDivElement>(null);
+  const introPlayedRef = useRef(false);
+  const exitStartedRef = useRef(false);
+  const readyToExit = progress >= 100 && timeIsUp;
 
   useEffect(() => {
-    if (!isVisible) {
-      return;
-    }
+    const preloaderWindow = window as Window & { __preloaderComplete?: boolean };
+    preloaderWindow.__preloaderComplete = false;
+  }, []);
 
-    let index = 0;
-    if (progress < 20) index = 0;
-    else if (progress < 50) index = 1;
-    else if (progress < 80) index = 2;
-    else if (progress < 100) index = 3;
-    else index = 4;
+  useEffect(() => {
+    const timer = window.setTimeout(() => {
+      setTimeIsUp(true);
+    }, 5000);
 
-    if (index !== quoteIndex) {
-      gsap.to(".quote-text", {
-        opacity: 0,
-        duration: 0.2,
-        onComplete: () => {
-          setQuoteIndex(index);
-          gsap.to(".quote-text", { opacity: 1, duration: 0.3 });
-        }
-      });
-    }
-  }, [isVisible, progress, quoteIndex]);
+    return () => {
+      window.clearTimeout(timer);
+    };
+  }, []);
 
   useGSAP(
     () => {
-      if (!isVisible || progress < 100) {
+      if (!isVisible) {
         return;
       }
 
-      gsap.to(".progress-text", { y: "-100%", duration: 0.5, ease: "power3.in" });
-      gsap.to(".preloader", {
-        y: "-100vh",
-        duration: 1,
-        ease: "expo.inOut",
-        delay: 0.4,
-        onComplete: () => setIsVisible(false),
-      });
+      gsap.ticker.lagSmoothing(1000, 16);
+
+      if (!introPlayedRef.current) {
+        introPlayedRef.current = true;
+        gsap
+          .timeline()
+          .to(".manifesto-text", {
+            y: 0,
+            opacity: 1,
+            duration: 0.9,
+            ease: "expo.out",
+            delay: 0.2,
+          })
+          .to(
+            ".counter-text",
+            {
+              y: 0,
+              opacity: 1,
+              duration: 0.9,
+              ease: "expo.out",
+            },
+            "-=0.65"
+          )
+          .to(
+            ".loading-details",
+            {
+              opacity: 1,
+              duration: 0.8,
+              ease: "power2.out",
+            },
+            "-=0.45"
+          );
+      }
+
+      if (!readyToExit || exitStartedRef.current) {
+        return;
+      }
+
+      exitStartedRef.current = true;
+      gsap
+        .timeline()
+        .to([".manifesto-text", ".counter-text", ".loading-details"], {
+          opacity: 0,
+          y: -24,
+          duration: 0.5,
+          stagger: 0.08,
+          ease: "power2.inOut",
+        })
+        .to(
+          preloaderRef.current,
+          {
+            y: "-100vh",
+            duration: 1.2,
+            ease: "expo.inOut",
+            onComplete: () => {
+              (window as Window & { __preloaderComplete?: boolean }).__preloaderComplete = true;
+              window.dispatchEvent(new CustomEvent("preloaderComplete"));
+              setIsVisible(false);
+            },
+          },
+          "-=0.1"
+        );
     },
-    { dependencies: [isVisible, progress] }
+    { dependencies: [isVisible, readyToExit], scope: preloaderRef }
   );
 
   useEffect(() => {
@@ -78,15 +119,32 @@ export function Preloader() {
   }
 
   return (
-    <div className="preloader fixed inset-0 z-[2000] bg-[#050505] flex flex-col items-center justify-center text-white pointer-events-auto">
-      <div className="text-[10vw] font-black overflow-hidden">
-        <span className="progress-text inline-block">{Math.round(progress)}%</span>
+    <div
+      ref={preloaderRef}
+      className="flex flex-col items-center justify-center text-white overflow-hidden"
+      style={{
+        position: "fixed",
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        zIndex: 999999,
+        backgroundColor: "#050505",
+      }}
+    >
+      <div className="overflow-hidden mb-4">
+        <p className="manifesto-text text-xs md:text-sm tracking-[0.3em] text-cyan-400 font-medium uppercase opacity-0 translate-y-full">
+          Immersive Experiences Ahead
+        </p>
       </div>
-      <div className="w-64 h-[2px] bg-white/20 mt-8 overflow-hidden rounded-full">
-        <div className="progress-bar h-full bg-cyan-400 transition-all duration-300 ease-out" style={{ width: progress + "%" }}></div>
+      <div className="overflow-hidden">
+        <h2 className="counter-text text-[clamp(4rem,10vw,8rem)] font-black leading-none opacity-0 translate-y-full">
+          {Math.round(progress)}%
+        </h2>
       </div>
-      <div className="mt-6 text-sm text-neutral-400 font-mono tracking-widest h-6">
-        <span className="quote-text opacity-100 block">{quotes[quoteIndex]}</span>
+      <div className="absolute bottom-10 left-10 text-xs font-mono text-neutral-500 loading-details opacity-0">
+        <p>Compiling WebGL Shaders...</p>
+        <p>Allocating VRAM...</p>
       </div>
     </div>
   );
