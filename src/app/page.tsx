@@ -3,10 +3,10 @@
 import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import { Footer } from "@/components/layout/Footer";
+import { About } from "@/components/ui/About";
 import { ContactSection } from "@/components/ui/ContactSection";
 import { Hero } from "@/components/ui/Hero";
 import { HorizontalProjects } from "@/components/ui/HorizontalProjects";
-import { MaskedAbout } from "@/components/ui/MaskedAbout";
 import { ResearchSection } from "@/components/ui/ResearchSection";
 import { SkillsBento } from "@/components/ui/SkillsBento";
 import { SportsSection } from "@/components/ui/SportsSection";
@@ -81,8 +81,12 @@ export default function Home() {
       className="relative"
       style={{ background: "var(--bg-base)" }}
     >
-      <Hero />
-      <MaskedAbout />
+      <div id="hero-master-container" className="h-screen w-full relative z-0">
+        <Hero />
+      </div>
+      <div className="relative z-10 mt-[120vh]">
+        <About />
+      </div>
       <WorkShowcase />
       <HorizontalProjects />
       <SkillsBento />

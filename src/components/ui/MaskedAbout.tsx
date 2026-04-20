@@ -119,8 +119,7 @@ export function MaskedAbout() {
     <section
       id="about"
       ref={sectionRef}
-      className="relative flex min-h-[100dvh] w-full items-center justify-center overflow-visible px-[clamp(1rem,5vw,4rem)] py-20"
-      style={{ background: "var(--bg-base)" }}
+      className="relative z-10 flex min-h-[100dvh] w-full items-center justify-center overflow-visible bg-[#050505]/95 px-[clamp(1rem,5vw,4rem)] py-20 backdrop-blur-sm"
     >
       <div
         ref={cardRef}

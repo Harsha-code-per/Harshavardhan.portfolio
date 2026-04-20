@@ -139,9 +139,9 @@ export function Navbar() {
   return (
     <header
       ref={navRef}
-      className={`fixed left-0 top-0 z-[1000] w-full border-b border-transparent px-4 py-5 transition-all duration-300 ${
+      className={`fixed left-0 top-0 z-1000 w-full border-b border-transparent px-4 py-5 transition-all duration-300 ${
         isScrolled
-          ? "nav-scrolled border-[var(--border-default)]"
+          ? "nav-scrolled border-(--border-default)"
           : "bg-transparent"
       }`}
     >
@@ -155,7 +155,7 @@ export function Navbar() {
               router.push("/");
             }
           }}
-          className="font-mono text-lg tracking-[0.18em] text-[var(--accent-primary-light)] transition-opacity hover:opacity-80"
+          className="font-mono text-lg tracking-[0.18em] text-(--accent-primary-light) transition-opacity hover:opacity-80"
           aria-label="Go to top"
         >
           Harshavardhan K
@@ -170,8 +170,8 @@ export function Navbar() {
                 onClick={() => scrollToSection(item.id)}
                 className={`relative z-10 text-sm font-medium uppercase tracking-[0.16em] transition-colors duration-200 ${
                   activeSection === item.id
-                    ? "text-[var(--text-primary)]"
-                    : "text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
+                    ? "text-foreground"
+                    : "text-(--text-secondary) hover:text-foreground"
                 }`}
               >
                 {item.label}
@@ -203,7 +203,7 @@ export function Navbar() {
 
         <button
           type="button"
-          className="text-[var(--text-primary)] lg:hidden"
+          className="text-foreground lg:hidden"
           onClick={() => setIsMenuOpen((open) => !open)}
           aria-label="Toggle menu"
         >
@@ -214,7 +214,7 @@ export function Navbar() {
       {/* ── Scroll progress bar ────────────────────────────────── */}
       <div
         ref={progressRef}
-        className="absolute bottom-0 left-0 h-[2px] w-full origin-left"
+        className="absolute bottom-0 left-0 h-0.5 w-full origin-left"
         style={{
           background:
             "linear-gradient(to right, var(--accent-primary), var(--accent-tertiary))",
@@ -225,7 +225,7 @@ export function Navbar() {
       {/* ── Mobile overlay ─────────────────────────────────────── */}
       <div
         ref={overlayRef}
-        className={`fixed inset-0 z-[990] flex flex-col items-center justify-center gap-8 bg-[var(--bg-base)] transition-opacity duration-300 lg:hidden ${
+        className={`fixed inset-0 z-990 flex flex-col items-center justify-center gap-8 bg-background transition-opacity duration-300 lg:hidden ${
           isMenuOpen
             ? "pointer-events-auto opacity-100"
             : "pointer-events-none opacity-0"
@@ -237,10 +237,10 @@ export function Navbar() {
             type="button"
             data-mobile-link
             onClick={() => scrollToSection(item.id)}
-            className={`text-3xl font-black uppercase tracking-[0.1em] transition-colors ${
+            className={`text-3xl font-black uppercase tracking-widest transition-colors ${
               activeSection === item.id
-                ? "text-[var(--accent-primary-light)]"
-                : "text-[var(--text-primary)]"
+                ? "text-(--accent-primary-light)"
+                : "text-foreground"
             }`}
           >
             {item.label}

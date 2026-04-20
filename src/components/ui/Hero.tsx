@@ -3,7 +3,7 @@
 import { useGSAP } from "@gsap/react";
 import SplitType from "split-type";
 import { HeroScene } from "@/components/canvas/HeroScene";
-import { gsap } from "@/lib/gsap";
+import { gsap, ScrollTrigger } from "@/lib/gsap";
 import { useRef } from "react";
 
 export function Hero() {
@@ -68,6 +68,57 @@ export function Hero() {
     { scope: container, dependencies: [] }
   );
 
+  useGSAP(
+    () => {
+      const pinTrigger = ScrollTrigger.create({
+        trigger: "#hero-master-container",
+        start: "top top",
+        end: "+=220%",
+        pin: true,
+        pinSpacing: false,
+      });
+
+      return () => {
+        pinTrigger.kill();
+      };
+    },
+    { dependencies: [] }
+  );
+
+  useGSAP(
+    () => {
+      const heroSection = container.current;
+      if (!heroSection) {
+        return;
+      }
+
+      const handoffTimeline = gsap.timeline({
+        scrollTrigger: {
+          trigger: "#hero-master-container",
+          start: "top top",
+          end: "+=100%",
+          scrub: true,
+          invalidateOnRefresh: true,
+        },
+      });
+
+      handoffTimeline
+        .to("#hero-scroll-wrapper", {
+          opacity: 0,
+          y: -100,
+          duration: 0.25,
+          ease: "none",
+        })
+        .to({}, { duration: 0.75 });
+
+      return () => {
+        handoffTimeline.scrollTrigger?.kill();
+        handoffTimeline.kill();
+      };
+    },
+    { scope: container, dependencies: [] }
+  );
+
   return (
     <section
       id="hero"
@@ -78,7 +129,7 @@ export function Hero() {
         <HeroScene />
       </div>
 
-      <div className="absolute inset-0 z-10 flex flex-col justify-center pt-24 lg:pt-0 px-8 lg:px-16 pointer-events-none w-full lg:w-[55vw] xl:w-[50vw]">
+      <div id="hero-scroll-wrapper" className="absolute inset-0 z-10 flex flex-col justify-center pt-24 lg:pt-0 px-8 lg:px-16 pointer-events-none w-full lg:w-[55vw] xl:w-[50vw]">
         
         {/* Eyebrow */}
         <p className="hero-anim text-cyan-400 text-xs md:text-sm tracking-widest uppercase mb-4 flex items-center gap-4 pointer-events-auto">
