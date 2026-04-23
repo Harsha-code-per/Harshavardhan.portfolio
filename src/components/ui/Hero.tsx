@@ -212,7 +212,6 @@ export function Hero() {
       {/* Scroll Indicator */}
       <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-2 opacity-70 animate-bounce pointer-events-none">
         <span className="text-xs uppercase tracking-widest text-[var(--chapter-muted)]">Scroll</span>
-        <div className="w-[1px] h-12 bg-gradient-to-b from-[var(--chapter-accent)] to-transparent"></div>
       </div>
     </section>
   );

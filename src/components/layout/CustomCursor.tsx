@@ -10,14 +10,30 @@ export default function CustomCursor() {
   const ringPos = useRef({ x: 0, y: 0 });
   const rafId = useRef(0);
 
-  const onEnter = useCallback(() => {
+  const cursorTextRef = useRef<HTMLSpanElement>(null);
+
+  const onEnter = useCallback((e: Event) => {
     dotRef.current?.classList.add("cursor-hover");
     ringRef.current?.classList.add("cursor-hover");
+    
+    const target = e.currentTarget as HTMLElement;
+    const text = target.getAttribute("data-cursor-text");
+    if (text && cursorTextRef.current) {
+      cursorTextRef.current.textContent = text;
+      cursorTextRef.current.style.opacity = "1";
+      ringRef.current?.classList.add("has-text");
+      dotRef.current?.classList.add("hidden-dot");
+    }
   }, []);
 
   const onLeave = useCallback(() => {
     dotRef.current?.classList.remove("cursor-hover");
     ringRef.current?.classList.remove("cursor-hover");
+    dotRef.current?.classList.remove("hidden-dot");
+    ringRef.current?.classList.remove("has-text");
+    if (cursorTextRef.current) {
+      cursorTextRef.current.style.opacity = "0";
+    }
   }, []);
 
   useEffect(() => {
@@ -138,7 +154,9 @@ export default function CustomCursor() {
   return (
     <>
       <div ref={dotRef} className="cursor-dot" aria-hidden="true" />
-      <div ref={ringRef} className="cursor-ring" aria-hidden="true" />
+      <div ref={ringRef} className="cursor-ring" aria-hidden="true">
+        <span ref={cursorTextRef} className="cursor-text" />
+      </div>
     </>
   );
 }

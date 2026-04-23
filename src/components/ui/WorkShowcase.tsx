@@ -26,7 +26,6 @@ export function WorkShowcase() {
 
   const sectionRef = useRef<HTMLElement | null>(null);
   const stageRef = useRef<HTMLDivElement | null>(null);
-  const [activeIndex, setActiveIndex] = useState(0);
   const activeIndexRef = useRef(0);
 
   useGSAP(
@@ -90,7 +89,23 @@ export function WorkShowcase() {
             const idx = Math.min(Math.round(self.progress * maxStep), maxStep);
             if (idx !== activeIndexRef.current) {
               activeIndexRef.current = idx;
-              setActiveIndex(idx);
+              
+              const dots = document.querySelectorAll('.progress-dot');
+              dots.forEach((dot, i) => {
+                const el = dot as HTMLElement;
+                if (i === idx) {
+                  el.style.width = '24px';
+                  el.style.background = progressColors[i % progressColors.length];
+                } else {
+                  el.style.width = '8px';
+                  el.style.background = 'rgba(255,255,255,0.16)';
+                }
+              });
+              
+              const text = document.querySelector('.progress-text');
+              if (text) {
+                text.textContent = `${String(idx + 1).padStart(2, '0')}/${String(workExperience.length).padStart(2, '0')}`;
+              }
             }
           },
         },
@@ -105,6 +120,8 @@ export function WorkShowcase() {
               y: "-12%",
               scale: 0.94,
               opacity: 0.35,
+              rotateX: 8,
+              transformPerspective: 1200,
               filter: "blur(8px) brightness(0.65)",
               duration: 1,
               ease: "power2.inOut",
@@ -119,6 +136,7 @@ export function WorkShowcase() {
               y: "0%",
               opacity: 1,
               scale: 1,
+              rotateX: 0,
               duration: 1,
               ease: "power3.out",
               overwrite: "auto",
@@ -159,19 +177,18 @@ export function WorkShowcase() {
           {workExperience.map((_, index) => (
             <span
               key={index}
-              className="h-2 rounded-full transition-all duration-300"
+              className="progress-dot h-2 rounded-full transition-all duration-300"
               style={{
-                width: activeIndex === index ? "24px" : "8px",
+                width: index === 0 ? "24px" : "8px",
                 background:
-                  activeIndex === index
-                    ? progressColors[index % progressColors.length]
+                  index === 0
+                    ? progressColors[0]
                     : "rgba(255,255,255,0.16)",
               }}
             />
           ))}
-          <span className="ml-2 font-mono text-xs text-[var(--chapter-muted)]">
-            {String(activeIndex + 1).padStart(2, "0")}/
-            {String(workExperience.length).padStart(2, "0")}
+          <span className="progress-text ml-2 font-mono text-xs text-[var(--chapter-muted)]">
+            01/{String(workExperience.length).padStart(2, "0")}
           </span>
         </div>
 
@@ -204,7 +221,7 @@ export function WorkShowcase() {
                       }}
                     >
                       <div
-                        className="pointer-events-none absolute inset-0"
+                        className="pointer-events-none absolute inset-0 mix-blend-color-dodge"
                         style={{
                           background: `radial-gradient(circle_at_18%_22%, ${accentSoft}, transparent 58%), radial-gradient(circle_at_86%_80%, ${accentSoft}, transparent 48%)`,
                         }}
@@ -215,7 +232,10 @@ export function WorkShowcase() {
                             <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-[var(--chapter-muted)]">
                               {work.period}
                             </p>
-                            <h3 className="font-[var(--font-space)] text-[clamp(3.2rem,8.8vw,7.4rem)] font-black uppercase leading-[0.86] tracking-[-0.045em] text-[var(--chapter-ink)]">
+                            <h3 
+                              className="font-[var(--font-serif)] text-[clamp(3.2rem,8.8vw,7.4rem)] font-normal capitalize leading-[0.86] tracking-[-0.02em] text-[var(--chapter-ink)]"
+                              style={{ fontFamily: "var(--font-serif)" }}
+                            >
                               {work.organization}
                             </h3>
                           </div>
@@ -290,7 +310,7 @@ export function WorkShowcase() {
                       }}
                     >
                       <div
-                        className="pointer-events-none absolute inset-0"
+                        className="pointer-events-none absolute inset-0 mix-blend-color-dodge"
                         style={{
                           background: `radial-gradient(circle_at_16%_22%, ${accentSoft}, transparent 58%), radial-gradient(circle_at_84%_82%, ${accentSoft}, transparent 48%)`,
                         }}
@@ -300,7 +320,10 @@ export function WorkShowcase() {
                           <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-[var(--chapter-muted)]">
                             {work.period}
                           </p>
-                          <h3 className="font-[var(--font-space)] text-[clamp(3.2rem,10vw,8rem)] font-black uppercase leading-[0.84] tracking-[-0.05em] text-[var(--chapter-ink)]">
+                          <h3 
+                            className="font-[var(--font-serif)] text-[clamp(3.2rem,10vw,8rem)] font-normal capitalize leading-[0.84] tracking-[-0.02em] text-[var(--chapter-ink)]"
+                            style={{ fontFamily: "var(--font-serif)" }}
+                          >
                             {work.organization}
                           </h3>
                           <div className="flex items-center gap-3">

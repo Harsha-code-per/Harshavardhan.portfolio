@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Space_Grotesk } from "next/font/google";
+import { Space_Grotesk, Instrument_Serif } from "next/font/google";
 import { Toaster } from "sonner";
 import CustomCursor from "@/components/layout/CustomCursor";
 import { Navbar } from "@/components/layout/Navbar";
@@ -11,6 +11,12 @@ import "./globals.css";
 const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
   variable: "--font-space",
+});
+
+const instrumentSerif = Instrument_Serif({
+  weight: "400",
+  subsets: ["latin"],
+  variable: "--font-serif",
 });
 
 export const metadata: Metadata = {
@@ -53,7 +59,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={spaceGrotesk.variable}>
+    <html lang="en" className={`${spaceGrotesk.variable} ${instrumentSerif.variable}`}>
       <head>
         <script
           type="application/ld+json"
@@ -73,10 +79,9 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${spaceGrotesk.variable} bg-[#0c0b0a] text-[#f4f0ea] font-sans antialiased overflow-x-hidden`}
+        className={`${spaceGrotesk.variable} ${instrumentSerif.variable} bg-[#0c0b0a] text-[#f4f0ea] font-sans antialiased overflow-x-hidden`}
         data-preloader-state="loading"
       >
-        <div className="grain-overlay" aria-hidden="true" />
         <Preloader />
         <CustomCursor />
         <div id="site-shell" className="relative w-full">

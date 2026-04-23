@@ -15,30 +15,12 @@ export default function ScrollCoordinator() {
   useEffect(() => {
     setupGsap();
 
-    /* Velocity-driven skew effect */
-    const skewSetter = gsap.quickTo('[data-skew]', 'skewY', { duration: 0.8, ease: 'power3' });
-    const clamp = gsap.utils.clamp(-6, 6);
     let ticking = false;
-
-    const onScroll = () => {
-      if (ticking && lenis) {
-        const velocity = lenis.velocity;
-        skewSetter(clamp(-velocity / 600));
-      }
-    };
-
-    const handleScrollStart = () => {
-      ticking = true;
-    };
-
-    const handleScrollEnd = () => {
-      skewSetter(0);
-      ticking = false;
-    };
+    const handleScrollStart = () => { ticking = true; };
+    const handleScrollEnd = () => { ticking = false; };
 
     ScrollTrigger.addEventListener('scrollStart', handleScrollStart);
     ScrollTrigger.addEventListener('scrollEnd', handleScrollEnd);
-    gsap.ticker.add(onScroll);
 
     const scheduleRefresh = () => {
       if (rafRef.current !== null) {
@@ -70,10 +52,6 @@ export default function ScrollCoordinator() {
       scheduleRefresh();
     };
 
-    const handleResize = () => {
-      scheduleRefresh();
-    };
-
     const handleVisibility = () => {
       if (document.visibilityState === "visible") {
         scheduleRefresh();
@@ -99,10 +77,8 @@ export default function ScrollCoordinator() {
         window.clearTimeout(timeoutRef.current);
       }
 
-      gsap.ticker.remove(onScroll);
       ScrollTrigger.removeEventListener('scrollStart', handleScrollStart);
       ScrollTrigger.removeEventListener('scrollEnd', handleScrollEnd);
-      // resizeObserverRef.current?.disconnect();
       window.removeEventListener("load", handleLoad);
       window.removeEventListener("preloaderComplete", handlePreloaderComplete);
       document.removeEventListener("visibilitychange", handleVisibility);

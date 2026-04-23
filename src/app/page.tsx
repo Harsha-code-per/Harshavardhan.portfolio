@@ -80,7 +80,6 @@ export default function Home() {
       ref={mainRef}
       className="relative w-full"
       data-chapter="hero"
-      data-skew
     >
       <div id="hero-master-container" className="h-screen w-full relative z-0">
         <Hero />

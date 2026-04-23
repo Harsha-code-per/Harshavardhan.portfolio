@@ -81,6 +81,23 @@ export function HorizontalProjects() {
             },
           }
         );
+
+        const bgs = card.querySelectorAll(".project-bg-number");
+        gsap.fromTo(bgs, 
+          { x: -100 },
+          {
+            x: 100,
+            ease: "none",
+            scrollTrigger: {
+              trigger: card,
+              containerAnimation: trackTween,
+              start: "left right",
+              end: "right left",
+              scrub: true,
+              invalidateOnRefresh: true,
+            },
+          }
+        );
       });
     },
     { scope: wrapperRef, dependencies: [] }
@@ -153,7 +170,10 @@ export function HorizontalProjects() {
                 }}
               >
                 {/* Background number */}
-                <span className="pointer-events-none absolute right-8 top-1/2 -translate-y-1/2 select-none text-[clamp(12rem,25vw,22rem)] font-black text-white opacity-[0.03]">
+                <span 
+                  className="project-bg-number pointer-events-none absolute right-8 top-1/2 -translate-y-1/2 select-none text-[clamp(12rem,25vw,22rem)] font-black text-white opacity-[0.03]"
+                  style={{ fontFamily: "var(--font-serif)" }}
+                >
                   {String(index + 1).padStart(2, "0")}
                 </span>
 
@@ -174,6 +194,7 @@ export function HorizontalProjects() {
                   <h2
                     data-project-reveal
                     className="mt-4 text-[clamp(3rem,8vw,7rem)] font-black leading-[0.92] tracking-[-0.03em] text-[var(--chapter-ink)]"
+                    style={{ fontFamily: "var(--font-serif)", fontWeight: "normal" }}
                   >
                     {project.title}
                   </h2>
@@ -220,7 +241,7 @@ export function HorizontalProjects() {
 
                   <motion.button
                     type="button"
-                    data-cursor="hover"
+                    data-cursor-text="View"
                     data-project-reveal
                     className="mt-10 w-fit rounded-full border px-8 py-3 text-sm font-semibold text-[var(--chapter-ink)] transition"
                     style={{ borderColor: "var(--chapter-accent)" }}

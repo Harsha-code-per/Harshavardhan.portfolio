@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, Suspense } from "react";
+import React, { useEffect, useRef, useState, Suspense, useMemo } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { Environment, Preload, Points, PointMaterial } from "@react-three/drei";
 import * as THREE from "three";
@@ -54,6 +54,8 @@ function SceneContent({ isMobile, prefersReducedMotion }: { isMobile: boolean, p
     const elapsed = state.clock.getElapsedTime();
     if (pivotRef.current) {
       pivotRef.current.position.y = Math.sin(elapsed * 0.8) * 0.12 - 0.06;
+      
+      pivotRef.current.position.y = Math.sin(elapsed * 0.8) * 0.12 - 0.06;
       pivotRef.current.rotation.z = Math.sin(elapsed * 0.35) * 0.02;
       pivotRef.current.rotation.y = proxy.current.rotationY;
       pivotRef.current.scale.setScalar(proxy.current.scale);
@@ -67,14 +69,17 @@ function SceneContent({ isMobile, prefersReducedMotion }: { isMobile: boolean, p
     }
   });
 
-  const particlePositions = new Float32Array((isMobile || prefersReducedMotion ? 48 : 92) * 3);
-  for (let index = 0; index < particlePositions.length; index += 3) {
-    particlePositions[index] = (Math.random() - 0.5) * 24;
-    particlePositions[index + 1] = (Math.random() - 0.5) * 16;
-    particlePositions[index + 2] = (Math.random() - 0.5) * 18;
-  }
+  const particlePositions = React.useMemo(() => {
+    const positions = new Float32Array((isMobile || prefersReducedMotion ? 48 : 92) * 3);
+    for (let index = 0; index < positions.length; index += 3) {
+      positions[index] = (Math.random() - 0.5) * 24;
+      positions[index + 1] = (Math.random() - 0.5) * 16;
+      positions[index + 2] = (Math.random() - 0.5) * 18;
+    }
+    return positions;
+  }, [isMobile, prefersReducedMotion]);
 
-  const modelScale = (isMobile || prefersReducedMotion ? 0.4 : 0.58) * (18 / 12);
+  const modelScale = isMobile || prefersReducedMotion ? 0.18 : 0.28;
 
   return (
     <>
@@ -84,8 +89,6 @@ function SceneContent({ isMobile, prefersReducedMotion }: { isMobile: boolean, p
         position={[10, 12, 8]}
         intensity={isMobile || prefersReducedMotion ? 2.5 : 3.2}
         color="#ffddb4"
-        castShadow
-        shadow-mapSize={[1024, 1024]}
       >
         <orthographicCamera attach="shadow-camera" args={[-12, 12, 12, -12, 0.5, 40]} />
       </directionalLight>
@@ -94,18 +97,15 @@ function SceneContent({ isMobile, prefersReducedMotion }: { isMobile: boolean, p
 
       <group ref={pivotRef}>
         <Model 
-          position={[0, 0.5, 0]} 
+          position={[2.8, -1.8, 0]} 
           scale={modelScale} 
-          rotation={[0.08, -0.2, 0]} 
+          rotation={[0.15, 0.4, 0]} 
         />
       </group>
 
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -2.8, 0]} receiveShadow>
-        <circleGeometry args={[8, 64]} />
-        <meshStandardMaterial color="#090807" roughness={1} metalness={0} transparent opacity={0.0} />
-      </mesh>
 
-      <mesh ref={shadowRef} rotation={[-Math.PI / 2, 0, 0]} position={[0, -3.95, 0.4]} scale={[1.15, 0.8, 1.15]}>
+
+      <mesh ref={shadowRef} rotation={[-Math.PI / 2, 0, 0]} position={[2.8, -3.2, 0]} scale={[0.8, 0.6, 0.8]}>
         <circleGeometry args={[4.8, 64]} />
         <meshBasicMaterial color="#000000" transparent opacity={0.28} depthWrite={false} />
       </mesh>
@@ -154,7 +154,6 @@ export function HeroScene() {
       camera={{ position: [0, 1, 6], fov: 45 }}
       dpr={isMobile ? 1 : [1, 2]}
       gl={{ antialias: !(isMobile || prefersReducedMotion), powerPreference: "high-performance" }}
-      shadows={!(isMobile || prefersReducedMotion)}
       className="absolute inset-0 h-full w-full bg-[radial-gradient(circle_at_30%_20%,rgba(230,95,43,0.18),transparent_35%),radial-gradient(circle_at_75%_35%,rgba(234,179,8,0.12),transparent_32%),linear-gradient(135deg,#0c0b0a_0%,#121110_100%)]"
     >
       <Suspense fallback={null}>
