@@ -33,7 +33,7 @@ import {
   FaVideo,
 } from "react-icons/fa";
 import { skillCategories } from "@/data/skills";
-import { ScrollTrigger, gsap, setupGsap } from "@/lib/gsap";
+import { gsap, setupGsap } from "@/lib/gsap";
 
 /* Proper icon mapping — no fallback to generic JS icon */
 const techIcons: Record<string, IconType> = {
@@ -204,14 +204,6 @@ export function SkillsBento() {
           invalidateOnRefresh: true,
         },
       });
-
-      const refreshFrame = requestAnimationFrame(() => {
-        ScrollTrigger.refresh();
-      });
-
-      return () => {
-        cancelAnimationFrame(refreshFrame);
-      };
     },
     { scope: sectionRef, dependencies: [] }
   );
@@ -221,9 +213,9 @@ export function SkillsBento() {
       id="skills"
       ref={sectionRef}
       className="flex min-h-[100dvh] w-full flex-col items-center justify-center px-[clamp(1rem,5vw,4rem)] py-20"
-      style={{ background: "var(--bg-base)" }}
+      style={{ background: "var(--chapter-bg)" }}
     >
-      <h2 className="text-gradient-violet mb-4 text-center text-[clamp(3rem,7vw,6rem)] font-black leading-[0.95] tracking-[-0.02em]">
+      <h2 className="text-gradient-retro mb-4 text-center text-[clamp(3rem,7vw,6rem)] font-black leading-[0.95] tracking-[-0.02em]">
         Skills
       </h2>
       <p className="mb-14 max-w-3xl text-center text-sm uppercase tracking-[0.28em] text-[var(--text-secondary)] md:text-base">

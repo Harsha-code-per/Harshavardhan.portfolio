@@ -58,10 +58,10 @@ export function SportsSection() {
       style={{
         background: `repeating-linear-gradient(
           -45deg,
-          var(--bg-base),
-          var(--bg-base) 10px,
-          var(--bg-surface) 10px,
-          var(--bg-surface) 11px
+          var(--chapter-bg),
+          var(--chapter-bg) 10px,
+          var(--chapter-surface) 10px,
+          var(--chapter-surface) 11px
         )`,
       }}
     >

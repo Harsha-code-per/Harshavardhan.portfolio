@@ -95,8 +95,6 @@ export function Navbar() {
             })
           );
         });
-
-        ScrollTrigger.refresh();
       });
 
       return () => {
@@ -104,42 +102,42 @@ export function Navbar() {
         triggers.forEach((trigger) => trigger.kill());
       };
     },
-    { scope: navRef, dependencies: [isHomePage] }
+    { scope: navRef, dependencies: [] }
   );
 
   /* ── Mobile menu animations ────────────────────────────────────── */
-  useGSAP(
-    () => {
-      const overlay = overlayRef.current;
-      if (!overlay || !isMenuOpen) {
-        return;
-      }
+  useEffect(() => {
+    const overlay = overlayRef.current;
+    if (!overlay || !isMenuOpen) {
+      return;
+    }
 
-      const links =
-        overlay.querySelectorAll<HTMLElement>("[data-mobile-link]");
-      if (links.length === 0) {
-        return;
-      }
+    const links = overlay.querySelectorAll<HTMLElement>("[data-mobile-link]");
+    if (links.length === 0) {
+      return;
+    }
 
-      gsap.fromTo(
-        links,
-        { y: 36, opacity: 0 },
-        {
-          y: 0,
-          opacity: 1,
-          stagger: 0.08,
-          duration: 0.7,
-          ease: "power3.out",
-        }
-      );
-    },
-    { scope: overlayRef, dependencies: [isMenuOpen] }
-  );
+    const tween = gsap.fromTo(
+      links,
+      { y: 36, opacity: 0 },
+      {
+        y: 0,
+        opacity: 1,
+        stagger: 0.08,
+        duration: 0.7,
+        ease: "power3.out",
+      }
+    );
+
+    return () => {
+      tween.kill();
+    };
+  }, [isMenuOpen]);
 
   return (
     <header
       ref={navRef}
-      className={`fixed left-0 top-0 z-1000 w-full border-b border-transparent px-4 py-5 transition-all duration-300 ${
+      className={`fixed left-0 top-0 z-[9999] w-full border-b border-transparent px-4 py-5 transition-all duration-300 ${
         isScrolled
           ? "nav-scrolled border-(--border-default)"
           : "bg-transparent"
@@ -225,7 +223,7 @@ export function Navbar() {
       {/* ── Mobile overlay ─────────────────────────────────────── */}
       <div
         ref={overlayRef}
-        className={`fixed inset-0 z-990 flex flex-col items-center justify-center gap-8 bg-background transition-opacity duration-300 lg:hidden ${
+        className={`fixed inset-0 z-[9998] flex flex-col items-center justify-center gap-8 bg-background transition-opacity duration-300 lg:hidden ${
           isMenuOpen
             ? "pointer-events-auto opacity-100"
             : "pointer-events-none opacity-0"

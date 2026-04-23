@@ -1,131 +1,166 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import type { Group } from "three";
-import { Canvas } from "@react-three/fiber";
-import { Environment, Float, ContactShadows, OrbitControls, Center } from "@react-three/drei";
-import { useGSAP } from "@gsap/react";
-import { Model as RetroComputer } from "./RetroComputer";
-import { gsap, setupGsap } from "@/lib/gsap";
+import { useEffect, useRef, useState, Suspense } from "react";
+import { Canvas, useFrame } from "@react-three/fiber";
+import { Environment, Preload, Points, PointMaterial } from "@react-three/drei";
+import * as THREE from "three";
+import { gsap } from "@/lib/gsap";
+import { Model } from "./RetroComputer";
+import { MathUtils } from "three";
 
-function SceneContent({ isMobile }: { isMobile: boolean }) {
-  const target = [isMobile ? 0 : 2.5, isMobile ? -2 : -0.5, 0] as const;
-  const modelRigRef = useRef<Group>(null);
+function SceneContent({ isMobile, prefersReducedMotion }: { isMobile: boolean, prefersReducedMotion: boolean }) {
+  const pivotRef = useRef<THREE.Group>(null);
+  const shadowRef = useRef<THREE.Mesh>(null);
+  const particlesRef = useRef<THREE.Points>(null);
+  const proxy = useRef({
+    rotationY: 0,
+    scale: isMobile || prefersReducedMotion ? 0.92 : 0.88,
+  });
 
-  useGSAP(
-    () => {
-      const modelRig = modelRigRef.current;
-      if (!modelRig) {
-        return;
-      }
+  useEffect(() => {
+    const timeline = gsap.timeline({
+      scrollTrigger: {
+        trigger: "#hero-master-container",
+        start: "top top",
+        end: "+=120%",
+        scrub: 1.2,
+        invalidateOnRefresh: true,
+      },
+    });
 
-      const startX = modelRig.position.x;
-      const startY = modelRig.position.y;
-      const startZ = modelRig.position.z;
-      const startRotationY = modelRig.rotation.y;
-      const startScale = modelRig.scale.x;
-      const handoffScale = startScale * 0.8;
+    // We animate a proxy object and apply it in useFrame
+    proxy.current.rotationY = 0;
+    proxy.current.scale = 1;
+    
+    timeline
+      .to(proxy.current, {
+        rotationY: Math.PI * 2,
+        duration: 1,
+        ease: "none",
+      }, 0)
+      .to(proxy.current, {
+        scale: isMobile || prefersReducedMotion ? 0.92 : 0.88,
+        duration: 1,
+        ease: "none",
+      }, 0);
 
-      const handoffTimeline = gsap.timeline({
-        scrollTrigger: {
-          trigger: "#hero-master-container",
-          start: "top top",
-          end: "+=100%",
-          scrub: 1,
-          invalidateOnRefresh: true,
-        },
-      });
+    return () => {
+      timeline.scrollTrigger?.kill();
+      timeline.kill();
+    };
+  }, [isMobile, prefersReducedMotion]);
 
-      handoffTimeline
-        .to({}, { duration: 0.25 })
-        .to(
-          modelRig.rotation,
-          {
-            y: Math.PI * 2,
-            duration: 0.75,
-            ease: "none",
-          },
-          0.25
-        )
-        .to(
-          modelRig.scale,
-          {
-            x: handoffScale,
-            y: handoffScale,
-            z: handoffScale,
-            duration: 0.75,
-            ease: "none",
-          },
-          0.25
-        );
+  useFrame((state) => {
+    const elapsed = state.clock.getElapsedTime();
+    if (pivotRef.current) {
+      pivotRef.current.position.y = Math.sin(elapsed * 0.8) * 0.12 - 0.06;
+      pivotRef.current.rotation.z = Math.sin(elapsed * 0.35) * 0.02;
+      pivotRef.current.rotation.y = proxy.current.rotationY;
+      pivotRef.current.scale.setScalar(proxy.current.scale);
+    }
+    if (shadowRef.current) {
+      shadowRef.current.scale.setScalar(1 + Math.sin(elapsed * 0.8) * 0.04);
+    }
+    if (particlesRef.current) {
+      particlesRef.current.rotation.y = elapsed * 0.04;
+      particlesRef.current.rotation.x = Math.sin(elapsed * 0.1) * 0.05;
+    }
+  });
 
-      return () => {
-        handoffTimeline.scrollTrigger?.kill();
-        handoffTimeline.kill();
-        modelRig.position.set(startX, startY, startZ);
-        modelRig.rotation.y = startRotationY;
-        modelRig.scale.set(startScale, startScale, startScale);
-      };
-    },
-    { dependencies: [isMobile] }
-  );
+  const particlePositions = new Float32Array((isMobile || prefersReducedMotion ? 48 : 92) * 3);
+  for (let index = 0; index < particlePositions.length; index += 3) {
+    particlePositions[index] = (Math.random() - 0.5) * 24;
+    particlePositions[index + 1] = (Math.random() - 0.5) * 16;
+    particlePositions[index + 2] = (Math.random() - 0.5) * 18;
+  }
+
+  const modelScale = (isMobile || prefersReducedMotion ? 0.4 : 0.58) * (18 / 12);
 
   return (
     <>
-      <ambientLight intensity={0.6} />
-      <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} intensity={1} castShadow />
-      <group ref={modelRigRef}>
-        <Float speed={2} rotationIntensity={0} floatIntensity={0.5} floatingRange={[-0.1, 0.1]}>
-          <Center position={target}>
-            <RetroComputer scale={isMobile ? 0.25 : 0.4} rotation={[0, -0.15, 0]} />
-          </Center>
-        </Float>
+      <Environment preset="studio" />
+      <ambientLight intensity={isMobile || prefersReducedMotion ? 1.5 : 1.8} color="#fff3e8" />
+      <directionalLight
+        position={[10, 12, 8]}
+        intensity={isMobile || prefersReducedMotion ? 2.5 : 3.2}
+        color="#ffddb4"
+        castShadow
+        shadow-mapSize={[1024, 1024]}
+      >
+        <orthographicCamera attach="shadow-camera" args={[-12, 12, 12, -12, 0.5, 40]} />
+      </directionalLight>
+      <pointLight position={[-8, 4, 5]} intensity={isMobile || prefersReducedMotion ? 10 : 16} color="#e65f2b" distance={50} decay={2} />
+      <pointLight position={[7, 5, -8]} intensity={isMobile || prefersReducedMotion ? 7 : 11} color="#eab308" distance={50} decay={2} />
+
+      <group ref={pivotRef}>
+        <Model 
+          position={[0, 0.5, 0]} 
+          scale={modelScale} 
+          rotation={[0.08, -0.2, 0]} 
+        />
       </group>
-      <ContactShadows
-        position={[target[0], target[1] - 1, target[2]]}
-        opacity={0.5}
-        scale={isMobile ? 7 : 10}
-        blur={2.5}
-        far={4}
-      />
-      <Environment preset="city" />
-      <OrbitControls
-        target={target}
-        enableZoom={false}
-        enablePan={false}
-        maxPolarAngle={Math.PI / 2}
-        minPolarAngle={Math.PI / 4}
-        enableDamping={true}
-        dampingFactor={0.05}
-        makeDefault
-      />
+
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -2.8, 0]} receiveShadow>
+        <circleGeometry args={[8, 64]} />
+        <meshStandardMaterial color="#090807" roughness={1} metalness={0} transparent opacity={0.0} />
+      </mesh>
+
+      <mesh ref={shadowRef} rotation={[-Math.PI / 2, 0, 0]} position={[0, -3.95, 0.4]} scale={[1.15, 0.8, 1.15]}>
+        <circleGeometry args={[4.8, 64]} />
+        <meshBasicMaterial color="#000000" transparent opacity={0.28} depthWrite={false} />
+      </mesh>
+
+      <Points ref={particlesRef} positions={particlePositions} position={[0, -0.4, 0]}>
+        <PointMaterial
+          transparent
+          color="#f4f0ea"
+          size={isMobile || prefersReducedMotion ? 0.03 : 0.045}
+          sizeAttenuation={true}
+          depthWrite={false}
+          opacity={isMobile || prefersReducedMotion ? 0.16 : 0.22}
+        />
+      </Points>
     </>
   );
 }
 
 export function HeroScene() {
-  setupGsap();
-
+  const [isMounted, setIsMounted] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
 
   useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
+    setIsMobile(window.innerWidth < 768);
+    setPrefersReducedMotion(window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+    setIsMounted(true);
 
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
+    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    const handleMotionChange = () => setPrefersReducedMotion(mediaQuery.matches);
+
+    window.addEventListener("resize", handleResize);
+    mediaQuery.addEventListener("change", handleMotionChange);
 
     return () => {
-      window.removeEventListener("resize", checkMobile);
+      window.removeEventListener("resize", handleResize);
+      mediaQuery.removeEventListener("change", handleMotionChange);
     };
   }, []);
 
+  if (!isMounted) return null;
+
   return (
-    <div className="w-full h-full">
-      <Canvas dpr={[1, 2]} camera={{ position: [10, 7, 14], fov: 45 }} className="pointer-events-auto">
-        <SceneContent isMobile={isMobile} />
-      </Canvas>
-    </div>
+    <Canvas
+      camera={{ position: [0, 1, 6], fov: 45 }}
+      dpr={isMobile ? 1 : [1, 2]}
+      gl={{ antialias: !(isMobile || prefersReducedMotion), powerPreference: "high-performance" }}
+      shadows={!(isMobile || prefersReducedMotion)}
+      className="absolute inset-0 h-full w-full bg-[radial-gradient(circle_at_30%_20%,rgba(230,95,43,0.18),transparent_35%),radial-gradient(circle_at_75%_35%,rgba(234,179,8,0.12),transparent_32%),linear-gradient(135deg,#0c0b0a_0%,#121110_100%)]"
+    >
+      <Suspense fallback={null}>
+        <SceneContent isMobile={isMobile} prefersReducedMotion={prefersReducedMotion} />
+        <Preload all />
+      </Suspense>
+    </Canvas>
   );
 }

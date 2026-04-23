@@ -65,7 +65,7 @@ function ResearchCard({
       >
         {entry.area}
       </p>
-      <h3 className="text-gradient-violet mt-3 text-xl font-bold md:text-2xl">
+      <h3 className="text-gradient-retro mt-3 text-xl font-bold md:text-2xl">
         {entry.title}
       </h3>
       <p
@@ -150,7 +150,7 @@ export function ResearchSection() {
       id="research"
       ref={sectionRef}
       className="relative overflow-hidden px-[clamp(1rem,5vw,4rem)] py-20"
-      style={{ background: "var(--bg-surface)" }}
+      style={{ background: "var(--chapter-surface)" }}
     >
       {/* Orbital decoration */}
       <div className="pointer-events-none absolute right-[clamp(1rem,6vw,5rem)] top-16 hidden h-[clamp(12rem,18vw,16rem)] w-[clamp(12rem,18vw,16rem)] rounded-full border border-[var(--border-default)] lg:block">

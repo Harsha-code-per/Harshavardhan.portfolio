@@ -100,7 +100,7 @@ export function Footer() {
     <footer
       ref={footerRef}
       className="relative z-20 mt-8 border-t border-[var(--border-default)] py-14"
-      style={{ background: "var(--bg-base)" }}
+      style={{ background: "var(--chapter-bg)" }}
     >
       {/* Background text */}
       <p className="pointer-events-none absolute left-1/2 top-2 -translate-x-1/2 select-none text-center text-[clamp(4rem,10vw,8rem)] font-black uppercase leading-none text-white opacity-[0.03]">

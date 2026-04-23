@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useCallback } from "react";
+import { gsap } from "@/lib/gsap";
 
 export default function CustomCursor() {
   const dotRef = useRef<HTMLDivElement>(null);
@@ -24,13 +25,19 @@ export default function CustomCursor() {
       return;
     }
 
+    const finePointer = window.matchMedia("(pointer: fine)").matches;
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (!finePointer || reducedMotion) {
+      return;
+    }
+
     const dot = dotRef.current;
     const ring = ringRef.current;
     if (!dot || !ring) {
       return;
     }
 
-    const SELECTOR = 'a, button, [data-cursor="hover"], input, textarea, [role="button"]';
+    const SELECTOR = 'a, button, [data-cursor="hover"], input, textarea, [role="button"], [data-magnetic]';
 
     const bindElement = (el: Element) => {
       el.addEventListener("mouseenter", onEnter);
@@ -46,6 +53,20 @@ export default function CustomCursor() {
     const initialElements = document.querySelectorAll<HTMLElement>(SELECTOR);
     initialElements.forEach(bindElement);
 
+    /* Magnetic effect for data-magnetic elements */
+    document.querySelectorAll('[data-magnetic]').forEach((el) => {
+      el.addEventListener('mousemove', (e: Event) => {
+        const mouseEvent = e as MouseEvent;
+        const rect = (el as HTMLElement).getBoundingClientRect();
+        const x = mouseEvent.clientX - rect.left - rect.width / 2;
+        const y = mouseEvent.clientY - rect.top - rect.height / 2;
+        gsap.to(el, { x: x * 0.3, y: y * 0.3, duration: 0.6, ease: 'power3.out' });
+      });
+      el.addEventListener('mouseleave', () => {
+        gsap.to(el, { x: 0, y: 0, duration: 0.8, ease: 'elastic.out(1, 0.4)' });
+      });
+    });
+
     /* Observe DOM for dynamically added interactive elements */
     const observer = new MutationObserver((mutations) => {
       for (const mutation of mutations) {
@@ -55,6 +76,32 @@ export default function CustomCursor() {
               bindElement(node);
             }
             node.querySelectorAll<HTMLElement>(SELECTOR).forEach(bindElement);
+            
+            /* Bind magnetic effect to new elements */
+            if (node.matches('[data-magnetic]')) {
+              node.addEventListener('mousemove', (e: Event) => {
+                const mouseEvent = e as MouseEvent;
+                const rect = node.getBoundingClientRect();
+                const x = mouseEvent.clientX - rect.left - rect.width / 2;
+                const y = mouseEvent.clientY - rect.top - rect.height / 2;
+                gsap.to(node, { x: x * 0.3, y: y * 0.3, duration: 0.6, ease: 'power3.out' });
+              });
+              node.addEventListener('mouseleave', () => {
+                gsap.to(node, { x: 0, y: 0, duration: 0.8, ease: 'elastic.out(1, 0.4)' });
+              });
+            }
+            node.querySelectorAll<HTMLElement>('[data-magnetic]').forEach((magneticEl) => {
+              magneticEl.addEventListener('mousemove', (e: Event) => {
+                const mouseEvent = e as MouseEvent;
+                const rect = magneticEl.getBoundingClientRect();
+                const x = mouseEvent.clientX - rect.left - rect.width / 2;
+                const y = mouseEvent.clientY - rect.top - rect.height / 2;
+                gsap.to(magneticEl, { x: x * 0.3, y: y * 0.3, duration: 0.6, ease: 'power3.out' });
+              });
+              magneticEl.addEventListener('mouseleave', () => {
+                gsap.to(magneticEl, { x: 0, y: 0, duration: 0.8, ease: 'elastic.out(1, 0.4)' });
+              });
+            });
           }
         }
       }

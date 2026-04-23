@@ -1,7 +1,7 @@
 "use client";
 
 import { ReactLenis } from "lenis/react";
-import { useEffect, useRef, type ComponentProps, type ReactNode } from "react";
+import { useCallback, useEffect, useRef, useState, createContext, useContext, type ComponentProps, type ReactNode } from "react";
 import { ScrollTrigger, gsap, setupGsap } from "@/lib/gsap";
 
 type SmoothScrollerProps = {
@@ -11,11 +11,26 @@ type SmoothScrollerProps = {
 type LenisInstance = InstanceType<typeof import("lenis").default>;
 type LenisRefApi = { lenis?: LenisInstance | null };
 
+const LenisContext = createContext<LenisInstance | null>(null);
+
+export const useLenis = () => useContext(LenisContext);
+
 export default function SmoothScroller({ children }: SmoothScrollerProps) {
   const lenisRef = useRef<LenisInstance | null>(null);
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+  const handleLenisScroll = useCallback(() => {
+    ScrollTrigger.update();
+  }, []);
 
   useEffect(() => {
     setupGsap();
+    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const applyPreference = () => {
+      setPrefersReducedMotion(mediaQuery.matches);
+    };
+
+    applyPreference();
+    mediaQuery.addEventListener("change", applyPreference);
 
     /* Synchronise Lenis with GSAP's ticker so both animation systems share
        a single RAF loop. This eliminates the jank caused by having two
@@ -29,35 +44,46 @@ export default function SmoothScroller({ children }: SmoothScrollerProps) {
 
     return () => {
       gsap.ticker.remove(update);
+      mediaQuery.removeEventListener("change", applyPreference);
+      if (lenisRef.current) {
+        lenisRef.current.off("scroll", handleLenisScroll);
+      }
     };
-  }, []);
+  }, [handleLenisScroll]);
 
   return (
-    <ReactLenis
+    <LenisContext.Provider value={lenisRef.current}>
+      <ReactLenis
       root
       options={{
-        lerp: 0.1,
-        duration: 1.2,
-        smoothWheel: true,
-        // Lenis v1 uses `syncTouch`; false is equivalent to disabling smoothTouch.
+        lerp: prefersReducedMotion ? 0.25 : 0.08,
+        duration: prefersReducedMotion ? 0.8 : 1.4,
+        smoothWheel: !prefersReducedMotion,
         syncTouch: false,
-        touchMultiplier: 2,
+        touchMultiplier: prefersReducedMotion ? 1.2 : 2,
         autoResize: true,
-        autoRaf: false, // we drive RAF via gsap.ticker
+        autoRaf: false,
+        infinite: false,
       }}
       ref={(instance: LenisRefApi | null) => {
         const lenis = instance?.lenis;
-        if (lenis) {
-          lenisRef.current = lenis;
+        if (lenisRef.current === lenis) {
+          return;
+        }
 
-          /* Every Lenis scroll event should update ScrollTrigger positions */
-          lenis.on("scroll", () => {
-            ScrollTrigger.update();
-          });
+        if (lenisRef.current) {
+          lenisRef.current.off("scroll", handleLenisScroll);
+        }
+
+        lenisRef.current = lenis ?? null;
+
+        if (lenis) {
+          lenis.on("scroll", handleLenisScroll);
         }
       }}
-    >
-      {children as unknown as ComponentProps<typeof ReactLenis>["children"]}
-    </ReactLenis>
+      >
+        {children as unknown as ComponentProps<typeof ReactLenis>["children"]}
+      </ReactLenis>
+    </LenisContext.Provider>
   );
 }

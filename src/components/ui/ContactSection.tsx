@@ -77,7 +77,7 @@ export function ContactSection() {
       id="contact"
       ref={sectionRef}
       className="relative overflow-hidden px-[clamp(1rem,5vw,4rem)] py-20"
-      style={{ background: "var(--bg-base)" }}
+      style={{ background: "var(--chapter-bg)" }}
     >
       <div
         data-contact-shell
@@ -87,7 +87,7 @@ export function ContactSection() {
           <p className="text-xs uppercase tracking-[0.3em] text-[var(--accent-primary-light)]">
             Contact
           </p>
-          <h2 className="text-gradient-violet mt-3 text-[clamp(2.5rem,5vw,5rem)] font-black leading-[0.95] tracking-tight">
+          <h2 className="text-gradient-retro mt-3 text-[clamp(2.5rem,5vw,5rem)] font-black leading-[0.95] tracking-tight">
             Let&apos;s Build Something.
           </h2>
           <p className="mt-5 text-sm leading-relaxed text-[var(--text-secondary)] md:text-base">

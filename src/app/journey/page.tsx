@@ -3,7 +3,7 @@ import { TimelineExperience } from "@/components/ui/TimelineExperience";
 
 export default function JourneyPage() {
   return (
-    <main className="bg-[var(--bg-base)] pt-24">
+    <main data-chapter="journey" className="pt-24">
       <TimelineExperience />
       <Footer />
     </main>

@@ -7,8 +7,8 @@ export default function manifest(): MetadataRoute.Manifest {
     description: "AI, ML & Full Stack Engineer portfolio",
     start_url: "/",
     display: "standalone",
-    background_color: "#0a0a0f",
-    theme_color: "#7c3aed",
+    background_color: "#0c0b0a",
+    theme_color: "#e65f2b",
     icons: [
       {
         src: "/icon-192.png",

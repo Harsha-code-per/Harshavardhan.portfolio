@@ -3,7 +3,7 @@ import { SportsSection } from "@/components/ui/SportsSection";
 
 export default function SportsPage() {
   return (
-    <main className="bg-[var(--bg-base)] pt-24">
+    <main data-chapter="sports" className="pt-24">
       <SportsSection />
       <Footer />
     </main>

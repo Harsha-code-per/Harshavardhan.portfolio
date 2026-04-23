@@ -108,14 +108,6 @@ export function TimelineExperience() {
           invalidateOnRefresh: true,
         },
       });
-
-      const refreshFrame = requestAnimationFrame(() => {
-        ScrollTrigger.refresh();
-      });
-
-      return () => {
-        cancelAnimationFrame(refreshFrame);
-      };
     },
     { scope: sectionRef, dependencies: [] }
   );
@@ -125,7 +117,7 @@ export function TimelineExperience() {
       id="journey"
       ref={sectionRef}
       className="relative px-[clamp(1rem,5vw,4rem)] py-20"
-      style={{ background: "var(--bg-base)" }}
+      style={{ background: "var(--chapter-bg)" }}
     >
       <div className="mx-auto w-full max-w-6xl">
         <div className="mb-12">

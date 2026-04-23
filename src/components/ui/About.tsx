@@ -49,7 +49,7 @@ export function About() {
       const revealTimeline = gsap.timeline({
         scrollTrigger: {
           trigger: card,
-          start: "top 35%",
+          start: "top 55%",
           toggleActions: "play none none reverse",
           invalidateOnRefresh: true,
         },
@@ -122,44 +122,44 @@ export function About() {
     <section
       id="about"
       ref={sectionRef}
-      className="relative z-10 w-full overflow-hidden rounded-t-[3rem] bg-[#0a0a0a] shadow-2xl"
+      className="relative z-10 w-full bg-gradient-to-b from-[#090807]/0 via-[#090807]/80 to-[#090807] pointer-events-none"
     >
       <article
         ref={cardRef}
-        className="relative w-full border-t border-white/5 px-[clamp(1rem,5vw,4rem)] pb-20 pt-32 text-[var(--text-primary)]"
+        className="relative w-full px-[clamp(1rem,5vw,4rem)] pb-20 pt-32 text-[var(--text-primary)] pointer-events-none"
       >
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_15%_20%,rgba(139,92,246,0.14),transparent_45%),radial-gradient(circle_at_85%_35%,rgba(6,182,212,0.09),transparent_48%)]" />
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_15%_20%,var(--accent-primary-subtle),transparent_45%),radial-gradient(circle_at_85%_35%,color-mix(in_srgb,var(--chapter-accent-alt)_9%,transparent),transparent_48%)]" />
 
         <div className="relative z-10 grid grid-cols-1 gap-y-12 lg:grid-cols-12 lg:gap-x-12">
           <div className="about-header lg:col-span-7">
-            <p className="text-xs uppercase tracking-[0.28em] text-[var(--accent-primary-light)]">
+            <p className="pointer-events-auto text-xs uppercase tracking-[0.28em] text-[var(--chapter-accent)]">
               About
             </p>
             <h2
               data-about-heading
-              className="about-heading mt-4 max-w-[18ch] text-balance text-[clamp(2.2rem,5.8vw,5.3rem)] font-[var(--font-space)] font-semibold leading-[0.95] text-zinc-100"
+              className="about-heading pointer-events-auto mt-4 max-w-[18ch] text-balance text-[clamp(2.2rem,5.8vw,5.3rem)] font-[var(--font-space)] font-semibold leading-[0.95] text-[var(--chapter-ink)] [text-shadow:0_4px_30px_rgba(0,0,0,0.65)]"
             >
               {aboutContent.title}
             </h2>
             <div data-about-copy className="mt-10 max-w-[42rem] space-y-5">
-              <p className="text-[clamp(1rem,1.55vw,1.32rem)] leading-relaxed text-zinc-300">
+              <p className="pointer-events-auto text-[clamp(1rem,1.55vw,1.32rem)] leading-relaxed text-[var(--chapter-muted)] [text-shadow:0_2px_16px_rgba(0,0,0,0.55)]">
                 {aboutContent.statement}
               </p>
-              <p className="text-[clamp(0.96rem,1.35vw,1.16rem)] leading-relaxed text-zinc-400">
+              <p className="pointer-events-auto text-[clamp(0.96rem,1.35vw,1.16rem)] leading-relaxed text-[var(--chapter-muted)] [text-shadow:0_2px_16px_rgba(0,0,0,0.55)]">
                 {aboutContent.bio}
               </p>
             </div>
           </div>
 
-          <div data-about-image-wrap className="about-image-wrap lg:col-span-5 lg:translate-y-10">
-            <div className="ml-auto w-full overflow-hidden rounded-[2rem] border border-white/10 bg-black/30 shadow-[0_40px_80px_rgba(0,0,0,0.45)] aspect-[3/4] max-w-[28rem]">
+          <div data-about-image-wrap className="about-image-wrap pointer-events-none lg:col-span-5 lg:translate-y-10">
+            <div className="ml-auto aspect-[3/4] w-full max-w-[28rem] overflow-hidden rounded-[2rem] border border-[var(--chapter-accent)]/10 bg-black/30 shadow-[0_40px_80px_rgba(0,0,0,0.45)]">
               <Image
                 ref={imageRef}
                 src={aboutContent.portrait.src}
                 alt={aboutContent.portrait.alt}
                 width={700}
                 height={934}
-                sizes="(max-width: 1024px) 100vw, 42vw"
+                sizes="(max-width: 1024px) 100svw, 42vw"
                 className="about-image h-full w-full scale-[1.3] object-cover object-top"
               />
             </div>
@@ -168,11 +168,11 @@ export function About() {
 
         <div className="relative z-10 mt-16 grid grid-cols-1 gap-4 md:grid-cols-3">
           {aboutContent.highlights.map((item) => (
-            <div key={item.label} data-about-card className="about-card rounded-2xl border border-white/10 bg-white/[0.03] p-5 backdrop-blur-sm">
-              <p className="text-[0.65rem] uppercase tracking-[0.24em] text-zinc-500">
+            <div key={item.label} data-about-card className="about-card pointer-events-auto rounded-2xl border border-[var(--chapter-accent)]/10 bg-white/[0.03] p-5 backdrop-blur-sm">
+              <p className="text-[0.65rem] uppercase tracking-[0.24em] text-[var(--chapter-muted)]">
                 {item.label}
               </p>
-              <p className="mt-2 text-sm leading-relaxed text-zinc-200 md:text-base">
+              <p className="mt-2 text-sm leading-relaxed text-[var(--chapter-ink)] md:text-base">
                 {item.value}
               </p>
             </div>

@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import { aboutContent } from "@/data/about";
-import { ScrollTrigger, gsap, setupGsap } from "@/lib/gsap";
+import { gsap, setupGsap } from "@/lib/gsap";
 
 export function MaskedAbout() {
   setupGsap();
@@ -14,6 +14,10 @@ export function MaskedAbout() {
 
   useGSAP(
     () => {
+      if (!sectionRef.current) {
+        return;
+      }
+
       const card = cardRef.current;
       const section = sectionRef.current;
       if (!card || !section) {
@@ -103,14 +107,6 @@ export function MaskedAbout() {
           },
           "-=0.25"
         );
-
-      const refreshFrame = requestAnimationFrame(() => {
-        ScrollTrigger.refresh();
-      });
-
-      return () => {
-        cancelAnimationFrame(refreshFrame);
-      };
     },
     { scope: sectionRef, dependencies: [] }
   );
@@ -119,14 +115,14 @@ export function MaskedAbout() {
     <section
       id="about"
       ref={sectionRef}
-      className="relative z-10 flex min-h-[100dvh] w-full items-center justify-center overflow-visible bg-[#050505]/95 px-[clamp(1rem,5vw,4rem)] py-20 backdrop-blur-sm"
+      className="relative z-10 flex min-h-[100dvh] w-full items-center justify-center overflow-visible bg-[var(--chapter-bg)]/95 px-[clamp(1rem,5vw,4rem)] py-20 backdrop-blur-sm"
     >
       <div
         ref={cardRef}
         data-about-mask
         className="about-ambient card-glass animated-border relative w-full max-w-6xl overflow-hidden text-[var(--text-primary)]"
       >
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_20%,var(--accent-primary-subtle),transparent_40%),radial-gradient(circle_at_80%_75%,rgba(6,182,212,0.08),transparent_45%)]" />
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_18%_20%,var(--accent-primary-subtle),transparent_40%),radial-gradient(circle_at_80%_75%,rgba(234,179,8,0.08),transparent_45%)]" />
         <div
           data-about-content
           className="relative z-10 grid h-full w-full grid-cols-1 gap-10 p-7 md:grid-cols-[1.2fr_0.8fr] md:items-center md:gap-12 md:p-12 lg:p-16"
@@ -135,7 +131,7 @@ export function MaskedAbout() {
             <p className="text-xs uppercase tracking-[0.28em] text-[var(--accent-primary-light)]">
               About
             </p>
-            <h2 className="text-gradient-violet mt-3 text-balance text-[clamp(1.7rem,3.8vw,3.35rem)] font-semibold leading-[1.05]">
+            <h2 className="text-gradient-retro mt-3 text-balance text-[clamp(1.7rem,3.8vw,3.35rem)] font-semibold leading-[1.05]">
               {aboutContent.title}
             </h2>
             <p className="mt-6 text-base leading-relaxed text-[var(--text-secondary)] md:text-lg">
