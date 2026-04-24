@@ -133,13 +133,6 @@ export function WorkShowcase() {
           );
       });
 
-      const refreshFrame = requestAnimationFrame(() => {
-        ScrollTrigger.refresh();
-      });
-
-      return () => {
-        cancelAnimationFrame(refreshFrame);
-      };
     },
     { scope: sectionRef, dependencies: [] }
   );

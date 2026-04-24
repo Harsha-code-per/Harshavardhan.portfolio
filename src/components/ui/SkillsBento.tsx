@@ -205,13 +205,6 @@ export function SkillsBento() {
         },
       });
 
-      const refreshFrame = requestAnimationFrame(() => {
-        ScrollTrigger.refresh();
-      });
-
-      return () => {
-        cancelAnimationFrame(refreshFrame);
-      };
     },
     { scope: sectionRef, dependencies: [] }
   );

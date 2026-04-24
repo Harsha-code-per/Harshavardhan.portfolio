@@ -76,7 +76,7 @@ type GLTFResult = GLTF & {
 export function Model(props: React.ComponentProps<'group'>) {
   const { nodes, materials } = useGLTF('/retro-computer.glb') as unknown as GLTFResult
   return (
-    <group {...props} dispose={null}>
+    <group {...props} dispose={null} frustumCulled={false}>
       <group position={[-6.496, -0.033, 1.768]} rotation={[Math.PI, 1.282, Math.PI / 2]} scale={[1.054, 0.955, 0.996]}>
         <mesh geometry={nodes.casette_base_low002_M_Details_Translucent_0.geometry} material={materials.M_Details_Translucent} />
         <mesh geometry={nodes.casette_base_low002_M_Details_0.geometry} material={materials.M_Details} />

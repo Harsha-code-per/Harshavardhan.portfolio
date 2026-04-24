@@ -73,9 +73,10 @@ export function Hero() {
       const pinTrigger = ScrollTrigger.create({
         trigger: "#hero-master-container",
         start: "top top",
-        end: "+=220%",
+        end: "+=150%",
         pin: true,
-        pinSpacing: false,
+        pinSpacing: true,
+        refreshPriority: 10,
       });
 
       return () => {
@@ -132,9 +133,9 @@ export function Hero() {
       <div id="hero-scroll-wrapper" className="absolute inset-0 z-10 flex flex-col justify-center pt-24 lg:pt-0 px-8 lg:px-16 pointer-events-none w-full lg:w-[55vw] xl:w-[50vw]">
         
         {/* Eyebrow */}
-        <p className="hero-anim text-cyan-400 text-xs md:text-sm tracking-widest uppercase mb-4 flex items-center gap-4 pointer-events-auto">
-          <span className="w-6 h-px bg-cyan-400"></span> 
-          AI Engineer <span className="text-cyan-400/50">&bull;</span> FULL-Stack Architect
+        <p className="hero-anim text-[var(--accent-primary)] text-xs md:text-sm tracking-widest uppercase mb-4 flex items-center gap-4 pointer-events-auto">
+          <span className="w-6 h-px bg-[var(--accent-primary)]"></span> 
+          AI Engineer <span className="opacity-50">&bull;</span> FULL-Stack Architect
         </p>
 
         {/* H1 - Note the updated clip-path to prevent descender clipping */}
@@ -144,7 +145,7 @@ export function Hero() {
 
         {/* Subheadline */}
         <p className="hero-anim mt-6 text-neutral-400 text-[clamp(1rem,min(1.5vw,2vh),1.25rem)] max-w-[90%] font-light pointer-events-auto">
-          I build <span className="text-white font-medium">AI-Powered Systems</span> and design <span className="text-purple-400 font-medium">Cinematic Web Interfaces</span> <br/>where deep engineering meets visual storytelling.
+          I build <span className="text-white font-medium">AI-Powered Systems</span> and design <span className="text-[var(--accent-primary-light)] font-medium">Cinematic Web Interfaces</span> <br/>where deep engineering meets visual storytelling.
         </p>
 
         {/* Badges */}
@@ -156,7 +157,7 @@ export function Hero() {
 
         {/* Primary Button */}
         <div className="hero-anim mt-8 pointer-events-auto">
-          <button onClick={() => document.getElementById("work")?.scrollIntoView({ behavior: "smooth" })} className="px-8 py-3 rounded-full bg-violet-600 hover:bg-violet-500 text-white font-medium transition-colors shadow-[0_0_20px_rgba(124,58,237,0.3)]">
+          <button onClick={() => document.getElementById("work")?.scrollIntoView({ behavior: "smooth" })} className="px-8 py-3 rounded-full bg-[var(--accent-primary)] hover:bg-[var(--accent-secondary)] text-white font-medium transition-colors shadow-[0_0_20px_var(--accent-primary-glow)]">
             View My Work
           </button>
         </div>

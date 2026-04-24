@@ -128,7 +128,7 @@ export function About() {
         ref={cardRef}
         className="relative w-full border-t border-white/5 px-[clamp(1rem,5vw,4rem)] pb-20 pt-32 text-[var(--text-primary)]"
       >
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_15%_20%,rgba(139,92,246,0.14),transparent_45%),radial-gradient(circle_at_85%_35%,rgba(6,182,212,0.09),transparent_48%)]" />
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_15%_20%,var(--accent-primary-subtle),transparent_45%),radial-gradient(circle_at_85%_35%,var(--accent-tertiary-glow),transparent_48%)]" />
 
         <div className="relative z-10 grid grid-cols-1 gap-y-12 lg:grid-cols-12 lg:gap-x-12">
           <div className="about-header lg:col-span-7">

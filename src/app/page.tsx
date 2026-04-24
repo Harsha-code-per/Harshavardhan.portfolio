@@ -12,18 +12,19 @@ import { SkillsBento } from "@/components/ui/SkillsBento";
 import { SportsSection } from "@/components/ui/SportsSection";
 import { TimelineExperience } from "@/components/ui/TimelineExperience";
 import { WorkShowcase } from "@/components/ui/WorkShowcase";
+import { MarqueeBanner } from "@/components/ui/MarqueeBanner";
 import { ScrollTrigger, gsap, setupGsap } from "@/lib/gsap";
 
 const storyChapters = [
-  { id: "hero", label: "Intro", tone: "#0a0a0f" },
-  { id: "about", label: "About", tone: "#0d0d15" },
-  { id: "work", label: "Work", tone: "#0a0a0f" },
-  { id: "projects", label: "Projects", tone: "#0c0a10" },
-  { id: "skills", label: "Skills", tone: "#0a0a0f" },
-  { id: "journey", label: "Journey", tone: "#0a0f0f" },
-  { id: "research", label: "Research", tone: "#111118" },
-  { id: "sports", label: "Sports", tone: "#0a0a0f" },
-  { id: "contact", label: "Contact", tone: "#0a0a0f" },
+  { id: "hero", label: "Intro", tone: "#0a0a0c" },
+  { id: "about", label: "About", tone: "#110e0c" },
+  { id: "work", label: "Work", tone: "#0a0a0c" },
+  { id: "projects", label: "Projects", tone: "#13100a" },
+  { id: "skills", label: "Skills", tone: "#0a0a0c" },
+  { id: "journey", label: "Journey", tone: "#110b0a" },
+  { id: "research", label: "Research", tone: "#111115" },
+  { id: "sports", label: "Sports", tone: "#0a0a0c" },
+  { id: "contact", label: "Contact", tone: "#0c0a0a" },
 ] as const;
 
 export default function Home() {
@@ -61,13 +62,7 @@ export default function Home() {
         );
       });
 
-      /* Single debounced refresh after everything is set up */
-      const refreshTimer = setTimeout(() => {
-        ScrollTrigger.refresh();
-      }, 300);
-
       return () => {
-        clearTimeout(refreshTimer);
         triggers.forEach((trigger) => trigger.kill());
       };
     },
@@ -84,7 +79,7 @@ export default function Home() {
       <div id="hero-master-container" className="h-screen w-full relative z-0">
         <Hero />
       </div>
-      <div className="relative z-10 mt-[120vh]">
+      <div className="relative z-10">
         <About />
       </div>
       <WorkShowcase />
@@ -92,6 +87,7 @@ export default function Home() {
       <SkillsBento />
       <TimelineExperience />
       <ResearchSection />
+      <MarqueeBanner />
       <SportsSection />
       <ContactSection />
       <Footer />

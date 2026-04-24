@@ -18,18 +18,7 @@ export function SportsSection() {
         return;
       }
 
-      /* Kinetic typography on scroll */
-      gsap.to(stripRef.current, {
-        xPercent: -8,
-        ease: "none",
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top bottom",
-          end: "bottom top",
-          scrub: true,
-          invalidateOnRefresh: true,
-        },
-      });
+      /* Removed kinetic typography scrub; using CSS marquee instead */
 
       /* Card reveal with rotation */
       gsap.from("[data-sports-card]", {
@@ -65,13 +54,6 @@ export function SportsSection() {
         )`,
       }}
     >
-      {/* Kinetic strip */}
-      <p
-        ref={stripRef}
-        className="pointer-events-none absolute left-6 top-4 whitespace-nowrap text-[clamp(4rem,12vw,10rem)] font-black uppercase tracking-[0.08em] text-[var(--text-primary)] opacity-[0.04]"
-      >
-        Energy · Discipline · Drive · Resilience · Focus
-      </p>
 
       <div className="mx-auto w-full max-w-7xl">
         <p className="text-xs uppercase tracking-[0.3em] text-[var(--accent-secondary)]">

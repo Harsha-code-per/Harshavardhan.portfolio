@@ -1,7 +1,7 @@
 "use client";
 
 import { ReactLenis } from "lenis/react";
-import { useEffect, useRef, type ComponentProps, type ReactNode } from "react";
+import { useEffect, useRef, useCallback, type ComponentProps, type ReactNode } from "react";
 import { ScrollTrigger, gsap, setupGsap } from "@/lib/gsap";
 
 type SmoothScrollerProps = {
@@ -27,9 +27,27 @@ export default function SmoothScroller({ children }: SmoothScrollerProps) {
     gsap.ticker.add(update);
     gsap.ticker.lagSmoothing(0);
 
+    /* Centralized refresh once fonts are loaded */
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(() => {
+        ScrollTrigger.refresh();
+      });
+    }
+
     return () => {
       gsap.ticker.remove(update);
     };
+  }, []);
+
+  const setLenisRef = useCallback((instance: LenisRefApi | null) => {
+    const lenis = instance?.lenis;
+    if (lenis && lenis !== lenisRef.current) {
+      if (lenisRef.current) {
+        lenisRef.current.off("scroll", ScrollTrigger.update);
+      }
+      lenisRef.current = lenis;
+      lenis.on("scroll", ScrollTrigger.update);
+    }
   }, []);
 
   return (
@@ -45,17 +63,7 @@ export default function SmoothScroller({ children }: SmoothScrollerProps) {
         autoResize: true,
         autoRaf: false, // we drive RAF via gsap.ticker
       }}
-      ref={(instance: LenisRefApi | null) => {
-        const lenis = instance?.lenis;
-        if (lenis) {
-          lenisRef.current = lenis;
-
-          /* Every Lenis scroll event should update ScrollTrigger positions */
-          lenis.on("scroll", () => {
-            ScrollTrigger.update();
-          });
-        }
-      }}
+      ref={setLenisRef}
     >
       {children as unknown as ComponentProps<typeof ReactLenis>["children"]}
     </ReactLenis>

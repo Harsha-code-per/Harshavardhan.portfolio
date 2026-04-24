@@ -88,7 +88,7 @@ export function HorizontalProjects() {
           );
         });
 
-        ScrollTrigger.refresh();
+
       }, 100);
 
       return () => {

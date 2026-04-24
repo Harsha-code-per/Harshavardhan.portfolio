@@ -51,17 +51,17 @@ export function Navbar() {
   };
 
   /* ── Scroll state ──────────────────────────────────────────────── */
+  useLenis((lenisInstance) => {
+    if (progressRef.current) {
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = docHeight > 0 ? lenisInstance.scroll / docHeight : 0;
+      progressRef.current.style.transform = `scaleX(${progress})`;
+    }
+  });
+
   useEffect(() => {
     const onScroll = () => {
       setIsScrolled(window.scrollY > 60);
-
-      /* Update progress bar */
-      if (progressRef.current) {
-        const docHeight =
-          document.documentElement.scrollHeight - window.innerHeight;
-        const progress = docHeight > 0 ? window.scrollY / docHeight : 0;
-        progressRef.current.style.transform = `scaleX(${progress})`;
-      }
     };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
@@ -69,43 +69,37 @@ export function Navbar() {
   }, []);
 
   /* ── Active section tracker ────────────────────────────────────── */
-  useGSAP(
-    () => {
-      if (!isHomePage) {
-        return;
-      }
+  useEffect(() => {
+    if (!isHomePage) return;
 
-      const triggers: ScrollTrigger[] = [];
-
-      const initFrame = requestAnimationFrame(() => {
-        navigationItems.forEach((item) => {
-          const section = document.getElementById(item.id);
-          if (!section) {
-            return;
-          }
-
-          triggers.push(
-            ScrollTrigger.create({
-              trigger: section,
-              start: "top 55%",
-              end: "bottom 45%",
-              invalidateOnRefresh: true,
-              onEnter: () => setActiveSection(item.id),
-              onEnterBack: () => setActiveSection(item.id),
-            })
-          );
-        });
-
-        ScrollTrigger.refresh();
+    const observerCallback: IntersectionObserverCallback = (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          setActiveSection(entry.target.id);
+        }
       });
+    };
 
-      return () => {
-        cancelAnimationFrame(initFrame);
-        triggers.forEach((trigger) => trigger.kill());
-      };
-    },
-    { scope: navRef, dependencies: [isHomePage] }
-  );
+    const observer = new IntersectionObserver(observerCallback, {
+      root: null,
+      // The section must cross the exact vertical center of the screen to become active
+      rootMargin: "-50% 0px -50% 0px",
+      threshold: 0,
+    });
+
+    // Let the DOM settle from GSAP Hero pins or framer-motion animations
+    const initTimer = setTimeout(() => {
+      navigationItems.forEach((item) => {
+        const section = document.getElementById(item.id);
+        if (section) observer.observe(section);
+      });
+    }, 500);
+
+    return () => {
+      clearTimeout(initTimer);
+      observer.disconnect();
+    };
+  }, [isHomePage]);
 
   /* ── Mobile menu animations ────────────────────────────────────── */
   useGSAP(
