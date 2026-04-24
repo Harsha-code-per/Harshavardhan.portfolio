@@ -2,7 +2,6 @@
 
 import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
-import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import type { IconType } from "react-icons";
 import {
   SiArchlinux,
@@ -33,9 +32,9 @@ import {
   FaVideo,
 } from "react-icons/fa";
 import { skillCategories } from "@/data/skills";
-import { ScrollTrigger, gsap, setupGsap } from "@/lib/gsap";
+import { gsap, setupGsap } from "@/lib/gsap";
 
-/* Proper icon mapping — no fallback to generic JS icon */
+/* Proper icon mapping */
 const techIcons: Record<string, IconType> = {
   "Next.js": SiNextdotjs,
   React: SiReact,
@@ -87,78 +86,50 @@ function SkillCard({
   accent: string;
   isLarge: boolean;
 }) {
-  const x = useMotionValue(0);
-  const y = useMotionValue(0);
-
-  const rotateX = useTransform(y, [-100, 100], [6, -6]);
-  const rotateY = useTransform(x, [-100, 100], [-6, 6]);
-
-  const smoothRotateX = useSpring(rotateX, { damping: 25, stiffness: 200 });
-  const smoothRotateY = useSpring(rotateY, { damping: 25, stiffness: 200 });
-
+  // Replaced: useMotionValue + useSpring + useTransform (14 ticking physics springs removed)
+  // Now using pure CSS hover — zero JS overhead on every frame
   return (
-    <motion.article
+    <article
       data-skill-card
-      className={`card-glass group relative overflow-hidden p-6 lg:p-8 ${
+      className={`card-glass group relative overflow-hidden p-6 lg:p-8 cursor-default ${
         isLarge ? "md:col-span-2" : ""
       }`}
       style={{
-        rotateX: smoothRotateX,
-        rotateY: smoothRotateY,
-        transformPerspective: 900,
+        transition: "transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease",
       }}
-      onMouseMove={(event) => {
-        const rect = event.currentTarget.getBoundingClientRect();
-        x.set(event.clientX - (rect.left + rect.width / 2));
-        y.set(event.clientY - (rect.top + rect.height / 2));
+      onMouseEnter={(e) => {
+        (e.currentTarget as HTMLElement).style.transform = "scale(1.02)";
+        (e.currentTarget as HTMLElement).style.boxShadow = `0 0 50px color-mix(in srgb, ${accent} 20%, transparent)`;
+        (e.currentTarget as HTMLElement).style.borderColor = accent;
       }}
-      onMouseLeave={() => {
-        x.set(0);
-        y.set(0);
+      onMouseLeave={(e) => {
+        (e.currentTarget as HTMLElement).style.transform = "";
+        (e.currentTarget as HTMLElement).style.boxShadow = "";
+        (e.currentTarget as HTMLElement).style.borderColor = "";
       }}
-      whileHover={{
-        scale: 1.02,
-        boxShadow: `0 0 50px color-mix(in srgb, ${accent} 25%, transparent)`,
-        borderColor: accent,
-      }}
-      transition={{ duration: 0.25, ease: "easeOut" }}
     >
-      {/* Accent glow on hover */}
+      {/* Accent glow on hover — CSS opacity transition, no JS */}
       <div
-        className="pointer-events-none absolute -right-8 -top-8 h-32 w-32 rounded-full opacity-0 blur-3xl transition-opacity duration-500 group-hover:opacity-30"
-        style={{ background: accent }}
+        className="pointer-events-none absolute -right-8 -top-8 h-32 w-32 rounded-full opacity-0 transition-opacity duration-500 group-hover:opacity-20"
+        style={{ background: accent, filter: "blur(40px)" }}
       />
 
       <div className="flex items-center gap-3">
-        <span
-          className="inline-block h-1 w-5 rounded-full"
-          style={{ background: accent }}
-        />
-        <p
-          className="font-mono text-[0.68rem] uppercase tracking-[0.22em]"
-          style={{ color: accent }}
-        >
+        <span className="inline-block h-1 w-5 rounded-full" style={{ background: accent }} />
+        <p className="font-mono text-[0.68rem] uppercase tracking-[0.22em]" style={{ color: accent }}>
           {title}
         </p>
       </div>
 
-      <p className="mt-4 text-sm leading-relaxed text-[var(--text-secondary)]">
-        {description}
-      </p>
+      <p className="mt-4 text-sm leading-relaxed text-[var(--text-secondary)]">{description}</p>
 
       {/* Icon row */}
       <div className="mt-5 flex flex-wrap gap-3">
         {technologies.slice(0, isLarge ? 6 : 4).map((item) => {
           const Icon = techIcons[item] ?? SiJavascript;
           return (
-            <div
-              key={`icon-${item}`}
-              className="group/icon relative"
-              title={item}
-            >
-              <Icon
-                className="h-7 w-7 text-[var(--text-muted)] transition-colors duration-300 group-hover/icon:text-[var(--accent-primary-light)]"
-              />
+            <div key={`icon-${item}`} className="group/icon relative" title={item}>
+              <Icon className="h-7 w-7 text-[var(--text-muted)] transition-colors duration-300 group-hover/icon:text-[var(--accent-primary-light)]" />
             </div>
           );
         })}
@@ -169,13 +140,24 @@ function SkillCard({
         {technologies.map((item) => (
           <li
             key={item}
-            className="rounded-lg border border-[var(--border-default)] bg-[var(--bg-elevated)] px-2.5 py-2 text-xs font-medium text-[var(--text-primary)] transition-colors hover:border-[var(--border-hover)]"
+            className="rounded-lg border border-[var(--border-default)] bg-[var(--bg-elevated)] px-2.5 py-2 text-xs font-medium transition-colors hover:bg-white/5"
+            style={{ color: "var(--text-primary)" }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.color = accent;
+              e.currentTarget.style.borderColor = accent;
+              e.currentTarget.style.boxShadow = `0 0 10px color-mix(in srgb, ${accent} 20%, transparent)`;
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.color = "var(--text-primary)";
+              e.currentTarget.style.borderColor = "var(--border-default)";
+              e.currentTarget.style.boxShadow = "none";
+            }}
           >
             <span className="truncate">{item}</span>
           </li>
         ))}
       </ul>
-    </motion.article>
+    </article>
   );
 }
 
@@ -187,9 +169,7 @@ export function SkillsBento() {
   useGSAP(
     () => {
       const cards = gsap.utils.toArray<HTMLElement>("[data-skill-card]");
-      if (cards.length === 0) {
-        return;
-      }
+      if (cards.length === 0) return;
 
       gsap.from(cards, {
         opacity: 0,
@@ -204,7 +184,6 @@ export function SkillsBento() {
           invalidateOnRefresh: true,
         },
       });
-
     },
     { scope: sectionRef, dependencies: [] }
   );
@@ -213,8 +192,11 @@ export function SkillsBento() {
     <section
       id="skills"
       ref={sectionRef}
-      className="flex min-h-[100dvh] w-full flex-col items-center justify-center px-[clamp(1rem,5vw,4rem)] py-20"
-      style={{ background: "var(--bg-base)" }}
+      className="relative flex min-h-[100dvh] w-full flex-col items-center justify-center px-[clamp(1rem,5vw,4rem)] py-20 overflow-hidden"
+      style={{ 
+        backgroundColor: "var(--bg-base)",
+        backgroundImage: "radial-gradient(circle at 10% 20%, var(--accent-primary-subtle) 0%, transparent 40%), radial-gradient(circle at 90% 80%, var(--accent-secondary-subtle) 0%, transparent 40%)"
+      }}
     >
       <h2 className="text-gradient-violet mb-4 text-center text-[clamp(3rem,7vw,6rem)] font-black leading-[0.95] tracking-[-0.02em]">
         Skills

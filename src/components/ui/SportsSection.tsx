@@ -2,7 +2,6 @@
 
 import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
-import { motion } from "framer-motion";
 import { sportsEntries } from "@/data/sports";
 import { gsap, setupGsap } from "@/lib/gsap";
 
@@ -56,10 +55,10 @@ export function SportsSection() {
     >
 
       <div className="mx-auto w-full max-w-7xl">
-        <p className="text-xs uppercase tracking-[0.3em] text-[var(--accent-secondary)]">
+        <p className="text-xs uppercase tracking-[0.3em] text-[var(--accent-tertiary)]">
           Sports
         </p>
-        <h2 className="mt-3 text-[clamp(1.8rem,4.6vw,3.5rem)] font-black uppercase tracking-tight text-[var(--text-primary)]">
+        <h2 className="mt-3 text-[clamp(2.5rem,5vw,4.5rem)] font-black uppercase tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-white to-white/60">
           Discipline Behind the Craft
         </h2>
         <p className="mt-3 max-w-2xl text-sm leading-relaxed text-[var(--text-secondary)] md:text-base">
@@ -68,28 +67,32 @@ export function SportsSection() {
 
         <div className="mt-12 grid gap-6 md:grid-cols-2">
           {sportsEntries.map((sport, index) => (
-            <motion.article
+            <article
               key={sport.title}
               data-sports-card
-              className="card-glass group relative overflow-hidden rounded-2xl p-7"
-              style={{ borderLeft: "3px solid var(--accent-secondary)" }}
-              whileHover={{
-                scale: 1.02,
-                boxShadow: "0 0 30px var(--accent-secondary-glow)",
-                borderColor: "var(--accent-secondary-light)",
+              className="card-glass group relative overflow-hidden rounded-2xl p-7 transition-all duration-300 ease-out"
+              style={{ borderLeft: "3px solid var(--accent-primary)" }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = "scale(1.02)";
+                e.currentTarget.style.boxShadow = "0 0 30px var(--accent-primary-glow)";
+                e.currentTarget.style.borderColor = "var(--accent-primary)";
               }}
-              transition={{ duration: 0.3 }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = "";
+                e.currentTarget.style.boxShadow = "";
+                e.currentTarget.style.borderColor = "var(--border-default)";
+              }}
             >
               {/* Glow */}
-              <div className="pointer-events-none absolute -right-6 -top-6 h-20 w-20 rounded-full bg-[var(--accent-secondary)] opacity-0 blur-2xl transition-opacity duration-500 group-hover:opacity-20" />
+              <div className="pointer-events-none absolute -right-6 -top-6 h-32 w-32 rounded-full bg-[var(--accent-primary)] opacity-0 transition-opacity duration-500 group-hover:opacity-10" style={{ filter: "blur(40px)" }} />
 
               <div className="flex items-center gap-3">
-                <span className="inline-block h-1 w-4 rounded-full bg-[var(--accent-secondary)]" />
-                <span className="font-mono text-xs uppercase tracking-[0.2em] text-[var(--accent-secondary)]">
+                <span className="inline-block h-1 w-4 rounded-full bg-[var(--accent-primary)]" />
+                <span className="font-mono text-xs uppercase tracking-[0.2em] text-[var(--accent-primary)]">
                   #{String(index + 1).padStart(2, "0")}
                 </span>
               </div>
-              <h3 className="mt-3 text-xl font-semibold text-[var(--text-primary)]">
+              <h3 className="mt-3 text-xl font-semibold text-[var(--text-primary)] transition-colors group-hover:text-[var(--accent-primary-light)]">
                 {sport.title}
               </h3>
               <p className="mt-2 text-sm font-semibold text-[var(--accent-secondary)]">
@@ -98,7 +101,7 @@ export function SportsSection() {
               <p className="mt-4 text-sm leading-relaxed text-[var(--text-secondary)] md:text-base">
                 {sport.summary}
               </p>
-            </motion.article>
+            </article>
           ))}
         </div>
       </div>

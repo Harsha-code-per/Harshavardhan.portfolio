@@ -7,6 +7,13 @@ import { projects } from "@/data/projects";
 import { ScrollTrigger, gsap, setupGsap } from "@/lib/gsap";
 import { Badge } from "@/components/ui/badge";
 
+const artisticPalettes = [
+  { primary: "#b2ff05", secondary: "#00b09b" }, // Acid Lime
+  { primary: "#00f2fe", secondary: "#4facfe" }, // Toxic Cyan
+  { primary: "#fde047", secondary: "#f59e0b" }, // Radioactive Yellow
+  { primary: "#f97316", secondary: "#ea580c" }, // Biohazard Orange
+];
+
 export function HorizontalProjects() {
   setupGsap();
 
@@ -31,14 +38,18 @@ export function HorizontalProjects() {
 
         gsap.set(track, { x: 0 });
 
-        gsap.to(track, {
-          x: getScrollAmount,
-          ease: "none",
+        const durationScroll = projects.length - 1;
+        const durationSettle = 0.3;
+        const totalDuration = durationScroll + durationSettle;
+
+        let lastIdx = -1;
+
+        const tl = gsap.timeline({
           scrollTrigger: {
             trigger: wrapper,
             start: "top top",
             end: () =>
-              `+=${Math.abs(getScrollAmount())}`,
+              `+=${Math.abs(getScrollAmount()) + window.innerWidth}`,
             scrub: 0.8,
             pin: true,
             pinSpacing: true,
@@ -46,39 +57,45 @@ export function HorizontalProjects() {
             invalidateOnRefresh: true,
             anticipatePin: 1,
             onUpdate: (self) => {
-              /* Update progress bar */
+              /* The track moves during durationScroll. We extract its exact physical progress (0 to 1). */
+              const trackProgress = Math.min((self.progress * totalDuration) / durationScroll, 1);
+
+              /* Update progress bar scale to precisely match the track's physical movement */
               gsap.set(progress, {
-                scaleX: self.progress,
+                scaleX: trackProgress,
                 transformOrigin: "left center",
               });
 
-              /* Update active project index purely through DOM to prevent React re-renders */
+              /* 
+                Calculate active index based on exact geometric collision on the screen!
+                The progress bar tip is at: trackProgress * 100vw
+                The left edge of card i is at: (i - trackProgress * (projects.length - 1)) * 100vw
+                Equating them gives collision point: trackProgress * projects.length = i
+              */
               const idx = Math.min(
-                Math.floor(self.progress * projects.length),
+                Math.floor(trackProgress * projects.length),
                 projects.length - 1
               );
-              
-              // Find all dot indicators
-              const dots = document.querySelectorAll("[data-project-dot]");
-              dots.forEach((dot, i) => {
-                const el = dot as HTMLElement;
-                if (i === idx) {
-                  el.style.width = "20px";
-                  el.style.background = accentColors[i % accentColors.length];
-                } else {
-                  el.style.width = "6px";
-                  el.style.background = "var(--border-hover)";
-                }
-              });
 
-              // Find index counter
-              const counter = document.querySelector("[data-project-counter]");
-              if (counter) {
-                counter.textContent = `${String(idx + 1).padStart(2, "0")}/${String(projects.length).padStart(2, "0")}`;
+              /* Only update progress bar colors when index changes to allow CSS transitions to play smoothly */
+              if (idx !== lastIdx) {
+                lastIdx = idx;
+                const currentPalette = artisticPalettes[idx % artisticPalettes.length];
+
+                progress.style.backgroundColor = currentPalette.primary;
+                progress.style.boxShadow = `0 0 15px ${currentPalette.primary}`;
               }
             },
           },
         });
+
+        const scrollTween = tl.to(track, {
+          x: getScrollAmount,
+          ease: "none",
+          duration: durationScroll,
+        });
+
+        tl.to({}, { duration: durationSettle });
 
         /* Per-card reveal animation */
         const cards = gsap.utils.toArray<HTMLElement>("[data-project-card]");
@@ -97,7 +114,7 @@ export function HorizontalProjects() {
               scrollTrigger: {
                 trigger: card,
                 start: "left 80%",
-                containerAnimation: undefined,
+                containerAnimation: scrollTween,
                 toggleActions: "play none none reverse",
                 invalidateOnRefresh: true,
               },
@@ -115,12 +132,6 @@ export function HorizontalProjects() {
     { scope: wrapperRef, dependencies: [] }
   );
 
-  const accentColors = [
-    "var(--accent-primary)",
-    "var(--accent-secondary)",
-    "var(--accent-tertiary)",
-  ];
-
   return (
     <section
       id="projects"
@@ -129,41 +140,8 @@ export function HorizontalProjects() {
     >
       <div
         ref={wrapperRef}
-        className="projects-wrapper relative h-[100dvh] overflow-hidden"
+        className="projects-wrapper relative h-screen overflow-hidden"
       >
-        {/* ── Sticky header ──────────────────────────────────────── */}
-        <div
-          ref={headerRef}
-          className="absolute top-0 left-0 right-0 z-20 flex items-center justify-between px-[clamp(1rem,5vw,4rem)] py-6"
-        >
-          <div>
-            <p className="font-mono text-xs uppercase tracking-[0.3em] text-[var(--accent-primary-light)]">
-              Featured Projects
-            </p>
-          </div>
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2">
-              {projects.map((_, index) => (
-                <span
-                  key={index}
-                  data-project-dot
-                  className="h-1.5 rounded-full transition-all duration-500"
-                  style={{
-                    width: index === 0 ? "20px" : "6px",
-                    background:
-                      index === 0
-                        ? accentColors[0]
-                        : "var(--border-hover)",
-                  }}
-                />
-              ))}
-            </div>
-            <span data-project-counter className="font-mono text-sm text-[var(--text-muted)]">
-              01/{String(projects.length).padStart(2, "0")}
-            </span>
-          </div>
-        </div>
-
         {/* ── Horizontal track ───────────────────────────────────── */}
         <div
           ref={trackRef}
@@ -171,7 +149,7 @@ export function HorizontalProjects() {
           style={{ width: `${projects.length * 100}vw` }}
         >
           {projects.map((project, index) => {
-            const accentColor = accentColors[index % accentColors.length];
+            const palette = artisticPalettes[index % artisticPalettes.length];
 
             return (
               <article
@@ -179,90 +157,91 @@ export function HorizontalProjects() {
                 data-project-card
                 className="relative flex h-full w-screen shrink-0 flex-col justify-center overflow-hidden px-[clamp(1rem,5vw,4rem)]"
                 style={{
-                  background: `linear-gradient(135deg, var(--bg-surface) 0%, color-mix(in srgb, ${accentColor} 8%, var(--bg-base)) 100%)`,
+                  willChange: "transform, opacity",
+                  background: `radial-gradient(ellipse at 20% 80%, color-mix(in srgb, ${palette.primary} 20%, #050505) 0%, color-mix(in srgb, ${palette.secondary} 25%, #0a0a0c) 100%)`,
                 }}
               >
-                {/* Background number */}
-                <span className="pointer-events-none absolute right-8 top-1/2 -translate-y-1/2 select-none text-[clamp(12rem,25vw,22rem)] font-black text-white opacity-[0.03]">
-                  {String(index + 1).padStart(2, "0")}
-                </span>
 
                 {/* Left accent bar */}
                 <span
-                  className="absolute left-0 top-0 h-full w-[3px]"
-                  style={{ background: accentColor }}
+                  className="absolute left-0 top-0 h-full w-[4px]"
+                  style={{ background: palette.primary, boxShadow: `0 0 20px ${palette.primary}` }}
                 />
 
                 {/* Content */}
-                <div className="relative z-10 max-w-4xl pt-16">
-                  <p
-                    data-project-reveal
-                    className="font-mono text-xs uppercase tracking-[0.25em] text-[var(--text-secondary)]"
-                  >
-                    Featured Project
-                  </p>
-                  <h2
-                    data-project-reveal
-                    className="mt-4 text-[clamp(3rem,8vw,7rem)] font-black leading-[0.92] tracking-[-0.03em] text-[var(--text-primary)]"
-                  >
-                    {project.title}
-                  </h2>
-                  <p
-                    data-project-reveal
-                    className="mt-5 max-w-3xl text-base text-[var(--text-secondary)] md:text-xl"
-                  >
-                    {project.oneLiner}
-                  </p>
-                  <p
-                    data-project-reveal
-                    className="mt-4 max-w-3xl text-sm leading-relaxed text-[var(--text-secondary)] md:text-base"
-                  >
-                    {project.summary}
-                  </p>
-
-                  {/* Impact metric */}
-                  <div
-                    data-project-reveal
-                    className="mt-6 inline-flex items-center gap-2 rounded-lg border border-[var(--border-default)] bg-[var(--bg-elevated)] px-4 py-2"
-                  >
-                    <span
-                      className="h-2 w-2 rounded-full"
-                      style={{ background: accentColor }}
-                    />
-                    <span className="text-xs text-[var(--text-secondary)]">
-                      {project.impact}
-                    </span>
+                <div className="relative z-10 w-full max-w-5xl mx-auto pt-16 flex flex-col items-center justify-center gap-12">
+                  
+                  {/* Top: Centered Title */}
+                  <div className="flex flex-col items-center text-center w-full relative z-20">
+                    <p
+                      data-project-reveal
+                      className="font-mono text-xs uppercase tracking-[0.4em] font-semibold mb-6"
+                      style={{ color: palette.primary }}
+                    >
+                      Featured Project
+                    </p>
+                    <h2
+                      data-project-reveal
+                      className="text-[clamp(3.5rem,7vw,7rem)] font-black uppercase leading-[0.85] tracking-tight text-white"
+                      style={{ textShadow: `0 20px 50px color-mix(in srgb, ${palette.primary} 40%, transparent)` }}
+                    >
+                      {project.title}
+                    </h2>
+                    <p
+                      data-project-reveal
+                      className="mt-6 text-xl md:text-2xl font-light tracking-wide text-white/90 max-w-2xl"
+                    >
+                      {project.oneLiner}
+                    </p>
                   </div>
 
-                  <div
-                    data-project-reveal
-                    className="mt-7 flex flex-wrap gap-2.5"
-                  >
-                    {project.stack.map((tech) => (
-                      <Badge
-                        key={tech}
-                        className="card-glass border-[var(--border-default)] bg-[var(--bg-elevated)] text-[0.68rem] text-[var(--text-secondary)]"
-                      >
-                        {tech}
-                      </Badge>
-                    ))}
+                  {/* Bottom: Contents Below */}
+                  <div className="w-full relative z-30">
+                    <div data-project-reveal className="p-8 md:p-10 rounded-[2rem] border border-white/10 bg-black/40 backdrop-blur-md shadow-2xl text-center flex flex-col items-center">
+                      <p className="text-[clamp(1rem,1.2vw,1.15rem)] font-medium text-white/90 leading-relaxed max-w-3xl">
+                        {project.summary}
+                      </p>
+
+                      <div className="mt-8 pt-8 border-t border-white/10 w-full flex flex-col items-center">
+                        <div className="inline-flex items-center gap-3 mb-6">
+                          <span
+                            className="h-2 w-2 rounded-full"
+                            style={{ background: palette.primary, boxShadow: `0 0 10px ${palette.primary}` }}
+                          />
+                          <span className="text-xs uppercase tracking-[0.2em] font-bold text-white/90">
+                            {project.impact}
+                          </span>
+                        </div>
+                        
+                        <div className="flex flex-wrap justify-center gap-2.5 mb-10">
+                          {project.stack.map((tech) => (
+                            <Badge
+                              key={tech}
+                              className="border border-white/10 bg-white/5 px-4 py-2 text-xs font-medium text-white/90 hover:bg-white/10 transition-colors"
+                            >
+                              {tech}
+                            </Badge>
+                          ))}
+                        </div>
+
+                        <motion.button
+                          type="button"
+                          data-cursor="hover"
+                          className="w-full max-w-sm mx-auto rounded-[2rem] border p-5 text-sm uppercase tracking-[0.2em] font-bold text-white transition-colors shadow-lg flex justify-center items-center gap-3"
+                          style={{ borderColor: "rgba(255, 255, 255, 0.2)" }}
+                          whileHover={{
+                            borderColor: palette.primary,
+                            backgroundColor: `color-mix(in srgb, ${palette.primary} 20%, transparent)`,
+                            scale: 1.02,
+                          }}
+                          whileTap={{ scale: 0.98 }}
+                        >
+                          View Project <span style={{ color: palette.primary }}>→</span>
+                        </motion.button>
+                      </div>
+                    </div>
                   </div>
 
-                  <motion.button
-                    type="button"
-                    data-cursor="hover"
-                    data-project-reveal
-                    className="mt-10 w-fit rounded-full border px-8 py-3 text-sm font-semibold text-[var(--text-primary)] transition"
-                    style={{ borderColor: "var(--border-hover)" }}
-                    whileHover={{
-                      borderColor: accentColor,
-                      backgroundColor: `color-mix(in srgb, ${accentColor} 12%, transparent)`,
-                      scale: 1.03,
-                    }}
-                    whileTap={{ scale: 0.97 }}
-                  >
-                    View Project →
-                  </motion.button>
                 </div>
               </article>
             );
@@ -273,8 +252,8 @@ export function HorizontalProjects() {
         <div className="pointer-events-none absolute bottom-0 left-0 h-[1px] w-full bg-[var(--border-default)]" />
         <div
           ref={progressRef}
-          className="pointer-events-none absolute bottom-0 left-0 h-[2px] w-full origin-left scale-x-0"
-          style={{ background: "var(--accent-primary)" }}
+          className="pointer-events-none absolute bottom-0 left-0 h-[2px] w-full origin-left scale-x-0 transition-colors duration-500 ease-out"
+          style={{ backgroundColor: artisticPalettes[0].primary, boxShadow: `0 0 15px ${artisticPalettes[0].primary}` }}
         />
       </div>
     </section>

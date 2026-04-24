@@ -122,7 +122,7 @@ export function About() {
     <section
       id="about"
       ref={sectionRef}
-      className="relative z-10 w-full overflow-hidden rounded-t-[3rem] bg-[#0a0a0a] shadow-2xl"
+      className="relative z-10 w-full overflow-hidden rounded-t-[3rem] bg-transparent shadow-[0_-20px_40px_rgba(0,0,0,0.5)] border-t border-white/5"
     >
       <article
         ref={cardRef}

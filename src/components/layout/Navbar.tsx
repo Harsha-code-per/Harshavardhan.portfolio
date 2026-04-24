@@ -19,6 +19,18 @@ const navigationItems = [
   { label: "Contact", id: "contact" },
 ] as const;
 
+const sectionPalettes: Record<string, { primary: string; secondary: string; tertiary: string; }> = {
+  hero: { primary: "#ffffff", secondary: "#e2e8f0", tertiary: "#94a3b8" },
+  about: { primary: "#ff00ff", secondary: "#4a00e0", tertiary: "#b000ff" },
+  work: { primary: "#00f2fe", secondary: "#4facfe", tertiary: "#00c6ff" },
+  projects: { primary: "#b2ff05", secondary: "#00b09b", tertiary: "#74ff00" },
+  skills: { primary: "#b2ff05", secondary: "#00b09b", tertiary: "#74ff00" },
+  journey: { primary: "#00f2fe", secondary: "#4facfe", tertiary: "#00c6ff" },
+  research: { primary: "#ff0844", secondary: "#ffb199", tertiary: "#ff4560" },
+  sports: { primary: "#7c3aed", secondary: "#3b82f6", tertiary: "#8b5cf6" },
+  contact: { primary: "#f97316", secondary: "#ea580c", tertiary: "#fcd34d" },
+};
+
 export function Navbar() {
   setupGsap();
   const lenis = useLenis();
@@ -26,8 +38,7 @@ export function Navbar() {
   const router = useRouter();
   const navRef = useRef<HTMLElement | null>(null);
   const overlayRef = useRef<HTMLDivElement | null>(null);
-  const progressRef = useRef<HTMLDivElement | null>(null);
-  const [activeSection, setActiveSection] = useState("about");
+  const [activeSection, setActiveSection] = useState("hero");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const isHomePage = pathname === "/";
@@ -50,14 +61,17 @@ export function Navbar() {
     setIsMenuOpen(false);
   };
 
-  /* ── Scroll state ──────────────────────────────────────────────── */
-  useLenis((lenisInstance) => {
-    if (progressRef.current) {
-      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-      const progress = docHeight > 0 ? lenisInstance.scroll / docHeight : 0;
-      progressRef.current.style.transform = `scaleX(${progress})`;
-    }
-  });
+  const docHeightRef = useRef(0);
+
+  // Cache scroll height — only recompute on resize, not on every scroll event
+  useEffect(() => {
+    const updateHeight = () => {
+      docHeightRef.current = document.documentElement.scrollHeight - window.innerHeight;
+    };
+    updateHeight();
+    window.addEventListener("resize", updateHeight, { passive: true });
+    return () => window.removeEventListener("resize", updateHeight);
+  }, []);
 
   useEffect(() => {
     const onScroll = () => {
@@ -89,8 +103,9 @@ export function Navbar() {
 
     // Let the DOM settle from GSAP Hero pins or framer-motion animations
     const initTimer = setTimeout(() => {
-      navigationItems.forEach((item) => {
-        const section = document.getElementById(item.id);
+      const allSections = ["hero", ...navigationItems.map(i => i.id)];
+      allSections.forEach((id) => {
+        const section = document.getElementById(id);
         if (section) observer.observe(section);
       });
     }, 500);
@@ -100,6 +115,21 @@ export function Navbar() {
       observer.disconnect();
     };
   }, [isHomePage]);
+
+  /* ── Global Color Engine ───────────────────────────────────────── */
+  useGSAP(
+    () => {
+      const palette = sectionPalettes[activeSection] || sectionPalettes.hero;
+      gsap.to(document.documentElement, {
+        "--accent-primary": palette.primary,
+        "--accent-secondary": palette.secondary,
+        "--accent-tertiary": palette.tertiary,
+        duration: 1.2,
+        ease: "power2.out",
+      });
+    },
+    { dependencies: [activeSection] }
+  );
 
   /* ── Mobile menu animations ────────────────────────────────────── */
   useGSAP(
@@ -133,11 +163,14 @@ export function Navbar() {
   return (
     <header
       ref={navRef}
-      className={`fixed left-0 top-0 z-1000 w-full border-b border-transparent px-4 py-5 transition-all duration-300 ${
+      className={`fixed left-0 top-0 z-1000 w-full px-4 py-5 transition-all duration-500 ${
         isScrolled
-          ? "nav-scrolled border-(--border-default)"
-          : "bg-transparent"
+          ? "nav-scrolled border-b"
+          : "bg-transparent border-b border-transparent"
       }`}
+      style={{
+        borderColor: isScrolled ? "color-mix(in srgb, var(--accent-primary) 25%, transparent)" : "transparent",
+      }}
     >
       <div className="mx-auto flex w-full max-w-7xl items-center justify-between">
         <button
@@ -149,7 +182,8 @@ export function Navbar() {
               router.push("/");
             }
           }}
-          className="font-mono text-lg tracking-[0.18em] text-(--accent-primary-light) transition-opacity hover:opacity-80"
+          className="font-mono text-lg font-bold tracking-[0.18em] text-white transition-all duration-300 hover:opacity-80"
+          style={{ textShadow: "0 0 15px color-mix(in srgb, var(--accent-primary) 60%, transparent)" }}
           aria-label="Go to top"
         >
           Harshavardhan K
@@ -170,15 +204,16 @@ export function Navbar() {
               >
                 {item.label}
               </button>
-              {/* Animated active indicator pill */}
+              {/* Animated active indicator glow */}
               <AnimatePresence>
                 {activeSection === item.id && (
                   <motion.span
                     layoutId="nav-active-pill"
-                    className="absolute inset-0 rounded-full"
+                    className="absolute inset-0 rounded-full pointer-events-none border"
                     style={{
-                      background: "var(--accent-primary-subtle)",
-                      border: "1px solid var(--accent-primary)",
+                      boxShadow: "0 0 20px 2px color-mix(in srgb, var(--accent-primary) 40%, transparent)",
+                      background: "color-mix(in srgb, var(--accent-primary) 15%, transparent)",
+                      borderColor: "color-mix(in srgb, var(--accent-primary) 30%, transparent)",
                     }}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
@@ -204,17 +239,6 @@ export function Navbar() {
           {isMenuOpen ? <X size={22} /> : <Menu size={22} />}
         </button>
       </div>
-
-      {/* ── Scroll progress bar ────────────────────────────────── */}
-      <div
-        ref={progressRef}
-        className="absolute bottom-0 left-0 h-0.5 w-full origin-left"
-        style={{
-          background:
-            "linear-gradient(to right, var(--accent-primary), var(--accent-tertiary))",
-          transform: "scaleX(0)",
-        }}
-      />
 
       {/* ── Mobile overlay ─────────────────────────────────────── */}
       <div

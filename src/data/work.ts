@@ -24,16 +24,17 @@ export const workExperience: WorkEntry[] = [
     technologies: ["TypeScript", "React", "SQL", "REST APIs"],
   },
   {
-    period: "2024 - Present",
-    role: "B.Tech, Artificial Intelligence & Data Science",
-    organization: "R.M.K. College of Engineering and Technology",
+    period: "2024",
+    role: "Full-Stack Developer Intern",
+    organization: "Zensphere Academy",
     location: "Chennai, India",
     overview:
-      "Focused on bridging machine learning concepts with full-stack deployment and interactive user-facing products.",
+      "Engineered an interactive e-learning platform focusing on seamless user experience and scalable backend architecture.",
     outcomes: [
-      "Built AI-leaning projects with end-to-end architecture ownership.",
-      "Developed practical strength in production web engineering patterns.",
+      "Architected dynamic course delivery modules using React and Next.js.",
+      "Optimized API response times for heavy media streaming workflows.",
+      "Integrated secure authentication and role-based access controls.",
     ],
-    technologies: ["Machine Learning", "Data Science", "Python", "Next.js"],
+    technologies: ["React", "Next.js", "Node.js", "MongoDB"],
   },
 ];

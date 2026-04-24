@@ -7,12 +7,19 @@ import { gsap } from "@/lib/gsap";
 
 export function Preloader() {
   const { progress, active } = useProgress();
+  // Use refs to read inside interval without re-creating it
+  const progressRef_internal = useRef(progress);
+  const activeRef_internal = useRef(active);
   const [fakeProgress, setFakeProgress] = useState(0);
   const [isVisible, setIsVisible] = useState(true);
   const preloaderRef = useRef<HTMLDivElement>(null);
   const introPlayedRef = useRef(false);
   const exitStartedRef = useRef(false);
   const phaseRef = useRef<HTMLParagraphElement>(null);
+
+  // Sync refs without triggering interval recreation
+  progressRef_internal.current = progress;
+  activeRef_internal.current = active;
 
   const getPhaseText = (p: number) => {
     if (p < 30) return "BOOTING KERNEL...";
@@ -26,24 +33,21 @@ export function Preloader() {
     preloaderWindow.__preloaderComplete = false;
   }, []);
 
-  // Smooth fake progress animation
+  // Smooth fake progress animation — single interval, reads refs to avoid re-creation
   useEffect(() => {
     const interval = setInterval(() => {
+      const isLoaded = progressRef_internal.current >= 100 || !activeRef_internal.current;
+      const maxFake = isLoaded ? 100 : 90;
       setFakeProgress((prev) => {
-        // Consider it loaded if three.js progress is 100% or it's inactive (no models to load)
-        const isLoaded = progress >= 100 || !active;
-        const maxFake = isLoaded ? 100 : 90; // hold at 90% until 3D is ready
-        
         if (prev < maxFake) {
-          // Fast initially, then slow down
           const increment = prev < 50 ? 1.5 : prev < 80 ? 0.8 : 0.4;
           return Math.min(prev + increment, maxFake);
         }
         return prev;
       });
-    }, 30);
+    }, 50); // Reduced from 30ms to 50ms (20fps is fine for a counter)
     return () => clearInterval(interval);
-  }, [progress, active]);
+  }, []); // Empty deps — interval created once, never recreated
 
   const readyToExit = fakeProgress >= 100;
 
@@ -115,7 +119,8 @@ export function Preloader() {
           "-=0.2"
         );
     },
-    { dependencies: [isVisible, readyToExit, fakeProgress], scope: preloaderRef }
+    // Only re-run for boolean state changes, not every fakeProgress tick
+    { dependencies: [isVisible, readyToExit], scope: preloaderRef }
   );
 
   useEffect(() => {
@@ -144,12 +149,12 @@ export function Preloader() {
       }}
     >
       <div className="overflow-hidden mb-4">
-        <p className="manifesto-text text-xs md:text-sm tracking-[0.3em] text-[var(--accent-primary-light)] font-medium uppercase opacity-0 translate-y-full">
+        <p className="manifesto-text text-xs md:text-sm tracking-[0.3em] text-white/70 font-medium uppercase opacity-0 translate-y-full">
           Immersive Experiences Ahead
         </p>
       </div>
       <div className="overflow-hidden">
-        <h2 className="counter-text text-[clamp(5rem,15vw,12rem)] font-black leading-none opacity-0 translate-y-full text-transparent bg-clip-text bg-gradient-to-b from-white to-[var(--accent-primary)]">
+        <h2 className="counter-text text-[clamp(5rem,15vw,12rem)] font-black leading-none opacity-0 translate-y-full text-transparent bg-clip-text bg-gradient-to-b from-white to-white/20">
           {Math.floor(fakeProgress)}%
         </h2>
       </div>
@@ -157,7 +162,7 @@ export function Preloader() {
         <p ref={phaseRef}>{getPhaseText(fakeProgress)}</p>
         <div className="mt-2 h-1 w-32 bg-white/10 rounded-full overflow-hidden">
           <div 
-            className="h-full bg-[var(--accent-primary)] transition-all duration-75 ease-linear" 
+            className="h-full bg-white/80 shadow-[0_0_10px_rgba(255,255,255,0.5)] transition-all duration-75 ease-linear" 
             style={{ width: `${fakeProgress}%` }}
           />
         </div>

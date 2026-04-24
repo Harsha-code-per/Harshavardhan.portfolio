@@ -79,18 +79,22 @@ export default function Home() {
       <div id="hero-master-container" className="h-screen w-full relative z-0">
         <Hero />
       </div>
-      <div className="relative z-10">
+
+      {/* Invisible spacer to hold scroll while Hero 3D model rotates */}
+      <div className="h-[100vh] w-full pointer-events-none" />
+
+      <div className="relative z-10 w-full">
         <About />
+        <WorkShowcase />
+        <HorizontalProjects />
+        <SkillsBento />
+        <TimelineExperience />
+        <ResearchSection />
+        <MarqueeBanner />
+        <SportsSection />
+        <ContactSection />
+        <Footer />
       </div>
-      <WorkShowcase />
-      <HorizontalProjects />
-      <SkillsBento />
-      <TimelineExperience />
-      <ResearchSection />
-      <MarqueeBanner />
-      <SportsSection />
-      <ContactSection />
-      <Footer />
     </main>
   );
 }

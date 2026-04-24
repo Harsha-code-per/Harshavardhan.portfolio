@@ -76,8 +76,11 @@ export function ContactSection() {
     <section
       id="contact"
       ref={sectionRef}
-      className="relative overflow-hidden px-[clamp(1rem,5vw,4rem)] py-20"
-      style={{ background: "var(--bg-base)" }}
+      className="relative flex min-h-[100dvh] w-full flex-col justify-center px-[clamp(1rem,5vw,4rem)] py-20 overflow-hidden"
+      style={{ 
+        backgroundColor: "var(--bg-base)",
+        backgroundImage: "radial-gradient(circle at 50% 100%, var(--accent-primary-subtle) 0%, transparent 70%)"
+      }}
     >
       <div
         data-contact-shell
@@ -87,7 +90,7 @@ export function ContactSection() {
           <p className="text-xs uppercase tracking-[0.3em] text-[var(--accent-primary-light)]">
             Contact
           </p>
-          <h2 className="text-gradient-violet mt-3 text-[clamp(2.5rem,5vw,5rem)] font-black leading-[0.95] tracking-tight">
+          <h2 className="mt-3 text-[clamp(2.5rem,5vw,5rem)] font-black uppercase tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-white to-white/60">
             Let&apos;s Build Something.
           </h2>
           <p className="mt-5 text-sm leading-relaxed text-[var(--text-secondary)] md:text-base">

@@ -2,7 +2,6 @@
 
 import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
-import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import { researchEntries } from "@/data/research";
 import { gsap, setupGsap } from "@/lib/gsap";
@@ -14,13 +13,8 @@ function ResearchCard({
   entry: (typeof researchEntries)[number];
   index: number;
 }) {
-  const x = useMotionValue(0);
-  const y = useMotionValue(0);
-  const rotateX = useTransform(y, [-80, 80], [5, -5]);
-  const rotateY = useTransform(x, [-80, 80], [-5, 5]);
-  const smoothRX = useSpring(rotateX, { damping: 25, stiffness: 200 });
-  const smoothRY = useSpring(rotateY, { damping: 25, stiffness: 200 });
-
+  // Replaced: useMotionValue + useSpring + useTransform (4 ticking physics springs removed)
+  // Pure CSS hover transition — zero JS per-frame cost
   const accents = [
     "var(--accent-tertiary)",
     "var(--accent-primary)",
@@ -29,53 +23,36 @@ function ResearchCard({
   const accent = accents[index % accents.length];
 
   return (
-    <motion.article
+    <article
       data-research-card
       className="card-glass group relative overflow-hidden rounded-2xl p-6"
       style={{
         borderLeft: `3px solid ${accent}`,
-        rotateX: smoothRX,
-        rotateY: smoothRY,
-        transformPerspective: 800,
+        transition: "transform 0.3s ease, box-shadow 0.3s ease",
       }}
-      onMouseMove={(event) => {
-        const rect = event.currentTarget.getBoundingClientRect();
-        x.set(event.clientX - (rect.left + rect.width / 2));
-        y.set(event.clientY - (rect.top + rect.height / 2));
+      onMouseEnter={(e) => {
+        (e.currentTarget as HTMLElement).style.transform = "scale(1.02)";
+        (e.currentTarget as HTMLElement).style.boxShadow = `0 0 40px color-mix(in srgb, ${accent} 15%, transparent)`;
       }}
-      onMouseLeave={() => {
-        x.set(0);
-        y.set(0);
+      onMouseLeave={(e) => {
+        (e.currentTarget as HTMLElement).style.transform = "";
+        (e.currentTarget as HTMLElement).style.boxShadow = "";
       }}
-      whileHover={{
-        scale: 1.02,
-        boxShadow: `0 0 40px color-mix(in srgb, ${accent} 20%, transparent)`,
-      }}
-      transition={{ duration: 0.3 }}
     >
-      {/* Glow orb */}
+      {/* Glow orb — CSS transition only */}
       <div
-        className="pointer-events-none absolute -right-6 -top-6 h-24 w-24 rounded-full opacity-0 blur-2xl transition-opacity duration-500 group-hover:opacity-40"
-        style={{ background: accent }}
+        className="pointer-events-none absolute -right-6 -top-6 h-24 w-24 rounded-full opacity-0 transition-opacity duration-500 group-hover:opacity-30"
+        style={{ background: accent, filter: "blur(30px)" }}
       />
 
-      <p
-        className="font-mono text-xs uppercase tracking-[0.2em]"
-        style={{ color: accent }}
-      >
+      <p className="font-mono text-xs uppercase tracking-[0.2em]" style={{ color: accent }}>
         {entry.area}
       </p>
       <h3 className="text-gradient-violet mt-3 text-xl font-bold md:text-2xl">
         {entry.title}
       </h3>
-      <p
-        className="mt-2 inline-flex items-center gap-1.5 text-xs uppercase tracking-[0.15em]"
-        style={{ color: accent }}
-      >
-        <span
-          className="h-1.5 w-1.5 rounded-full"
-          style={{ background: accent }}
-        />
+      <p className="mt-2 inline-flex items-center gap-1.5 text-xs uppercase tracking-[0.15em]" style={{ color: accent }}>
+        <span className="h-1.5 w-1.5 rounded-full" style={{ background: accent }} />
         {entry.status}
       </p>
       <p className="mt-4 text-sm leading-relaxed text-[var(--text-secondary)]">
@@ -104,7 +81,7 @@ function ResearchCard({
         </span>
         <ArrowUpRight className="h-4 w-4 transition-transform group-hover/link:-translate-y-0.5 group-hover/link:translate-x-0.5" />
       </a>
-    </motion.article>
+    </article>
   );
 }
 
@@ -149,36 +126,44 @@ export function ResearchSection() {
     <section
       id="research"
       ref={sectionRef}
-      className="relative overflow-hidden px-[clamp(1rem,5vw,4rem)] py-20"
-      style={{ background: "var(--bg-surface)" }}
+      className="relative overflow-hidden px-[clamp(1rem,5vw,4rem)] pt-20 pb-32"
+      style={{ 
+        backgroundColor: "var(--bg-base)",
+        backgroundImage: "radial-gradient(circle at 80% 20%, var(--accent-primary-subtle) 0%, transparent 50%), radial-gradient(circle at 20% 80%, var(--accent-secondary-subtle) 0%, transparent 50%)"
+      }}
     >
-      {/* Orbital decoration */}
-      <div className="pointer-events-none absolute right-[clamp(1rem,6vw,5rem)] top-16 hidden h-[clamp(12rem,18vw,16rem)] w-[clamp(12rem,18vw,16rem)] rounded-full border border-[var(--border-default)] lg:block">
-        <span className="orbital-dot absolute left-1/2 top-1/2 h-3 w-3 rounded-full bg-[var(--accent-tertiary)] shadow-[0_0_20px_var(--accent-tertiary-glow)]" />
-        <span className="orbital-dot absolute left-1/2 top-1/2 h-3 w-3 rounded-full bg-[var(--accent-primary-light)] shadow-[0_0_20px_var(--accent-primary-glow)]" />
+      {/* Orbital decoration - Extreme top right corner of the screen */}
+      <div className="pointer-events-none absolute right-8 top-16 hidden h-[240px] w-[240px] rounded-full border border-white/10 lg:block opacity-80 z-0">
+        {/* Orbit 1 - Fast forward spin */}
+        <div className="absolute inset-0 animate-[spin_8s_linear_infinite]">
+          <span className="absolute -top-2 left-1/2 h-4 w-4 -translate-x-1/2 rounded-full bg-[var(--accent-tertiary)] shadow-[0_0_20px_var(--accent-tertiary-glow)]" />
+        </div>
+
+        {/* Orbit 2 - Slower reverse spin */}
+        <div className="absolute inset-0 animate-[spin_12s_linear_infinite_reverse]">
+          <span className="absolute top-1/2 -left-1.5 h-3 w-3 -translate-y-1/2 rounded-full bg-[var(--accent-primary)] shadow-[0_0_15px_var(--accent-primary-glow)]" />
+        </div>
       </div>
 
-      <div className="mx-auto w-full max-w-7xl">
-        <p
-          data-research-heading
-          className="text-xs uppercase tracking-[0.3em] text-[var(--accent-tertiary)]"
-        >
+      <div className="relative z-10 mx-auto w-full max-w-7xl">
+
+        <p data-research-heading className="text-xs uppercase tracking-[0.3em] text-[var(--accent-tertiary)] relative z-10">
           Research
         </p>
         <h2
           data-research-heading
-          className="mt-3 text-[clamp(1.9rem,4.8vw,3.6rem)] font-black uppercase tracking-tight text-[var(--text-primary)]"
+          className="mt-3 text-[clamp(2.5rem,5vw,4.5rem)] font-black uppercase tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-white to-white/60 relative z-10 w-full lg:whitespace-nowrap"
         >
           Exploration Beyond Shipping
         </h2>
         <p
           data-research-heading
-          className="mt-4 max-w-3xl text-sm leading-relaxed text-[var(--text-secondary)] md:text-base"
+          className="mt-4 max-w-4xl text-sm leading-relaxed text-[var(--text-secondary)] md:text-base relative z-10"
         >
           Structured experimentation that turns ideas into practical systems.
         </p>
 
-        <div className="mt-12 grid gap-6 lg:grid-cols-2">
+        <div className="mt-12 grid gap-6 lg:grid-cols-2 relative z-20">
           {researchEntries.map((entry, index) => (
             <ResearchCard key={entry.title} entry={entry} index={index} />
           ))}

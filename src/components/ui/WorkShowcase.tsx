@@ -42,14 +42,21 @@ export function WorkShowcase() {
         return;
       }
 
-      /* Use a more conservative scroll distance */
-      const scrollPerCard = window.innerHeight * 1.2;
-      const totalScroll = scrollPerCard * (cards.length - 1);
+      /* Add more scroll distance to accommodate reading pauses */
+      const scrollPerCard = window.innerHeight * 1.1; // Reduced from 1.5 to 1.1 for a snappier feel
+      const totalScroll = scrollPerCard * cards.length;
+      
+      const artisticPalettes = [
+        { primary: "#00f2fe", secondary: "#4facfe" }, // Ocean Cyan
+        { primary: "#0052D4", secondary: "#4364F7" }, // Deep Azure
+        { primary: "#00b09b", secondary: "#96c93d" }, // Bioluminescent Teal
+        { primary: "#4a00e0", secondary: "#8e2de2" }, // Electric Indigo
+      ];
 
       const timeline = gsap.timeline({
         scrollTrigger: {
           trigger: stageRef.current,
-          start: "top top+=96",
+          start: "top top",
           end: () => `+=${Math.max(totalScroll, 800)}`,
           scrub: 0.8,
           pin: true,
@@ -58,35 +65,12 @@ export function WorkShowcase() {
           invalidateOnRefresh: true,
           anticipatePin: 1,
           onUpdate: (self) => {
+            // We multiply by 2 because each card now has a [Resting] and [Transitioning] phase
+            const totalDuration = cards.length * 2;
             const idx = Math.min(
-              Math.floor(self.progress * cards.length),
+              Math.floor((self.progress * totalDuration) / 2),
               cards.length - 1
             );
-            
-            // Update dots via DOM
-            const dots = document.querySelectorAll("[data-work-dot]");
-            const accentColors = [
-              "var(--accent-primary)",
-              "var(--accent-secondary)",
-              "var(--accent-tertiary)",
-            ];
-            
-            dots.forEach((dot, i) => {
-              const el = dot as HTMLElement;
-              if (i === idx) {
-                el.style.width = "24px";
-                el.style.background = accentColors[i % accentColors.length];
-              } else {
-                el.style.width = "8px";
-                el.style.background = "var(--border-hover)";
-              }
-            });
-
-            // Update counter via DOM
-            const counter = document.querySelector("[data-work-counter]");
-            if (counter) {
-              counter.textContent = `${String(idx + 1).padStart(2, "0")}/${String(cards.length).padStart(2, "0")}`;
-            }
           },
         },
       });
@@ -95,9 +79,15 @@ export function WorkShowcase() {
         const nextCard = cards[index + 1];
         const currentInner = card.querySelectorAll("[data-work-animate]");
         const nextInner = nextCard.querySelectorAll("[data-work-animate]");
-        const position = index;
+        
+        // position is index * 2. 
+        // Example: index 0. 
+        // 0 to 1 = card 0 rests (Reading Pause)
+        // 1 to 2 = card 0 exits, card 1 enters
+        // 2 to 3 = card 1 rests
+        const position = index * 2;
 
-        /* Current card exits up with slight rotation */
+        /* Current card exits up */
         timeline
           .to(
             card,
@@ -105,22 +95,22 @@ export function WorkShowcase() {
               yPercent: -30,
               opacity: 0,
               scale: 0.92,
-              duration: 0.5,
+              duration: 0.8,
               ease: "power2.inOut",
               overwrite: "auto",
             },
-            position
+            position + 1
           )
           .to(
             currentInner,
             {
               opacity: 0,
-              y: -18,
-              duration: 0.3,
-              stagger: 0.03,
+              y: -20,
+              duration: 0.4,
+              stagger: 0.02,
               overwrite: "auto",
             },
-            position
+            position + 1
           );
 
         /* Next card enters from below */
@@ -136,182 +126,154 @@ export function WorkShowcase() {
               yPercent: 0,
               scale: 1,
               opacity: 1,
-              duration: 0.6,
+              duration: 0.8,
               ease: "power2.out",
               overwrite: "auto",
             },
-            position + 0.15
+            position + 1.2
           )
           .fromTo(
             nextInner,
-            { opacity: 0, y: 28 },
+            { opacity: 0, y: 30 },
             {
               opacity: 1,
               y: 0,
-              duration: 0.4,
-              stagger: 0.05,
+              duration: 0.5,
+              stagger: 0.04,
               overwrite: "auto",
             },
-            position + 0.28
+            position + 1.3
           );
       });
+
+      /* Add an extra period for the last card to settle and lock the screen before unpinning */
+      timeline.to({}, { duration: 1 });
 
     },
     { scope: sectionRef, dependencies: [] }
   );
 
-  const accentColors = [
-    "var(--accent-primary)",
-    "var(--accent-secondary)",
-    "var(--accent-tertiary)",
+  const artisticPalettes = [
+    { primary: "#00f2fe", secondary: "#4facfe" }, // Ocean Cyan
+    { primary: "#0052D4", secondary: "#4364F7" }, // Deep Azure
+    { primary: "#00b09b", secondary: "#96c93d" }, // Bioluminescent Teal
+    { primary: "#4a00e0", secondary: "#8e2de2" }, // Electric Indigo
   ];
 
   return (
     <section
       id="work"
       ref={sectionRef}
-      className="relative isolate px-[clamp(1rem,5vw,4rem)] py-20"
-      style={{ background: "var(--bg-base)" }}
+      className="relative isolate bg-[var(--bg-base)]"
     >
-      <div className="mx-auto w-full max-w-7xl">
-        <p className="text-xs uppercase tracking-[0.3em] text-[var(--accent-primary-light)]">
-          Work
-        </p>
-        <h2 className="mt-3 text-[clamp(1.9rem,4.8vw,3.8rem)] font-black uppercase leading-[0.95] tracking-tight text-[var(--text-primary)]">
-          Real-World Engineering
-        </h2>
-        <p className="mt-4 max-w-3xl text-sm leading-relaxed text-[var(--text-secondary)] md:text-base">
-          Scroll through each chapter to see progression from problem framing to
-          production outcomes.
-        </p>
+      <div ref={stageRef} className="relative h-screen w-full overflow-hidden">
+        
+        {/* Intro Card */}
+        <article
+          data-work-card
+          className="absolute inset-0 flex flex-col justify-center px-[clamp(1rem,5vw,4rem)]"
+          style={{ background: "var(--bg-base)" }}
+        >
+          <div className="mx-auto w-full max-w-7xl">
+            <p data-work-animate className="text-xs uppercase tracking-[0.3em] text-[var(--accent-primary-light)]">
+              Work
+            </p>
+            <h2 data-work-animate className="mt-3 text-[clamp(1.9rem,4.8vw,3.8rem)] font-black uppercase leading-[0.95] tracking-tight text-[var(--text-primary)]">
+              Real-World Engineering
+            </h2>
+            <p data-work-animate className="mt-4 max-w-3xl text-sm leading-relaxed text-[var(--text-secondary)] md:text-base">
+              Scroll through each chapter to see progression from problem framing to
+              production outcomes.
+            </p>
+          </div>
+        </article>
 
-        {/* ── Progress dots ──────────────────────────────────────── */}
-        <div className="mt-6 flex items-center gap-2">
-          {workExperience.map((_, index) => (
-            <span
-              key={index}
-              data-work-dot
-              className="h-2 rounded-full transition-all duration-300"
-              style={{
-                width: index === 0 ? "24px" : "8px",
-                background:
-                  index === 0
-                    ? accentColors[0]
-                    : "var(--border-hover)",
-              }}
-            />
-          ))}
-          <span data-work-counter className="ml-2 font-mono text-xs text-[var(--text-muted)]">
-            01/{String(workExperience.length).padStart(2, "0")}
-          </span>
-        </div>
-
-        <div ref={stageRef} className="relative mt-8 h-[70vh] md:h-[76vh]">
-          {workExperience.map((work, index) => (
+        {/* Work Cards */}
+        {workExperience.map((work, index) => {
+          const palette = artisticPalettes[index % artisticPalettes.length];
+          return (
             <article
               key={`${work.period}-${work.role}`}
               data-work-card
-              className="card-glass absolute inset-0 rounded-3xl p-7 md:p-8"
+              className="absolute inset-0 flex flex-col justify-center px-[clamp(1rem,5vw,4rem)]"
+              style={{
+                willChange: "transform, opacity",
+                background: `radial-gradient(ellipse at 80% 20%, color-mix(in srgb, ${palette.primary} 20%, #050505) 0%, color-mix(in srgb, ${palette.secondary} 25%, #0a0a0c) 100%)`,
+              }}
             >
-              <div
-                className="grid h-full grid-cols-1 gap-6 md:grid-cols-[1.2fr_0.8fr]"
-                style={{
-                  borderLeft: `3px solid ${accentColors[index % accentColors.length]}`,
-                  paddingLeft: "1rem",
-                }}
-              >
-                <div>
-                  <p
-                    data-work-animate
-                    className="text-xs uppercase tracking-[0.24em] text-[var(--text-secondary)]"
-                  >
-                    {work.period}
-                  </p>
+
+              <div className="relative z-10 mx-auto w-full max-w-7xl h-full flex flex-col justify-center">
+                
+                {/* Top Section: Title & Role */}
+                <div className="w-full relative z-20 mb-12">
                   <h3
                     data-work-animate
-                    className="mt-3 text-2xl font-bold text-[var(--text-primary)]"
+                    className="text-[clamp(3rem,6vw,5rem)] font-black uppercase tracking-tight text-white"
+                    style={{ textShadow: `0 20px 50px color-mix(in srgb, ${palette.primary} 40%, transparent)` }}
                   >
                     {work.organization}
                   </h3>
-                  <p
-                    data-work-animate
-                    className="mt-1 text-sm text-[var(--text-secondary)]"
-                  >
-                    {work.role}
-                  </p>
-                  <p
-                    data-work-animate
-                    className="mt-1 text-sm text-[var(--text-secondary)]"
-                  >
-                    {work.organization} · {work.location}
-                  </p>
-                  <p
-                    data-work-animate
-                    className="mt-5 text-sm leading-relaxed text-[var(--text-secondary)] md:text-base"
-                  >
-                    {work.overview}
-                  </p>
-
-                  <ul className="mt-5 space-y-2">
-                    {work.outcomes.map((outcome) => (
-                      <li
-                        key={outcome}
-                        data-work-animate
-                        className="text-sm text-[var(--text-secondary)]"
-                      >
-                        <span className="mr-2 text-[var(--accent-primary-light)]">
-                          →
-                        </span>
-                        <span>{outcome}</span>
-                      </li>
-                    ))}
-                  </ul>
+                  <div className="mt-4 flex flex-wrap items-center gap-4">
+                    <span data-work-animate className="font-mono text-sm uppercase tracking-[0.2em] font-semibold" style={{ color: palette.primary }}>
+                      {work.period}
+                    </span>
+                    <span data-work-animate className="hidden md:block h-1.5 w-1.5 rounded-full bg-white/30" />
+                    <p data-work-animate className="text-xl md:text-2xl font-light text-white/80">
+                      {work.role}
+                    </p>
+                  </div>
                 </div>
 
-                <div className="card-glass flex h-full flex-col justify-between rounded-2xl p-5">
-                  <div>
-                    <p
-                      data-work-animate
-                      className="text-[0.65rem] uppercase tracking-[0.22em] text-[var(--accent-tertiary)]"
-                    >
-                      Core Stack
+                {/* Bottom Section: The two inner cards placed dynamically */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 relative z-30">
+                  
+                  {/* Inner Card 1: Overview & Stack */}
+                  <div data-work-animate className="p-8 rounded-[2rem] border border-white/10 bg-black/40 backdrop-blur-md shadow-2xl flex flex-col justify-between">
+                    <p className="text-[clamp(1rem,1.2vw,1.15rem)] font-medium text-white/90 leading-relaxed">
+                      {work.overview}
                     </p>
-                    <div className="mt-3 flex flex-wrap gap-2.5">
-                      {work.technologies.map((technology) => (
-                        <span
-                          key={technology}
-                          data-work-animate
-                          className="rounded-full border px-3 py-1 text-xs"
-                          style={{
-                            background: "var(--bg-elevated)",
-                            borderColor: "var(--border-default)",
-                            color: "var(--text-secondary)",
-                          }}
-                        >
-                          {technology}
-                        </span>
-                      ))}
+                    <div className="mt-10 pt-6 border-t border-white/10">
+                      <p className="text-[0.65rem] uppercase tracking-[0.25em] text-white/50 mb-4">
+                        Core Stack
+                      </p>
+                      <div className="flex flex-wrap gap-2.5">
+                        {work.technologies.map((technology) => (
+                          <span
+                            key={technology}
+                            className="rounded-full border border-white/10 bg-white/5 px-4 py-1.5 text-xs font-medium text-white/90 transition-colors hover:bg-white/10"
+                          >
+                            {technology}
+                          </span>
+                        ))}
+                      </div>
                     </div>
                   </div>
-                  <div className="mt-5 rounded-xl border border-[var(--border-default)] bg-[var(--bg-elevated)] px-4 py-3">
-                    <p
-                      data-work-animate
-                      className="text-[0.65rem] uppercase tracking-[0.2em] text-[var(--text-muted)]"
-                    >
+
+                  {/* Inner Card 2: Outcomes */}
+                  <div data-work-animate className="p-8 rounded-[2rem] border border-white/10 bg-black/40 backdrop-blur-md shadow-2xl">
+                    <p className="text-[0.65rem] uppercase tracking-[0.25em] text-white/50 mb-6">
                       Outcome Focus
                     </p>
-                    <p
-                      data-work-animate
-                      className="mt-1 text-sm text-[var(--text-secondary)]"
-                    >
-                      Production-grade delivery with measurable engineering impact.
-                    </p>
+                    <ul className="space-y-5">
+                      {work.outcomes.map((outcome) => (
+                        <li
+                          key={outcome}
+                          className="text-sm md:text-base text-white/80 flex items-start leading-relaxed group"
+                        >
+                          <span className="mr-4 font-bold text-lg leading-none transition-transform group-hover:translate-x-1" style={{ color: palette.primary }}>
+                            →
+                          </span>
+                          <span>{outcome}</span>
+                        </li>
+                      ))}
+                    </ul>
                   </div>
+
                 </div>
               </div>
             </article>
-          ))}
-        </div>
+          );
+        })}
       </div>
     </section>
   );

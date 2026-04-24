@@ -73,9 +73,9 @@ export function Hero() {
       const pinTrigger = ScrollTrigger.create({
         trigger: "#hero-master-container",
         start: "top top",
-        end: "+=150%",
+        end: "+=200%", // 100% for 3D rotation + 100% for About page to slide over it
         pin: true,
-        pinSpacing: true,
+        pinSpacing: false, // Do NOT push subsequent content down, allow overlap
         refreshPriority: 10,
       });
 
@@ -145,7 +145,7 @@ export function Hero() {
 
         {/* Subheadline */}
         <p className="hero-anim mt-6 text-neutral-400 text-[clamp(1rem,min(1.5vw,2vh),1.25rem)] max-w-[90%] font-light pointer-events-auto">
-          I build <span className="text-white font-medium">AI-Powered Systems</span> and design <span className="text-[var(--accent-primary-light)] font-medium">Cinematic Web Interfaces</span> <br/>where deep engineering meets visual storytelling.
+          I build <span className="text-white font-medium">AI-Powered Systems</span> and design <span className="text-[#E49B55] font-medium">Cinematic Web Interfaces</span> <br/>where deep engineering meets visual storytelling.
         </p>
 
         {/* Badges */}
@@ -157,7 +157,7 @@ export function Hero() {
 
         {/* Primary Button */}
         <div className="hero-anim mt-8 pointer-events-auto">
-          <button onClick={() => document.getElementById("work")?.scrollIntoView({ behavior: "smooth" })} className="px-8 py-3 rounded-full bg-[var(--accent-primary)] hover:bg-[var(--accent-secondary)] text-white font-medium transition-colors shadow-[0_0_20px_var(--accent-primary-glow)]">
+          <button onClick={() => document.getElementById("work")?.scrollIntoView({ behavior: "smooth" })} className="px-8 py-3 rounded-full bg-[var(--accent-primary)] hover:bg-[var(--accent-secondary)] text-black font-semibold transition-colors shadow-[0_0_20px_var(--accent-primary-glow)]">
             View My Work
           </button>
         </div>
