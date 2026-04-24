@@ -72,7 +72,7 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${spaceGrotesk.variable} grain-overlay bg-[#0a0a0f] text-[#f8fafc] font-sans antialiased overflow-x-hidden`}
+        className={`${spaceGrotesk.variable} bg-[#0a0a0f] text-[#f8fafc] font-sans antialiased overflow-x-hidden`}
       >
         <Preloader />
         <CustomCursor />

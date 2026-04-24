@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import { workExperience } from "@/data/work";
 import { ScrollTrigger, gsap, setupGsap } from "@/lib/gsap";
@@ -10,7 +10,6 @@ export function WorkShowcase() {
 
   const sectionRef = useRef<HTMLElement | null>(null);
   const stageRef = useRef<HTMLDivElement | null>(null);
-  const [activeIndex, setActiveIndex] = useState(0);
 
   useGSAP(
     () => {
@@ -63,7 +62,31 @@ export function WorkShowcase() {
               Math.floor(self.progress * cards.length),
               cards.length - 1
             );
-            setActiveIndex(idx);
+            
+            // Update dots via DOM
+            const dots = document.querySelectorAll("[data-work-dot]");
+            const accentColors = [
+              "var(--accent-primary)",
+              "var(--accent-secondary)",
+              "var(--accent-tertiary)",
+            ];
+            
+            dots.forEach((dot, i) => {
+              const el = dot as HTMLElement;
+              if (i === idx) {
+                el.style.width = "24px";
+                el.style.background = accentColors[i % accentColors.length];
+              } else {
+                el.style.width = "8px";
+                el.style.background = "var(--border-hover)";
+              }
+            });
+
+            // Update counter via DOM
+            const counter = document.querySelector("[data-work-counter]");
+            if (counter) {
+              counter.textContent = `${String(idx + 1).padStart(2, "0")}/${String(cards.length).padStart(2, "0")}`;
+            }
           },
         },
       });
@@ -167,19 +190,19 @@ export function WorkShowcase() {
           {workExperience.map((_, index) => (
             <span
               key={index}
+              data-work-dot
               className="h-2 rounded-full transition-all duration-300"
               style={{
-                width: activeIndex === index ? "24px" : "8px",
+                width: index === 0 ? "24px" : "8px",
                 background:
-                  activeIndex === index
-                    ? accentColors[index % accentColors.length]
+                  index === 0
+                    ? accentColors[0]
                     : "var(--border-hover)",
               }}
             />
           ))}
-          <span className="ml-2 font-mono text-xs text-[var(--text-muted)]">
-            {String(activeIndex + 1).padStart(2, "0")}/
-            {String(workExperience.length).padStart(2, "0")}
+          <span data-work-counter className="ml-2 font-mono text-xs text-[var(--text-muted)]">
+            01/{String(workExperience.length).padStart(2, "0")}
           </span>
         </div>
 

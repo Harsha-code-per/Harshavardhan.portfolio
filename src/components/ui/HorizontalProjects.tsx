@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import { motion } from "framer-motion";
 import { projects } from "@/data/projects";
@@ -14,7 +14,6 @@ export function HorizontalProjects() {
   const trackRef = useRef<HTMLDivElement | null>(null);
   const progressRef = useRef<HTMLDivElement | null>(null);
   const headerRef = useRef<HTMLDivElement | null>(null);
-  const [activeProject, setActiveProject] = useState(0);
 
   useGSAP(
     () => {
@@ -53,12 +52,30 @@ export function HorizontalProjects() {
                 transformOrigin: "left center",
               });
 
-              /* Update active project index */
+              /* Update active project index purely through DOM to prevent React re-renders */
               const idx = Math.min(
                 Math.floor(self.progress * projects.length),
                 projects.length - 1
               );
-              setActiveProject(idx);
+              
+              // Find all dot indicators
+              const dots = document.querySelectorAll("[data-project-dot]");
+              dots.forEach((dot, i) => {
+                const el = dot as HTMLElement;
+                if (i === idx) {
+                  el.style.width = "20px";
+                  el.style.background = accentColors[i % accentColors.length];
+                } else {
+                  el.style.width = "6px";
+                  el.style.background = "var(--border-hover)";
+                }
+              });
+
+              // Find index counter
+              const counter = document.querySelector("[data-project-counter]");
+              if (counter) {
+                counter.textContent = `${String(idx + 1).padStart(2, "0")}/${String(projects.length).padStart(2, "0")}`;
+              }
             },
           },
         });
@@ -129,20 +146,20 @@ export function HorizontalProjects() {
               {projects.map((_, index) => (
                 <span
                   key={index}
+                  data-project-dot
                   className="h-1.5 rounded-full transition-all duration-500"
                   style={{
-                    width: activeProject === index ? "20px" : "6px",
+                    width: index === 0 ? "20px" : "6px",
                     background:
-                      activeProject === index
-                        ? accentColors[index % accentColors.length]
+                      index === 0
+                        ? accentColors[0]
                         : "var(--border-hover)",
                   }}
                 />
               ))}
             </div>
-            <span className="font-mono text-sm text-[var(--text-muted)]">
-              {String(activeProject + 1).padStart(2, "0")}/
-              {String(projects.length).padStart(2, "0")}
+            <span data-project-counter className="font-mono text-sm text-[var(--text-muted)]">
+              01/{String(projects.length).padStart(2, "0")}
             </span>
           </div>
         </div>
