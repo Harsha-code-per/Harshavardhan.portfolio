@@ -64,14 +64,6 @@ export function WorkShowcase() {
           pinType: "transform",
           invalidateOnRefresh: true,
           anticipatePin: 1,
-          onUpdate: (self) => {
-            // We multiply by 2 because each card now has a [Resting] and [Transitioning] phase
-            const totalDuration = cards.length * 2;
-            const idx = Math.min(
-              Math.floor((self.progress * totalDuration) / 2),
-              cards.length - 1
-            );
-          },
         },
       });
 

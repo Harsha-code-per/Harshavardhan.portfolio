@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
 import { useGSAP } from "@gsap/react";
 import { ArrowUpRight } from "lucide-react";
 import { researchEntries } from "@/data/research";
@@ -89,6 +89,25 @@ export function ResearchSection() {
   setupGsap();
 
   const sectionRef = useRef<HTMLElement | null>(null);
+  const orbitRef = useRef<HTMLDivElement | null>(null);
+
+  /* Pause infinite CSS spin animations when section is off-screen.
+     These were burning GPU 24/7 even when 3000px out of view. */
+  useEffect(() => {
+    const el = orbitRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        const spinners = el.querySelectorAll<HTMLElement>("[data-orbit-spin]");
+        spinners.forEach((s) => {
+          s.style.animationPlayState = entry.isIntersecting ? "running" : "paused";
+        });
+      },
+      { threshold: 0 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   useGSAP(
     () => {
@@ -132,15 +151,15 @@ export function ResearchSection() {
         backgroundImage: "radial-gradient(circle at 80% 20%, var(--accent-primary-subtle) 0%, transparent 50%), radial-gradient(circle at 20% 80%, var(--accent-secondary-subtle) 0%, transparent 50%)"
       }}
     >
-      {/* Orbital decoration - Extreme top right corner of the screen */}
-      <div className="pointer-events-none absolute right-8 top-16 hidden h-[240px] w-[240px] rounded-full border border-white/10 lg:block opacity-80 z-0">
-        {/* Orbit 1 - Fast forward spin */}
-        <div className="absolute inset-0 animate-[spin_8s_linear_infinite]">
+      {/* Orbital decoration - paused when off-screen via IntersectionObserver */}
+      <div ref={orbitRef} className="pointer-events-none absolute right-8 top-16 hidden h-[240px] w-[240px] rounded-full border border-white/10 lg:block opacity-80 z-0">
+        {/* Orbit 1 - starts paused, observer resumes when visible */}
+        <div data-orbit-spin className="absolute inset-0 animate-[spin_8s_linear_infinite]" style={{ animationPlayState: "paused" }}>
           <span className="absolute -top-2 left-1/2 h-4 w-4 -translate-x-1/2 rounded-full bg-[var(--accent-tertiary)] shadow-[0_0_20px_var(--accent-tertiary-glow)]" />
         </div>
 
-        {/* Orbit 2 - Slower reverse spin */}
-        <div className="absolute inset-0 animate-[spin_12s_linear_infinite_reverse]">
+        {/* Orbit 2 - starts paused, observer resumes when visible */}
+        <div data-orbit-spin className="absolute inset-0 animate-[spin_12s_linear_infinite_reverse]" style={{ animationPlayState: "paused" }}>
           <span className="absolute top-1/2 -left-1.5 h-3 w-3 -translate-y-1/2 rounded-full bg-[var(--accent-primary)] shadow-[0_0_15px_var(--accent-primary-glow)]" />
         </div>
       </div>

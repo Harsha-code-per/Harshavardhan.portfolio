@@ -54,6 +54,8 @@ export default function RootLayout({
   return (
     <html lang="en" className={spaceGrotesk.variable}>
       <head>
+        {/* Prevent mobile browsers from auto-scaling — we handle scaling ourselves */}
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{

@@ -1,4 +1,24 @@
 @import "tailwindcss";
+
+/* ── Typed custom properties — enables smooth CSS transitions on colors ─ */
+/* Without @property, custom property transitions are ignored by the browser */
+@property --accent-primary {
+  syntax: "<color>";
+  initial-value: #f97316;
+  inherits: true;
+}
+
+@property --accent-secondary {
+  syntax: "<color>";
+  initial-value: #ea580c;
+  inherits: true;
+}
+
+@property --accent-tertiary {
+  syntax: "<color>";
+  initial-value: #fcd34d;
+  inherits: true;
+}
 @custom-variant dark (&:where(.dark, .dark *));
 
 :root {
@@ -31,6 +51,11 @@
   --radius-md: 12px;
   --radius-lg: 20px;
   --radius-xl: 32px;
+  /* Smooth CSS-transition for typed color variables (no GSAP needed) */
+  transition:
+    --accent-primary 1.2s ease,
+    --accent-secondary 1.2s ease,
+    --accent-tertiary 1.2s ease;
 }
 
 @theme inline {
@@ -173,14 +198,18 @@ section {
 }
 
 .orbital-dot {
-  /* Use a simple scale pulse instead of complex nested transforms */
+  /* will-change removed — permanent GPU compositing layer was never released */
   animation: orbit 8s linear infinite;
-  will-change: transform;
 }
 
 .orbital-dot:nth-child(2) {
   animation-duration: 12s;
   animation-direction: reverse;
+}
+
+/* Pause any CSS animation when element is scrolled off-screen */
+.animation-paused {
+  animation-play-state: paused !important;
 }
 
 /* ── Animated gradient border — GPU-composited version ──────────────── */

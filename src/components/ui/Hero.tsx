@@ -130,6 +130,15 @@ export function Hero() {
         <HeroScene />
       </div>
 
+      {/* Mobile gradient: ensures text is readable over the 3D canvas */}
+      <div
+        className="absolute inset-0 z-[1] pointer-events-none lg:hidden"
+        style={{
+          background:
+            "linear-gradient(to right, rgba(5,5,5,0.88) 0%, rgba(5,5,5,0.65) 55%, rgba(5,5,5,0.15) 100%)",
+        }}
+      />
+
       <div id="hero-scroll-wrapper" className="absolute inset-0 z-10 flex flex-col justify-center pt-24 lg:pt-0 px-8 lg:px-16 pointer-events-none w-full lg:w-[55vw] xl:w-[50vw]">
         
         {/* Eyebrow */}
@@ -138,14 +147,14 @@ export function Hero() {
           AI Engineer <span className="opacity-50">&bull;</span> FULL-Stack Architect
         </p>
 
-        {/* H1 - Note the updated clip-path to prevent descender clipping */}
+        {/* H1 */}
         <h1 id="hero-title" className="text-[clamp(2.5rem,min(5vw,6.5vh),5rem)] font-black uppercase leading-[0.85] tracking-tighter text-zinc-100 pointer-events-auto [clip-path:polygon(0_0,100%_0,100%_120%,0_120%)]">
           CRAFTING<br/>INTELLIGENT<br/>EXPERIENCES.
         </h1>
 
         {/* Subheadline */}
         <p className="hero-anim mt-6 text-neutral-400 text-[clamp(1rem,min(1.5vw,2vh),1.25rem)] max-w-[90%] font-light pointer-events-auto">
-          I build <span className="text-white font-medium">AI-Powered Systems</span> and design <span className="text-[#E49B55] font-medium">Cinematic Web Interfaces</span> <br/>where deep engineering meets visual storytelling.
+          I build <span className="text-white font-medium">AI-Powered Systems</span> and design <span className="text-[#E49B55] font-medium">Cinematic Web Interfaces</span> <br className="hidden sm:block"/>where deep engineering meets visual storytelling.
         </p>
 
         {/* Badges */}

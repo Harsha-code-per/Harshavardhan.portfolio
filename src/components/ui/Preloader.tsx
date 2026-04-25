@@ -16,6 +16,8 @@ export function Preloader() {
   const introPlayedRef = useRef(false);
   const exitStartedRef = useRef(false);
   const phaseRef = useRef<HTMLParagraphElement>(null);
+  // Guard against double-interval in React StrictMode
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   // Sync refs without triggering interval recreation
   progressRef_internal.current = progress;
@@ -33,20 +35,29 @@ export function Preloader() {
     preloaderWindow.__preloaderComplete = false;
   }, []);
 
-  // Smooth fake progress animation — single interval, reads refs to avoid re-creation
+  // Smooth fake progress animation — single interval, guarded against double-create
   useEffect(() => {
-    const interval = setInterval(() => {
+    if (intervalRef.current) clearInterval(intervalRef.current);
+    intervalRef.current = setInterval(() => {
       const isLoaded = progressRef_internal.current >= 100 || !activeRef_internal.current;
       const maxFake = isLoaded ? 100 : 90;
       setFakeProgress((prev) => {
-        if (prev < maxFake) {
-          const increment = prev < 50 ? 1.5 : prev < 80 ? 0.8 : 0.4;
-          return Math.min(prev + increment, maxFake);
+        const next = prev < maxFake
+          ? Math.min(prev + (prev < 50 ? 1.5 : prev < 80 ? 0.8 : 0.4), maxFake)
+          : prev;
+        // Update phase text directly in the interval — no GSAP hook needed
+        if (phaseRef.current) {
+          phaseRef.current.innerText = getPhaseText(next);
         }
-        return prev;
+        return next;
       });
-    }, 50); // Reduced from 30ms to 50ms (20fps is fine for a counter)
-    return () => clearInterval(interval);
+    }, 50);
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
+    };
   }, []); // Empty deps — interval created once, never recreated
 
   const readyToExit = fakeProgress >= 100;
@@ -87,10 +98,7 @@ export function Preloader() {
             "-=0.45"
           );
       }
-
-      if (phaseRef.current) {
-        phaseRef.current.innerText = getPhaseText(fakeProgress);
-      }
+      // phaseRef update moved to the interval — no DOM mutation needed here
 
       if (!readyToExit || exitStartedRef.current) return;
 

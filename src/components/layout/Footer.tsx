@@ -65,18 +65,27 @@ export function Footer() {
       const cleanup: Array<() => void> = [];
 
       links.forEach((element) => {
+        let rafId: number | null = null;
+
         const onMove = (event: MouseEvent) => {
-          const rect = element.getBoundingClientRect();
-          const x = (event.clientX - rect.left - rect.width / 2) * 0.25;
-          const y = (event.clientY - rect.top - rect.height / 2) * 0.25;
-          gsap.to(element, { x, y, duration: 0.4, ease: "power2.out" });
+          // Skip if a RAF is already pending — collapses burst events into one frame
+          if (rafId !== null) return;
+          rafId = requestAnimationFrame(() => {
+            const rect = element.getBoundingClientRect();
+            const x = (event.clientX - rect.left - rect.width / 2) * 0.25;
+            const y = (event.clientY - rect.top - rect.height / 2) * 0.25;
+            gsap.to(element, { x, y, duration: 0.4, ease: "power2.out", overwrite: true });
+            rafId = null;
+          });
         };
         const onLeave = () => {
+          if (rafId !== null) { cancelAnimationFrame(rafId); rafId = null; }
           gsap.to(element, {
             x: 0,
             y: 0,
             duration: 0.6,
             ease: "elastic.out(1, 0.5)",
+            overwrite: true,
           });
         };
 
@@ -84,6 +93,7 @@ export function Footer() {
         element.addEventListener("mouseleave", onLeave);
 
         cleanup.push(() => {
+          if (rafId !== null) cancelAnimationFrame(rafId);
           element.removeEventListener("mousemove", onMove);
           element.removeEventListener("mouseleave", onLeave);
         });

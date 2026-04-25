@@ -25,7 +25,9 @@ export default function SmoothScroller({ children }: SmoothScrollerProps) {
     }
 
     gsap.ticker.add(update);
-    gsap.ticker.lagSmoothing(0);
+    // Allow GSAP to recover missed frames gradually (500ms window)
+    // lagSmoothing(0) caused frame-spike cascades under GPU load.
+    gsap.ticker.lagSmoothing(500, 33);
 
     /* Centralized refresh once fonts are loaded */
     if (document.fonts && document.fonts.ready) {
@@ -34,8 +36,18 @@ export default function SmoothScroller({ children }: SmoothScrollerProps) {
       });
     }
 
+    /* Refresh ScrollTrigger on resize (handles zoom changes, orientation, etc.) */
+    let resizeTimer: ReturnType<typeof setTimeout>;
+    const onResize = () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => ScrollTrigger.refresh(), 250);
+    };
+    window.addEventListener("resize", onResize, { passive: true });
+
     return () => {
       gsap.ticker.remove(update);
+      window.removeEventListener("resize", onResize);
+      clearTimeout(resizeTimer);
     };
   }, []);
 

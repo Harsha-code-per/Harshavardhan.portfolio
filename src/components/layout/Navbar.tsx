@@ -116,20 +116,16 @@ export function Navbar() {
     };
   }, [isHomePage]);
 
-  /* ── Global Color Engine ───────────────────────────────────────── */
-  useGSAP(
-    () => {
-      const palette = sectionPalettes[activeSection] || sectionPalettes.hero;
-      gsap.to(document.documentElement, {
-        "--accent-primary": palette.primary,
-        "--accent-secondary": palette.secondary,
-        "--accent-tertiary": palette.tertiary,
-        duration: 1.2,
-        ease: "power2.out",
-      });
-    },
-    { dependencies: [activeSection] }
-  );
+  /* ── Global Color Engine (zero-tween version) ─────────────────────── */
+  // style.setProperty() + CSS @property in globals.css handles smooth
+  // color transitions natively — no GSAP tweens that accumulate over time.
+  useEffect(() => {
+    const palette = sectionPalettes[activeSection] ?? sectionPalettes.hero;
+    const el = document.documentElement;
+    el.style.setProperty("--accent-primary", palette.primary);
+    el.style.setProperty("--accent-secondary", palette.secondary);
+    el.style.setProperty("--accent-tertiary", palette.tertiary);
+  }, [activeSection]);
 
   /* ── Mobile menu animations ────────────────────────────────────── */
   useGSAP(
