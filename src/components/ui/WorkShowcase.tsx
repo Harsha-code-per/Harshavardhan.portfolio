@@ -3,269 +3,249 @@
 import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import { workExperience } from "@/data/work";
-import { ScrollTrigger, gsap, setupGsap } from "@/lib/gsap";
+import { gsap, ScrollTrigger, setupGsap } from "@/lib/gsap";
+import { useReducedMotionPreference } from "@/lib/useReducedMotion";
+
+const proofSignals = [
+  { label: "Status", value: "Fresher", detail: "ready for first team" },
+  { label: "Internships", value: "02", detail: "real product exposure" },
+  { label: "Mode", value: "Ship", detail: "learn fast, build clean" },
+];
 
 export function WorkShowcase() {
   setupGsap();
 
   const sectionRef = useRef<HTMLElement | null>(null);
-  const stageRef = useRef<HTMLDivElement | null>(null);
+  const horizontalRef = useRef<HTMLDivElement | null>(null);
+  const prefersReducedMotion = useReducedMotionPreference();
 
   useGSAP(
     () => {
-      const cards = gsap.utils.toArray<HTMLElement>("[data-work-card]");
-      if (!stageRef.current || cards.length === 0) {
-        return;
-      }
+      const section = sectionRef.current;
+      const horizontal = horizontalRef.current;
+      if (!section || !horizontal) return;
 
-      cards.forEach((card, index) => {
-        gsap.set(card, {
-          zIndex: index + 1,
-          yPercent: index === 0 ? 0 : 100,
-          opacity: index === 0 ? 1 : 0,
-          scale: index === 0 ? 1 : 0.95,
-          transformOrigin: "center center",
-        });
+      const panels = gsap.utils.toArray<HTMLElement>(".work-panel", section);
+      const parallaxTexts = gsap.utils.toArray<HTMLElement>(".parallax-text", section);
+      
+      const getScrollAmount = () => horizontal.scrollWidth - window.innerWidth;
+
+      const pinTrigger = ScrollTrigger.create({
+        trigger: section,
+        start: "top top",
+        end: () => `+=${getScrollAmount()}`,
+        pin: true,
+        anticipatePin: 1,
       });
 
-      if (cards.length === 1) {
-        gsap.from(cards[0], {
-          opacity: 0,
-          y: 40,
-          duration: 0.8,
-          ease: "power2.out",
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: "top 75%",
-          },
-        });
-        return;
-      }
-
-      /* Add more scroll distance to accommodate reading pauses */
-      const scrollPerCard = window.innerHeight * 1.1; // Reduced from 1.5 to 1.1 for a snappier feel
-      const totalScroll = scrollPerCard * cards.length;
-      
-      const artisticPalettes = [
-        { primary: "#00f2fe", secondary: "#4facfe" }, // Ocean Cyan
-        { primary: "#0052D4", secondary: "#4364F7" }, // Deep Azure
-        { primary: "#00b09b", secondary: "#96c93d" }, // Bioluminescent Teal
-        { primary: "#4a00e0", secondary: "#8e2de2" }, // Electric Indigo
-      ];
-
-      const timeline = gsap.timeline({
+      // Horizontal Scrub
+      const scrollTween = gsap.to(horizontal, {
+        x: () => -getScrollAmount(),
+        ease: "none",
         scrollTrigger: {
-          trigger: stageRef.current,
+          trigger: section,
           start: "top top",
-          end: () => `+=${Math.max(totalScroll, 800)}`,
-          scrub: 0.8,
-          pin: true,
-          pinSpacing: true,
-          pinType: "transform",
+          end: () => `+=${getScrollAmount()}`,
+          scrub: prefersReducedMotion ? false : 0.8,
           invalidateOnRefresh: true,
-          anticipatePin: 1,
         },
       });
 
-      cards.slice(0, -1).forEach((card, index) => {
-        const nextCard = cards[index + 1];
-        const currentInner = card.querySelectorAll("[data-work-animate]");
-        const nextInner = nextCard.querySelectorAll("[data-work-animate]");
-        
-        // position is index * 2. 
-        // Example: index 0. 
-        // 0 to 1 = card 0 rests (Reading Pause)
-        // 1 to 2 = card 0 exits, card 1 enters
-        // 2 to 3 = card 1 rests
-        const position = index * 2;
-
-        /* Current card exits up */
-        timeline
-          .to(
-            card,
-            {
-              yPercent: -30,
-              opacity: 0,
-              scale: 0.92,
-              duration: 0.8,
-              ease: "power2.inOut",
-              overwrite: "auto",
-            },
-            position + 1
-          )
-          .to(
-            currentInner,
-            {
-              opacity: 0,
-              y: -20,
-              duration: 0.4,
-              stagger: 0.02,
-              overwrite: "auto",
-            },
-            position + 1
-          );
-
-        /* Next card enters from below */
-        timeline
-          .fromTo(
-            nextCard,
-            {
-              yPercent: 100,
-              opacity: 0,
-              scale: 0.95,
-            },
-            {
-              yPercent: 0,
-              scale: 1,
-              opacity: 1,
-              duration: 0.8,
-              ease: "power2.out",
-              overwrite: "auto",
-            },
-            position + 1.2
-          )
-          .fromTo(
-            nextInner,
-            { opacity: 0, y: 30 },
-            {
-              opacity: 1,
-              y: 0,
-              duration: 0.5,
-              stagger: 0.04,
-              overwrite: "auto",
-            },
-            position + 1.3
-          );
+      // Parallax Typography Effect
+      // As the container moves left, we move the text right at a different speed to create depth
+      parallaxTexts.forEach((text) => {
+        gsap.to(text, {
+          x: "15vw",
+          ease: "none",
+          scrollTrigger: {
+            trigger: section,
+            start: "top top",
+            end: () => `+=${getScrollAmount()}`,
+            scrub: prefersReducedMotion ? false : 1,
+            invalidateOnRefresh: true,
+          },
+        });
       });
 
-      /* Add an extra period for the last card to settle and lock the screen before unpinning */
-      timeline.to({}, { duration: 1 });
+      // Subtle entrance animations for cards when they come into view
+      panels.forEach((panel, i) => {
+        if (i === 0) return; // Skip intro panel
+        
+        const innerContent = panel.querySelector(".work-content");
+        if (innerContent) {
+          gsap.from(innerContent, {
+            opacity: 0,
+            y: 40,
+            scale: 0.95,
+            duration: 0.8,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: panel,
+              containerAnimation: scrollTween, // Use the horizontal scroll tween as the container
+              start: "left 80%",
+              toggleActions: "play none none reverse",
+            },
+          });
+        }
+      });
 
+      return () => {
+        pinTrigger.kill();
+        scrollTween.scrollTrigger?.kill();
+        scrollTween.kill();
+      };
     },
-    { scope: sectionRef, dependencies: [] }
+    { scope: sectionRef, dependencies: [prefersReducedMotion] }
   );
 
   const artisticPalettes = [
-    { primary: "#00f2fe", secondary: "#4facfe" }, // Ocean Cyan
-    { primary: "#0052D4", secondary: "#4364F7" }, // Deep Azure
-    { primary: "#00b09b", secondary: "#96c93d" }, // Bioluminescent Teal
-    { primary: "#4a00e0", secondary: "#8e2de2" }, // Electric Indigo
+    { primary: "#00f2fe", secondary: "#4facfe" }, 
+    { primary: "#4a00e0", secondary: "#8e2de2" },
+    { primary: "#b2ff05", secondary: "#00b09b" }, 
   ];
 
   return (
-    <section
-      id="work"
-      ref={sectionRef}
-      className="relative isolate bg-[var(--bg-base)]"
-    >
-      <div ref={stageRef} className="relative h-screen w-full overflow-hidden">
-        
-        {/* Intro Card */}
-        <article
-          data-work-card
-          className="absolute inset-0 flex flex-col justify-center px-[clamp(1rem,5vw,4rem)]"
-          style={{ background: "var(--bg-base)" }}
-        >
-          <div className="mx-auto w-full max-w-7xl">
-            <p data-work-animate className="text-xs uppercase tracking-[0.3em] text-[var(--accent-primary-light)]">
-              Work
-            </p>
-            <h2 data-work-animate className="mt-3 text-[clamp(1.9rem,4.8vw,3.8rem)] font-black uppercase leading-[0.95] tracking-tight text-[var(--text-primary)]">
-              Real-World Engineering
-            </h2>
-            <p data-work-animate className="mt-4 max-w-3xl text-sm leading-relaxed text-[var(--text-secondary)] md:text-base">
-              Scroll through each chapter to see progression from problem framing to
-              production outcomes.
-            </p>
-          </div>
-        </article>
+    <section id="work" ref={sectionRef} className="relative isolate bg-[#050505] overflow-hidden text-white">
+      <div className="h-screen w-full overflow-hidden">
+        <div ref={horizontalRef} className="flex h-full w-[300vw] will-change-transform">
+          
+          {/* Intro Panel */}
+          <article className="work-panel relative h-full w-screen shrink-0 flex flex-col justify-center px-[clamp(1.5rem,5vw,4rem)]">
+            <div className="cinematic-grid pointer-events-none absolute inset-0 opacity-10" />
+            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_left,rgba(255,255,255,0.03),transparent_50%)]" />
 
-        {/* Work Cards */}
-        {workExperience.map((work, index) => {
-          const palette = artisticPalettes[index % artisticPalettes.length];
-          return (
-            <article
-              key={`${work.period}-${work.role}`}
-              data-work-card
-              className="absolute inset-0 flex flex-col justify-center px-[clamp(1rem,5vw,4rem)]"
-              style={{
-                willChange: "transform, opacity",
-                background: `radial-gradient(ellipse at 80% 20%, color-mix(in srgb, ${palette.primary} 20%, #050505) 0%, color-mix(in srgb, ${palette.secondary} 25%, #0a0a0c) 100%)`,
-              }}
-            >
+            <div className="relative z-10 w-full max-w-7xl mx-auto flex flex-col lg:flex-row gap-16 lg:items-center">
+              <div className="flex-1">
+                <div className="flex items-center gap-4 mb-6">
+                  <span className="w-12 h-[2px] bg-[var(--accent-primary)]" />
+                  <p className="font-mono text-xs uppercase tracking-[0.3em] text-[var(--accent-primary-light)]">
+                    First Team Signal
+                  </p>
+                </div>
+                <h2 className="text-[clamp(3.5rem,7vw,7.5rem)] font-black uppercase leading-[0.85] tracking-tighter text-white">
+                  Ready For<br/>The Real<br/>Room.
+                </h2>
+                <p className="mt-8 max-w-[48ch] text-[clamp(1rem,1.5vw,1.25rem)] leading-relaxed text-zinc-400 font-light border-l border-[var(--accent-primary)]/50 pl-6 py-2">
+                  I am a fresher building like a production engineer: listening carefully,
+                  documenting decisions, moving fast, and turning internship problems into
+                  interfaces that can survive real feedback.
+                </p>
+              </div>
 
-              <div className="relative z-10 mx-auto w-full max-w-7xl h-full flex flex-col justify-center">
+              <div className="w-full lg:w-[400px] grid gap-4 relative">
+                {/* Decoration rings */}
+                <div className="absolute -inset-12 border border-white/5 rounded-full pointer-events-none" />
+                <div className="absolute -inset-24 border border-[var(--accent-primary)]/10 rounded-full pointer-events-none" />
                 
-                {/* Top Section: Title & Role */}
-                <div className="w-full relative z-20 mb-12">
-                  <h3
-                    data-work-animate
-                    className="text-[clamp(3rem,6vw,5rem)] font-black uppercase tracking-tight text-white"
-                    style={{ textShadow: `0 20px 50px color-mix(in srgb, ${palette.primary} 40%, transparent)` }}
-                  >
-                    {work.organization}
-                  </h3>
-                  <div className="mt-4 flex flex-wrap items-center gap-4">
-                    <span data-work-animate className="font-mono text-sm uppercase tracking-[0.2em] font-semibold" style={{ color: palette.primary }}>
-                      {work.period}
-                    </span>
-                    <span data-work-animate className="hidden md:block h-1.5 w-1.5 rounded-full bg-white/30" />
-                    <p data-work-animate className="text-xl md:text-2xl font-light text-white/80">
-                      {work.role}
+                {proofSignals.map((signal) => (
+                  <div key={signal.label} className="hud-panel p-6 backdrop-blur-md bg-white/[0.02] border border-white/10 rounded-xl transition-colors hover:bg-white/[0.05]">
+                    <div className="flex items-end justify-between gap-5 mb-2">
+                      <p className="font-mono text-[0.62rem] uppercase tracking-[0.24em] text-zinc-500">
+                        {signal.label}
+                      </p>
+                      <p className="text-3xl font-black leading-none text-[var(--accent-primary-light)]">
+                        {signal.value}
+                      </p>
+                    </div>
+                    <p className="text-xs uppercase tracking-[0.16em] text-zinc-400">
+                      {signal.detail}
                     </p>
                   </div>
+                ))}
+              </div>
+            </div>
+          </article>
+
+          {/* Work History Panels */}
+          {workExperience.map((work, index) => {
+            const palette = artisticPalettes[index % artisticPalettes.length];
+            return (
+              <article
+                key={work.organization}
+                className="work-panel relative h-full w-screen shrink-0 flex items-center px-[clamp(1.5rem,5vw,4rem)]"
+                style={{
+                  background: `radial-gradient(circle at center, color-mix(in srgb, ${palette.primary} 12%, transparent) 0%, transparent 60%)`,
+                }}
+              >
+                {/* Massive Parallax Typography Background */}
+                <div className="absolute inset-0 flex items-center overflow-hidden pointer-events-none -z-10">
+                  <span 
+                    className="parallax-text font-black text-[22vw] leading-none whitespace-nowrap opacity-[0.03] text-white select-none"
+                    style={{ transform: "translateX(-5vw)" }}
+                  >
+                    {work.organization}
+                  </span>
                 </div>
 
-                {/* Bottom Section: The two inner cards placed dynamically */}
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 relative z-30">
+                <div className="work-content relative z-10 w-full max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-[0.8fr_1fr] gap-12 lg:gap-24 items-center">
                   
-                  {/* Inner Card 1: Overview & Stack */}
-                  <div data-work-animate className="p-8 rounded-[2rem] border border-white/10 bg-black/40 backdrop-blur-md shadow-2xl flex flex-col justify-between">
-                    <p className="text-[clamp(1rem,1.2vw,1.15rem)] font-medium text-white/90 leading-relaxed">
+                  {/* Left Column: Context */}
+                  <div>
+                    <div className="flex items-center gap-4 mb-6">
+                      <span className="font-mono text-sm uppercase tracking-[0.2em] font-semibold" style={{ color: palette.primary }}>
+                        {work.period}
+                      </span>
+                      <span className="h-1 w-1 rounded-full bg-white/30" />
+                      <span className="font-mono text-[0.62rem] uppercase tracking-[0.2em] text-zinc-500">
+                        {work.location}
+                      </span>
+                    </div>
+
+                    <h3 className="text-[clamp(3.5rem,5.5vw,5.5rem)] font-black uppercase leading-[0.85] tracking-tighter text-white mb-6">
+                      {work.organization}
+                    </h3>
+                    
+                    <p className="text-[clamp(1.25rem,2vw,1.75rem)] font-light leading-tight text-white/90 mb-8">
+                      {work.role}
+                    </p>
+
+                    <p className="text-base lg:text-lg leading-relaxed text-zinc-400 max-w-[45ch]">
                       {work.overview}
                     </p>
-                    <div className="mt-10 pt-6 border-t border-white/10">
-                      <p className="text-[0.65rem] uppercase tracking-[0.25em] text-white/50 mb-4">
-                        Core Stack
+
+                    <div className="mt-12">
+                      <p className="font-mono text-[0.65rem] uppercase tracking-[0.25em] text-zinc-500 mb-5">
+                        Core Architecture
                       </p>
                       <div className="flex flex-wrap gap-2.5">
-                        {work.technologies.map((technology) => (
+                        {work.technologies.map((tech) => (
                           <span
-                            key={technology}
-                            className="rounded-full border border-white/10 bg-white/5 px-4 py-1.5 text-xs font-medium text-white/90 transition-colors hover:bg-white/10"
+                            key={tech}
+                            className="rounded border border-white/10 bg-black/40 px-3 py-1.5 text-xs font-mono text-zinc-300"
                           >
-                            {technology}
+                            {tech}
                           </span>
                         ))}
                       </div>
                     </div>
                   </div>
 
-                  {/* Inner Card 2: Outcomes */}
-                  <div data-work-animate className="p-8 rounded-[2rem] border border-white/10 bg-black/40 backdrop-blur-md shadow-2xl">
-                    <p className="text-[0.65rem] uppercase tracking-[0.25em] text-white/50 mb-6">
+                  {/* Right Column: Data Nodes / Outcomes */}
+                  <div className="flex flex-col gap-6 relative">
+                    <div className="absolute -left-6 top-0 bottom-0 w-px bg-gradient-to-b from-transparent via-white/10 to-transparent hidden lg:block" />
+                    
+                    <p className="font-mono text-[0.65rem] uppercase tracking-[0.25em] text-zinc-500 pl-4 border-l border-[var(--accent-primary)]">
                       Outcome Focus
                     </p>
-                    <ul className="space-y-5">
-                      {work.outcomes.map((outcome) => (
-                        <li
-                          key={outcome}
-                          className="text-sm md:text-base text-white/80 flex items-start leading-relaxed group"
-                        >
-                          <span className="mr-4 font-bold text-lg leading-none transition-transform group-hover:translate-x-1" style={{ color: palette.primary }}>
-                            →
-                          </span>
-                          <span>{outcome}</span>
-                        </li>
-                      ))}
-                    </ul>
+
+                    {work.outcomes.map((outcome, i) => (
+                      <div 
+                        key={i} 
+                        className="group relative p-6 lg:p-8 rounded-xl border border-white/5 bg-white/[0.01] backdrop-blur-sm transition-all hover:bg-white/[0.04] hover:border-white/10"
+                      >
+                        <div className="absolute top-8 left-0 w-1 h-8 bg-white/20 transition-colors group-hover:bg-[var(--accent-primary)] rounded-r" style={{ "--accent-primary": palette.primary } as React.CSSProperties} />
+                        <p className="text-sm md:text-base text-zinc-300 leading-relaxed pl-4">
+                          {outcome}
+                        </p>
+                      </div>
+                    ))}
                   </div>
 
                 </div>
-              </div>
-            </article>
-          );
-        })}
+              </article>
+            );
+          })}
+        </div>
       </div>
     </section>
   );

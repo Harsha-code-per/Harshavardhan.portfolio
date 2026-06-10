@@ -1,6 +1,7 @@
 "use server";
 
 import { Resend } from "resend";
+import { PRIMARY_EMAIL } from "@/data/profile";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -17,10 +18,10 @@ export async function sendContactEmail(
     return { error: "Name, email, and message are required." };
   }
 
-  const toEmail = process.env.RESEND_TO_EMAIL;
+  const toEmail = process.env.RESEND_TO_EMAIL || PRIMARY_EMAIL;
 
   if (!toEmail) {
-    return { error: "RESEND_TO_EMAIL is not configured." };
+    return { error: "Recipient email address is not configured." };
   }
 
   const { error } = await resend.emails.send({

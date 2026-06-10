@@ -99,6 +99,17 @@ section {
   color: var(--text-primary);
 }
 
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
 /* ── Custom cursor ──────────────────────────────────────────────────── */
 /* Hide native cursor globally if pointer is fine */
 @media (pointer: fine) {
@@ -136,6 +147,48 @@ section {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+}
+
+/* ── Cinematic system surfaces ─────────────────────────────────────── */
+.cinematic-grid {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.055) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.055) 1px, transparent 1px);
+  background-size: 64px 64px;
+  mask-image: radial-gradient(circle at 50% 45%, black 0%, transparent 72%);
+}
+
+.cinematic-scanline {
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    color-mix(in srgb, var(--accent-primary) 40%, transparent) 48%,
+    rgba(255, 255, 255, 0.28) 50%,
+    color-mix(in srgb, var(--accent-primary) 40%, transparent) 52%,
+    transparent 100%
+  );
+  animation: cinematic-scan 6s linear infinite;
+}
+
+@keyframes cinematic-scan {
+  0% {
+    transform: translate3d(0, -110%, 0);
+  }
+  100% {
+    transform: translate3d(0, 110%, 0);
+  }
+}
+
+.cinematic-vignette {
+  background:
+    radial-gradient(circle at 70% 45%, transparent 0%, rgba(0, 0, 0, 0.55) 58%, rgba(0, 0, 0, 0.9) 100%),
+    linear-gradient(90deg, rgba(0, 0, 0, 0.78), transparent 42%, rgba(0, 0, 0, 0.42));
+}
+
+.hud-panel {
+  border: 1px solid color-mix(in srgb, var(--accent-primary) 22%, rgba(255, 255, 255, 0.08));
+  background: color-mix(in srgb, var(--bg-surface) 96%, transparent);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.28);
 }
 
 /* ── Glass card ─────────────────────────────────────────────────────── */
@@ -187,25 +240,7 @@ section {
   animation: bgshift 14s ease-in-out infinite;
 }
 
-/* ── Orbital dots ───────────────────────────────────────────────────── */
-@keyframes orbit {
-  from {
-    transform: rotate(0deg) translateX(120px) rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg) translateX(120px) rotate(-360deg);
-  }
-}
 
-.orbital-dot {
-  /* will-change removed — permanent GPU compositing layer was never released */
-  animation: orbit 8s linear infinite;
-}
-
-.orbital-dot:nth-child(2) {
-  animation-duration: 12s;
-  animation-direction: reverse;
-}
 
 /* Pause any CSS animation when element is scrolled off-screen */
 .animation-paused {

@@ -1,69 +1,118 @@
 "use client";
 
-import Image from "next/image";
-import { useRef } from "react";
+import { useRef, MouseEvent, useState } from "react";
 import { useGSAP } from "@gsap/react";
 import SplitType from "split-type";
 import { aboutContent } from "@/data/about";
 import { gsap, setupGsap } from "@/lib/gsap";
+import { cinematicEase } from "@/lib/motion";
+import { useReducedMotionPreference } from "@/lib/useReducedMotion";
+
+function BentoCard({ label, value }: { label: string; value: string }) {
+  const cardRef = useRef<HTMLDivElement>(null);
+  const [isHovered, setIsHovered] = useState(false);
+
+  const handleMouseMove = (e: MouseEvent<HTMLDivElement>) => {
+    if (!cardRef.current) return;
+    const rect = cardRef.current.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    cardRef.current.style.setProperty("--mouse-x", `${x}px`);
+    cardRef.current.style.setProperty("--mouse-y", `${y}px`);
+
+    // Magnetic pull
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+    const distanceX = x - centerX;
+    const distanceY = y - centerY;
+
+    gsap.to(cardRef.current, {
+      x: distanceX * 0.05,
+      y: distanceY * 0.05,
+      rotationY: distanceX * 0.01,
+      rotationX: -distanceY * 0.01,
+      duration: 0.4,
+      ease: "power2.out",
+    });
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+    if (!cardRef.current) return;
+    gsap.to(cardRef.current, {
+      x: 0,
+      y: 0,
+      rotationY: 0,
+      rotationX: 0,
+      duration: 0.7,
+      ease: "elastic.out(1, 0.3)",
+    });
+  };
+
+  return (
+    <div
+      ref={cardRef}
+      onMouseMove={handleMouseMove}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={handleMouseLeave}
+      className="group relative h-full overflow-hidden rounded-2xl border border-white/10 bg-white/[0.02] p-6 backdrop-blur-sm transition-colors hover:border-white/20 hover:bg-white/[0.04]"
+      style={{ perspective: 1000 }}
+    >
+      <div
+        className="pointer-events-none absolute -inset-px opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+        style={{
+          background: `radial-gradient(400px circle at var(--mouse-x, 0) var(--mouse-y, 0), rgba(255,138,61,0.15), transparent 40%)`,
+        }}
+      />
+      <div className="relative z-10">
+        <p className="text-[0.65rem] font-bold uppercase tracking-[0.24em] text-[var(--accent-primary)]">
+          {label}
+        </p>
+        <p className="mt-3 text-sm leading-relaxed text-zinc-300 md:text-base">
+          {value}
+        </p>
+      </div>
+    </div>
+  );
+}
 
 export function About() {
   setupGsap();
 
   const sectionRef = useRef<HTMLElement | null>(null);
-  const cardRef = useRef<HTMLDivElement | null>(null);
-  const imageRef = useRef<HTMLImageElement | null>(null);
+  const textRef = useRef<HTMLParagraphElement | null>(null);
+  const prefersReducedMotion = useReducedMotionPreference();
 
   useGSAP(
     () => {
       const section = sectionRef.current;
-      const card = cardRef.current;
-      const image = imageRef.current;
-      if (!section || !card || !image) {
-        return;
-      }
+      const textEl = textRef.current;
+      if (!section || !textEl) return;
 
       const heading = section.querySelector<HTMLElement>("[data-about-heading]");
-      if (!heading) {
-        return;
-      }
+      const hudItems = gsap.utils.toArray<HTMLElement>("[data-about-hud]", section);
+      const bentoCards = gsap.utils.toArray<HTMLElement>(".bento-container > div", section);
 
-      const splitText = new SplitType(heading, { types: "lines,words" });
-      const headingTargets =
-        splitText.lines && splitText.lines.length > 0 ? splitText.lines : splitText.words ?? [];
-      const featureCards = gsap.utils.toArray<HTMLElement>("[data-about-card]", section);
-      const aboutBody = section.querySelector<HTMLElement>("[data-about-copy]");
-      const imageWrap = section.querySelector<HTMLElement>("[data-about-image-wrap]");
+      // 1. Split Text for the massive heading
+      const splitHeading = new SplitType(heading as HTMLElement, { types: "lines,words" });
+      const headingTargets = splitHeading.lines && splitHeading.lines.length > 0 ? splitHeading.lines : splitHeading.words ?? [];
 
-      if (!imageWrap || !aboutBody) {
-        splitText.revert();
-        return;
-      }
+      // 2. Split Text for the scrub body paragraph
+      const splitBody = new SplitType(textEl, { types: "words" });
+      const bodyWords = splitBody.words ?? [];
 
-      gsap.set(headingTargets, { opacity: 0, y: 40 });
-      gsap.set(aboutBody, { opacity: 0, y: 28 });
-      gsap.set(imageWrap, { opacity: 0, y: 40 });
-      gsap.set(image, { scale: 1.3 });
-      gsap.set(featureCards, { opacity: 0, y: 30 });
+      // Initial states
+      gsap.set(headingTargets, { opacity: 0, y: 50, rotateX: -20 });
+      gsap.set(hudItems, { opacity: 0, x: -20 });
+      gsap.set(bodyWords, { opacity: 0.15 }); // Dimmed by default
+      gsap.set(bentoCards, { opacity: 0, y: 40 });
 
+      // Intro Reveal Timeline
       const revealTimeline = gsap.timeline({
         scrollTrigger: {
-          trigger: card,
-          start: "top 35%",
+          trigger: section,
+          start: "top 45%",
           toggleActions: "play none none reverse",
-          invalidateOnRefresh: true,
-        },
-      });
-
-      const imageParallaxTween = gsap.to(image, {
-        scale: 1,
-        ease: "none",
-        scrollTrigger: {
-          trigger: card,
-          start: "top bottom",
-          end: "bottom top",
-          scrub: 1,
-          invalidateOnRefresh: true,
         },
       });
 
@@ -71,51 +120,57 @@ export function About() {
         .to(headingTargets, {
           opacity: 1,
           y: 0,
-          duration: 1.2,
-          stagger: 0.08,
-          ease: "expo.out",
+          rotateX: 0,
+          duration: prefersReducedMotion ? 0.01 : 1.2,
+          stagger: prefersReducedMotion ? 0 : 0.08,
+          ease: cinematicEase.out,
         })
         .to(
-          aboutBody,
+          hudItems,
           {
             opacity: 1,
-            y: 0,
-            duration: 1.1,
-            ease: "expo.out",
+            x: 0,
+            duration: prefersReducedMotion ? 0.01 : 0.8,
+            stagger: prefersReducedMotion ? 0 : 0.1,
+            ease: cinematicEase.out,
           },
           "-=0.8"
         )
         .to(
-          imageWrap,
+          bentoCards,
           {
             opacity: 1,
             y: 0,
-            duration: 1.2,
-            ease: "expo.out",
+            duration: prefersReducedMotion ? 0.01 : 1,
+            stagger: prefersReducedMotion ? 0 : 0.1,
+            ease: cinematicEase.out,
           },
-          "-=0.9"
-        )
-        .to(
-          featureCards,
-          {
-            opacity: 1,
-            y: 0,
-            duration: 1.1,
-            stagger: 0.12,
-            ease: "expo.out",
-          },
-          "-=0.8"
+          "-=0.6"
         );
 
+      // Scrub Reveal for Body Text
+      const scrubTween = gsap.to(bodyWords, {
+        opacity: 1,
+        stagger: 0.1,
+        ease: "none",
+        scrollTrigger: {
+          trigger: textEl,
+          start: "top 85%",
+          end: "bottom 55%",
+          scrub: true,
+        },
+      });
+
       return () => {
-        imageParallaxTween.scrollTrigger?.kill();
-        imageParallaxTween.kill();
         revealTimeline.scrollTrigger?.kill();
         revealTimeline.kill();
-        splitText.revert();
+        scrubTween.scrollTrigger?.kill();
+        scrubTween.kill();
+        splitHeading.revert();
+        splitBody.revert();
       };
     },
-    { scope: sectionRef, dependencies: [] }
+    { scope: sectionRef, dependencies: [prefersReducedMotion] }
   );
 
   return (
@@ -124,59 +179,71 @@ export function About() {
       ref={sectionRef}
       className="relative z-10 w-full overflow-hidden rounded-t-[3rem] bg-transparent shadow-[0_-20px_40px_rgba(0,0,0,0.5)] border-t border-white/5"
     >
-      <article
-        ref={cardRef}
-        className="relative w-full border-t border-white/5 px-[clamp(1rem,5vw,4rem)] pb-20 pt-32 text-[var(--text-primary)]"
-      >
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_15%_20%,var(--accent-primary-subtle),transparent_45%),radial-gradient(circle_at_85%_35%,var(--accent-tertiary-glow),transparent_48%)]" />
+      <article className="relative min-h-[100dvh] w-full px-[clamp(1.5rem,5vw,4rem)] pb-24 pt-32 text-[var(--text-primary)]">
+        {/* Background elements */}
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_0%_30%,var(--accent-primary-subtle),transparent_50%)] opacity-30" />
 
-        <div className="relative z-10 grid grid-cols-1 gap-y-12 lg:grid-cols-12 lg:gap-x-12">
-          <div className="about-header lg:col-span-7">
-            <p className="text-xs uppercase tracking-[0.28em] text-[var(--accent-primary-light)]">
-              About
-            </p>
+        <div className="relative z-10 grid grid-cols-1 gap-y-16 lg:grid-cols-12 lg:gap-x-12">
+          
+          {/* Vertical Side HUD */}
+          <div className="hidden lg:col-span-1 lg:flex flex-col gap-12 pt-4 border-l border-white/10 pl-4 relative">
+            <div className="absolute top-0 -left-[1px] w-[2px] h-12 bg-[var(--accent-primary)] shadow-[0_0_12px_var(--accent-primary)]" />
+            
+            <div data-about-hud>
+              <p className="font-mono text-[0.55rem] uppercase tracking-[0.3em] text-zinc-500 mb-2">Input</p>
+              <p className="font-mono text-xs uppercase tracking-widest text-[var(--accent-primary-light)]">Curiosity</p>
+            </div>
+            <div data-about-hud>
+              <p className="font-mono text-[0.55rem] uppercase tracking-[0.3em] text-zinc-500 mb-2">Mode</p>
+              <p className="font-mono text-xs uppercase tracking-widest text-zinc-300">Builder</p>
+            </div>
+            <div data-about-hud>
+              <p className="font-mono text-[0.55rem] uppercase tracking-[0.3em] text-zinc-500 mb-2">Bias</p>
+              <p className="font-mono text-xs uppercase tracking-widest text-zinc-300">Performance</p>
+            </div>
+          </div>
+
+          {/* Main Content Area */}
+          <div className="lg:col-span-7 flex flex-col justify-center relative z-10">
+            
+            {/* Mobile-only horizontal HUD */}
+            <div className="flex lg:hidden flex-wrap gap-6 mb-12 border-l-2 border-[var(--accent-primary)] pl-4">
+              <div data-about-hud>
+                <p className="font-mono text-[0.55rem] uppercase tracking-[0.3em] text-zinc-500 mb-1">Mode</p>
+                <p className="font-mono text-[0.65rem] uppercase tracking-widest text-[var(--accent-primary-light)]">Builder</p>
+              </div>
+              <div data-about-hud>
+                <p className="font-mono text-[0.55rem] uppercase tracking-[0.3em] text-zinc-500 mb-1">Bias</p>
+                <p className="font-mono text-[0.65rem] uppercase tracking-widest text-zinc-300">Performance</p>
+              </div>
+            </div>
+
             <h2
               data-about-heading
-              className="about-heading mt-4 max-w-[18ch] text-balance text-[clamp(2.2rem,5.8vw,5.3rem)] font-[var(--font-space)] font-semibold leading-[0.95] text-zinc-100"
+              className="max-w-[16ch] text-balance text-[clamp(2.2rem,4.8vw,4.5rem)] font-[var(--font-space)] font-black uppercase leading-[0.85] tracking-tight text-white"
+              style={{ perspective: "1000px" }}
             >
               {aboutContent.title}
             </h2>
-            <div data-about-copy className="mt-10 max-w-[42rem] space-y-5">
-              <p className="text-[clamp(1rem,1.55vw,1.32rem)] leading-relaxed text-zinc-300">
-                {aboutContent.statement}
-              </p>
-              <p className="text-[clamp(0.96rem,1.35vw,1.16rem)] leading-relaxed text-zinc-400">
-                {aboutContent.bio}
-              </p>
+            
+            <p
+              ref={textRef}
+              className="mt-12 max-w-[42rem] text-[clamp(1.1rem,2vw,1.6rem)] leading-[1.6] text-white font-light"
+            >
+              {aboutContent.statement} {aboutContent.bio}
+            </p>
+
+            <div className="bento-container mt-20 grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {aboutContent.highlights.map((item, i) => (
+                <div key={item.label} className={i === 2 ? "sm:col-span-2" : ""}>
+                  <BentoCard label={item.label} value={item.value} />
+                </div>
+              ))}
             </div>
           </div>
 
-          <div data-about-image-wrap className="about-image-wrap lg:col-span-5 lg:translate-y-10">
-            <div className="ml-auto w-full overflow-hidden rounded-[2rem] border border-white/10 bg-black/30 shadow-[0_40px_80px_rgba(0,0,0,0.45)] aspect-[3/4] max-w-[28rem]">
-              <Image
-                ref={imageRef}
-                src={aboutContent.portrait.src}
-                alt={aboutContent.portrait.alt}
-                width={700}
-                height={934}
-                sizes="(max-width: 1024px) 100vw, 42vw"
-                className="about-image h-full w-full scale-[1.3] object-cover object-top"
-              />
-            </div>
-          </div>
-        </div>
-
-        <div className="relative z-10 mt-16 grid grid-cols-1 gap-4 md:grid-cols-3">
-          {aboutContent.highlights.map((item) => (
-            <div key={item.label} data-about-card className="about-card rounded-2xl border border-white/10 bg-white/[0.03] p-5 backdrop-blur-sm">
-              <p className="text-[0.65rem] uppercase tracking-[0.24em] text-zinc-500">
-                {item.label}
-              </p>
-              <p className="mt-2 text-sm leading-relaxed text-zinc-200 md:text-base">
-                {item.value}
-              </p>
-            </div>
-          ))}
+          {/* Empty Space strictly reserved for the 3D RetroComputer to land */}
+          <div className="hidden lg:block lg:col-span-4 pointer-events-none" />
         </div>
       </article>
     </section>

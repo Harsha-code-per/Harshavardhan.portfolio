@@ -2,174 +2,143 @@
 
 import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
-import { motion } from "framer-motion";
-import {
-  FaEnvelope,
-  FaGithub,
-  FaLinkedin,
-  FaWhatsapp,
-} from "react-icons/fa";
+import { Mail, MessageCircle } from "lucide-react";
+
+const GithubIcon = (props: React.ComponentProps<"svg">) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    {...props}
+  >
+    <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.24c3-.34 6-1.53 6-6.76a5.2 5.2 0 0 0-1.39-3.5 4.9 4.9 0 0 0-.13-3.4s-1.14-.36-3.7 1.36a12.5 12.5 0 0 0-6.8 0c-2.56-1.72-3.7-1.36-3.7-1.36a4.9 4.9 0 0 0-.13 3.4A5.2 5.2 0 0 0 3 12.04c0 5.22 3 6.42 6 6.76a4.8 4.8 0 0 0-1 3.24v4" />
+  </svg>
+);
+
+const LinkedinIcon = (props: React.ComponentProps<"svg">) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    {...props}
+  >
+    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
+    <rect width="4" height="12" x="2" y="9" />
+    <circle cx="4" cy="4" r="2" />
+  </svg>
+);
 import {
   GITHUB_URL,
   LINKEDIN_URL,
-  PLACEHOLDER_ADDRESS,
   PRIMARY_EMAIL,
   PROFILE_NAME,
   WHATSAPP_NUMBER,
 } from "@/data/profile";
 import { gsap, setupGsap } from "@/lib/gsap";
+import { cinematicEase } from "@/lib/motion";
+import { useReducedMotionPreference } from "@/lib/useReducedMotion";
 
 const footerLinks = [
-  { href: `mailto:${PRIMARY_EMAIL}`, label: "Email", Icon: FaEnvelope },
-  { href: LINKEDIN_URL, label: "LinkedIn", Icon: FaLinkedin },
-  { href: GITHUB_URL, label: "GitHub", Icon: FaGithub },
-  {
-    href: `https://wa.me/${WHATSAPP_NUMBER}`,
-    label: "WhatsApp",
-    Icon: FaWhatsapp,
-  },
-] as const;
-
-const footerNavLinks = [
-  { label: "About", href: "#about" },
-  { label: "Work", href: "#work" },
-  { label: "Projects", href: "#projects" },
-  { label: "Skills", href: "#skills" },
-  { label: "Contact", href: "#contact" },
+  { href: `mailto:${PRIMARY_EMAIL}`, label: "Email", Icon: Mail },
+  { href: LINKEDIN_URL, label: "LinkedIn", Icon: LinkedinIcon },
+  { href: GITHUB_URL, label: "GitHub", Icon: GithubIcon },
+  { href: `https://wa.me/${WHATSAPP_NUMBER}`, label: "WhatsApp", Icon: MessageCircle },
 ] as const;
 
 export function Footer() {
   setupGsap();
+
   const footerRef = useRef<HTMLElement | null>(null);
+  const prefersReducedMotion = useReducedMotionPreference();
 
   useGSAP(
     () => {
-      if (!footerRef.current) {
-        return;
-      }
+      const footer = footerRef.current;
+      if (!footer) return;
 
-      gsap.from(footerRef.current, {
+      gsap.from("[data-footer-reveal]", {
         opacity: 0,
-        y: 40,
-        duration: 1,
-        ease: "power3.out",
+        y: prefersReducedMotion ? 0 : 34,
+        duration: prefersReducedMotion ? 0.01 : 0.82,
+        stagger: prefersReducedMotion ? 0 : 0.08,
+        ease: cinematicEase.out,
         scrollTrigger: {
-          trigger: footerRef.current,
-          start: "top 90%",
+          trigger: footer,
+          start: "top 86%",
           invalidateOnRefresh: true,
         },
       });
-
-      /* Magnetic footer links */
-      const links = gsap.utils.toArray<HTMLElement>("[data-footer-magnetic]");
-      const cleanup: Array<() => void> = [];
-
-      links.forEach((element) => {
-        let rafId: number | null = null;
-
-        const onMove = (event: MouseEvent) => {
-          // Skip if a RAF is already pending — collapses burst events into one frame
-          if (rafId !== null) return;
-          rafId = requestAnimationFrame(() => {
-            const rect = element.getBoundingClientRect();
-            const x = (event.clientX - rect.left - rect.width / 2) * 0.25;
-            const y = (event.clientY - rect.top - rect.height / 2) * 0.25;
-            gsap.to(element, { x, y, duration: 0.4, ease: "power2.out", overwrite: true });
-            rafId = null;
-          });
-        };
-        const onLeave = () => {
-          if (rafId !== null) { cancelAnimationFrame(rafId); rafId = null; }
-          gsap.to(element, {
-            x: 0,
-            y: 0,
-            duration: 0.6,
-            ease: "elastic.out(1, 0.5)",
-            overwrite: true,
-          });
-        };
-
-        element.addEventListener("mousemove", onMove);
-        element.addEventListener("mouseleave", onLeave);
-
-        cleanup.push(() => {
-          if (rafId !== null) cancelAnimationFrame(rafId);
-          element.removeEventListener("mousemove", onMove);
-          element.removeEventListener("mouseleave", onLeave);
-        });
-      });
-
-      return () => {
-        cleanup.forEach((handler) => handler());
-      };
     },
-    { scope: footerRef, dependencies: [] }
+    { scope: footerRef, dependencies: [prefersReducedMotion] }
   );
 
   return (
     <footer
       ref={footerRef}
-      className="relative z-20 mt-8 border-t border-[var(--border-default)] py-14"
+      className="relative z-20 overflow-hidden border-t border-white/10 px-[clamp(1rem,5vw,4rem)] py-12 text-white"
       style={{ background: "var(--bg-base)" }}
     >
-      {/* Background text */}
-      <p className="pointer-events-none absolute left-1/2 top-2 -translate-x-1/2 select-none text-center text-[clamp(4rem,10vw,8rem)] font-black uppercase leading-none text-white opacity-[0.03]">
-        Available For Work
+      <p className="pointer-events-none absolute left-1/2 top-3 -translate-x-1/2 select-none text-center text-[clamp(3.7rem,13vw,11rem)] font-black uppercase leading-none text-white opacity-[0.035]">
+        Available
       </p>
 
-      <div className="relative mx-auto grid w-full max-w-7xl grid-cols-1 gap-10 px-6 md:grid-cols-2 md:px-10 lg:px-12">
-        <div>
-          <p className="font-mono text-lg tracking-[0.2em] text-[var(--accent-primary-light)]">
-            HV
+      <div className="relative z-10 mx-auto grid w-full max-w-7xl gap-8 md:grid-cols-[1fr_auto] md:items-end">
+        <div data-footer-reveal>
+          <p className="font-mono text-xs uppercase tracking-[0.32em] text-[var(--accent-primary-light)]">
+            End Of Transmission
           </p>
-          <p className="mt-3 text-xl font-semibold text-[var(--text-primary)]">
+          <h2 className="mt-3 text-[clamp(2rem,5vw,4.7rem)] font-black uppercase leading-[0.82] text-white">
             {PROFILE_NAME}
-          </p>
-          <p className="mt-2 max-w-md text-sm text-[var(--text-secondary)]">
-            Building AI-first products and cinematic interfaces with
-            production-grade engineering.
-          </p>
-          <p className="mt-5 text-sm text-[var(--text-muted)]">
-            {PRIMARY_EMAIL}
-          </p>
-          <p className="mt-1 text-sm text-[var(--text-muted)]">
-            {PLACEHOLDER_ADDRESS}
+          </h2>
+          <p className="mt-4 max-w-xl text-sm leading-relaxed text-white/52">
+            AI-first products, cinematic interfaces, and production-minded engineering.
           </p>
         </div>
 
-        <div className="flex flex-col items-start gap-3 md:items-end">
-          {footerNavLinks.map((link) => (
-            <a
-              key={link.label}
-              href={link.href}
-              data-cursor="hover"
-              data-footer-magnetic
-              className="text-sm uppercase tracking-[0.16em] text-[var(--text-muted)] transition-colors hover:text-[var(--text-primary)]"
-            >
-              {link.label}
-            </a>
-          ))}
+        <div data-footer-reveal className="hud-panel rounded-md p-5 md:w-[22rem]">
+          <p className="font-mono text-[0.62rem] uppercase tracking-[0.28em] text-white/40">
+            Signal Status
+          </p>
+          <p className="mt-3 text-2xl font-black uppercase leading-tight text-[var(--accent-primary-light)]">
+            Available For First Team
+          </p>
+          <p className="mt-3 text-sm leading-relaxed text-white/50">
+            Open to internships, fresher roles, and product teams that value speed,
+            clarity, and craft.
+          </p>
         </div>
 
-        <div className="md:col-span-2 mt-4 flex flex-wrap items-center justify-between gap-4 border-t border-[var(--border-default)] pt-5 text-sm text-[var(--text-muted)]">
-          <p>© 2026 {PROFILE_NAME}. All rights reserved.</p>
-          <div className="flex items-center gap-5">
-            {footerLinks.map(({ href, label, Icon }) => (
-              <motion.a
-                key={label}
-                href={href}
-                target={href.startsWith("mailto:") ? undefined : "_blank"}
-                rel={href.startsWith("mailto:") ? undefined : "noreferrer"}
-                aria-label={label}
-                data-cursor="hover"
-                className="inline-flex items-center gap-2 text-[var(--text-muted)] transition-colors hover:text-[var(--text-primary)]"
-                whileHover={{ scale: 1.1, y: -2 }}
-                transition={{ duration: 0.2 }}
-              >
-                <Icon />
-                <span>{label}</span>
-              </motion.a>
-            ))}
+        <div data-footer-reveal className="border-t border-white/10 pt-5 md:col-span-2">
+          <div className="flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
+            <p className="text-sm text-white/38">© 2026 {PROFILE_NAME}. All rights reserved.</p>
+            <div className="flex flex-wrap items-center gap-4">
+              {footerLinks.map(({ href, label, Icon }) => (
+                <a
+                  key={label}
+                  href={href}
+                  target={href.startsWith("mailto:") ? undefined : "_blank"}
+                  rel={href.startsWith("mailto:") ? undefined : "noreferrer"}
+                  aria-label={label}
+                  data-cursor="hover"
+                  className="inline-flex items-center gap-2 text-sm text-white/44 transition-all duration-200 hover:text-white hover:-translate-y-0.5 hover:scale-105 motion-reduce:transform-none"
+                >
+                  <Icon className="w-4 h-4" />
+                  <span>{label}</span>
+                </a>
+              ))}
+            </div>
           </div>
         </div>
       </div>

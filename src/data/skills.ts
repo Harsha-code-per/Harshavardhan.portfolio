@@ -6,29 +6,29 @@ export type SkillCategory = {
 
 export const skillCategories: SkillCategory[] = [
   {
-    title: "Frontend & Architecture",
+    title: "Frontend Architecture",
     description: "Design systems, app architecture, and high-quality production interfaces.",
     technologies: ["Next.js", "React", "TypeScript", "Tailwind CSS", "shadcn/ui", "App Router"],
   },
   {
     title: "Motion & Immersive UI",
     description: "Narrative-driven motion systems and high-fidelity visual choreography.",
-    technologies: ["GSAP", "ScrollTrigger", "Framer Motion", "Lenis", "SplitType", "Spline"],
+    technologies: ["GSAP", "ScrollTrigger", "Framer Motion", "Lenis", "Three.js", "WebGL"],
   },
   {
-    title: "Backend, AI & Real-Time",
-    description: "Practical AI pipelines and secure real-time product capabilities.",
-    technologies: ["Python", "Java", "C++", "Machine Learning", "REST APIs", "WebRTC"],
+    title: "AI & Data Science",
+    description: "Practical ML pipelines, data processing, and large language model integration.",
+    technologies: ["Python", "Machine Learning", "Data Science", "LLMs", "RAG", "Data Pipelines"],
   },
   {
-    title: "Systems & Dev Workflow",
-    description: "Reliable execution environments and disciplined shipping workflows.",
-    technologies: ["Arch Linux", "Git", "Bash/Zsh", "CI/CD", "Debugging"],
+    title: "Cloud & Systems",
+    description: "Scalable infrastructure, serverless architectures, and reliable execution environments.",
+    technologies: ["AWS", "Azure", "Google Cloud", "Docker", "Kubernetes", "CI/CD"],
   },
   {
-    title: "Cloud & Product Delivery",
-    description: "Translating engineering effort into recruiter-visible outcomes.",
-    technologies: ["Performance Optimization", "SEO Fundamentals", "Accessibility", "Analytics Thinking"],
+    title: "Backend & Dev Workflow",
+    description: "Secure real-time product capabilities and disciplined shipping workflows.",
+    technologies: ["Java", "Node.js", "REST APIs", "WebRTC", "Arch Linux", "Git"],
   },
 ];
 

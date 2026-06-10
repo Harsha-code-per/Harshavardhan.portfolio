@@ -10,31 +10,30 @@ export type WorkEntry = {
 
 export const workExperience: WorkEntry[] = [
   {
-    period: "2025",
-    role: "Full-Stack Engineering Intern",
-    organization: "ResPro Labs",
-    location: "Chennai, India",
+    period: "Dec 2025 - Apr 2026",
+    role: "AI Engineer Intern",
+    organization: "Zensphere Academy",
+    location: "Online",
     overview:
-      "Designed and shipped an Employee Management System with scalable data architecture and reporting surfaces.",
+      "Engineered interactive voice agents using LiveKit and Azure AI Foundry, integrating LLMs to automate complex speaking assessments and real-time linguistic feedback.",
     outcomes: [
-      "Implemented SQL schema patterns for efficient operational reporting.",
-      "Improved reliability of HR data workflows by tightening validation paths.",
-      "Delivered production-focused UI flows for daily admin tasks.",
+      "Integrated Azure AI Pronunciation Assessment for high-accuracy phonetic analysis and model optimization.",
+      "Deployed scalable AI features within Next.js frameworks.",
+      "Ensured platform stability via Playwright E2E testing."
     ],
-    technologies: ["TypeScript", "React", "SQL", "REST APIs"],
+    technologies: ["LiveKit", "Azure AI", "LLMs", "Next.js", "Django", "Playwright"],
   },
   {
-    period: "2024",
-    role: "Full-Stack Developer Intern",
-    organization: "Zensphere Academy",
-    location: "Chennai, India",
+    period: "June 2nd - 25th 2025",
+    role: "Intern",
+    organization: "ResPro Labs",
+    location: "Chennai",
     overview:
-      "Engineered an interactive e-learning platform focusing on seamless user experience and scalable backend architecture.",
+      "Engineered a modular Employee Management System (EMS) using SQL for real-time data analysis and reporting.",
     outcomes: [
-      "Architected dynamic course delivery modules using React and Next.js.",
-      "Optimized API response times for heavy media streaming workflows.",
-      "Integrated secure authentication and role-based access controls.",
+      "Streamlined HR processes by developing automated features for onboarding and attendance tracking.",
+      "Implemented highly efficient database schemas for robust operational reporting."
     ],
-    technologies: ["React", "Next.js", "Node.js", "MongoDB"],
+    technologies: ["SQL", "Relational Databases", "Data Architecture"],
   },
 ];

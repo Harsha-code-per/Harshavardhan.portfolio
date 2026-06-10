@@ -4,7 +4,6 @@ import { Component, type ReactNode, useEffect, useRef, useState } from "react";
 import type { Group } from "three";
 import { Canvas, useThree } from "@react-three/fiber";
 import { Environment, Center } from "@react-three/drei";
-import { useGSAP } from "@gsap/react";
 import { Model as RetroComputer } from "./RetroComputer";
 import { gsap, setupGsap } from "@/lib/gsap";
 
@@ -56,51 +55,81 @@ function EnvironmentWithFallback() {
 }
 
 function SceneContent({ isMobile }: { isMobile: boolean }) {
+  const { invalidate, viewport } = useThree();
   const target = [isMobile ? 0 : 0.5, isMobile ? -2 : 0, 0] as const;
   const modelRigRef = useRef<Group>(null);
 
-  useGSAP(
-    () => {
-      const modelRig = modelRigRef.current;
-      if (!modelRig) return;
+  useEffect(() => {
+    const modelRig = modelRigRef.current;
+    if (!modelRig) return;
 
-      const startX = modelRig.position.x;
-      const startY = modelRig.position.y;
-      const startZ = modelRig.position.z;
-      const startRotationY = modelRig.rotation.y;
-      const startScale = modelRig.scale.x;
-      const handoffScale = startScale * 0.8;
+    const startX = modelRig.position.x;
+    const startY = modelRig.position.y;
+    const startZ = modelRig.position.z;
+    const startRotationY = modelRig.rotation.y;
+    const startScale = modelRig.scale.x;
+    const handoffScale = startScale * 0.8;
+    let rafId: number | null = null;
+    let lastSpinProgress = -1;
+    let lastTravelProgress = -1;
 
-      const handoffTimeline = gsap.timeline({
-        scrollTrigger: {
-          trigger: "#hero-master-container",
-          start: "top top",
-          end: "+=100%",
-          scrub: 1,
-          invalidateOnRefresh: true,
-        },
+    const updateFromScroll = () => {
+      const hero = document.getElementById("hero-master-container");
+      const heroTop = hero?.offsetTop ?? 0;
+      const spinDistance = window.innerHeight * 1.1;
+      const progress = Math.min(Math.max((window.scrollY - heroTop) / spinDistance, 0), 1);
+      const travelProgress = Math.min(Math.max((window.scrollY - heroTop) / (window.innerHeight * 1.65), 0), 1);
+      if (progress === lastSpinProgress && travelProgress === lastTravelProgress) {
+        return;
+      }
+      lastSpinProgress = progress;
+      lastTravelProgress = travelProgress;
+      
+      const targetX = isMobile ? 0 : 2.2;
+      const targetY = isMobile ? -0.35 : -0.25;
+      const targetZ = isMobile ? -0.2 : -0.75;
+
+      modelRig.rotation.y = startRotationY + progress * Math.PI * 2;
+      modelRig.position.set(
+        startX + (targetX - startX) * travelProgress,
+        startY + (targetY - startY) * travelProgress,
+        startZ + (targetZ - startZ) * travelProgress
+      );
+      const scale = startScale + (handoffScale - startScale) * travelProgress;
+      modelRig.scale.set(scale, scale, scale);
+      invalidate();
+    };
+
+    const scheduleUpdate = () => {
+      if (rafId !== null) return;
+      rafId = window.requestAnimationFrame(() => {
+        rafId = null;
+        updateFromScroll();
       });
+    };
 
-      handoffTimeline
-        .to({}, { duration: 0.25 })
-        .to(modelRig.rotation, { y: Math.PI * 2, duration: 0.75, ease: "none" }, 0.25)
-        .to(modelRig.scale, { x: handoffScale, y: handoffScale, z: handoffScale, duration: 0.75, ease: "none" }, 0.25);
+    updateFromScroll();
+    window.addEventListener("scroll", scheduleUpdate, { passive: true });
+    window.addEventListener("resize", scheduleUpdate, { passive: true });
 
-      return () => {
-        handoffTimeline.scrollTrigger?.kill();
-        handoffTimeline.kill();
-        modelRig.position.set(startX, startY, startZ);
-        modelRig.rotation.y = startRotationY;
-        modelRig.scale.set(startScale, startScale, startScale);
-      };
-    },
-    { dependencies: [isMobile] }
-  );
+    return () => {
+      if (rafId !== null) {
+        window.cancelAnimationFrame(rafId);
+      }
+      window.removeEventListener("scroll", scheduleUpdate);
+      window.removeEventListener("resize", scheduleUpdate);
+      modelRig.position.set(startX, startY, startZ);
+      modelRig.rotation.y = startRotationY;
+      modelRig.scale.set(startScale, startScale, startScale);
+    };
+  }, [invalidate, isMobile, viewport.width]);
 
   return (
     <>
       <ambientLight intensity={0.8} />
       <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} intensity={1} castShadow={false} />
+      <pointLight position={[-4, 3, 6]} intensity={1.6} color="#f97316" distance={18} />
+      <pointLight position={[6, -2, -4]} intensity={1.2} color="#00f2fe" distance={16} />
       <group ref={modelRigRef}>
         <Center position={target}>
           <RetroComputer scale={isMobile ? 0.25 : 0.4} rotation={[0, -0.15, 0]} />
@@ -146,6 +175,7 @@ export function HeroScene() {
         dpr={isMobile ? [1, 1] : [1, 1.5]}
         performance={{ min: 0.5 }}
         frameloop="demand"
+        gl={{ antialias: !isMobile, powerPreference: "high-performance" }}
         camera={{ position: [10, 7, 14], fov: 45 }}
         className="pointer-events-auto"
       >

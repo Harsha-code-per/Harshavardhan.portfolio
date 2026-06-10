@@ -1,27 +1,26 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useProgress } from "@react-three/drei";
 import { useGSAP } from "@gsap/react";
 import { gsap } from "@/lib/gsap";
 
+const PRELOADER_STORAGE_KEY = "portfolio-preloader-complete";
+
 export function Preloader() {
   const { progress, active } = useProgress();
   // Use refs to read inside interval without re-creating it
-  const progressRef_internal = useRef(progress);
-  const activeRef_internal = useRef(active);
+  const progressRef = useRef(progress);
+  const activeRef = useRef(active);
   const [fakeProgress, setFakeProgress] = useState(0);
   const [isVisible, setIsVisible] = useState(true);
   const preloaderRef = useRef<HTMLDivElement>(null);
   const introPlayedRef = useRef(false);
   const exitStartedRef = useRef(false);
+  const skipPreloaderRef = useRef(false);
   const phaseRef = useRef<HTMLParagraphElement>(null);
   // Guard against double-interval in React StrictMode
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
-
-  // Sync refs without triggering interval recreation
-  progressRef_internal.current = progress;
-  activeRef_internal.current = active;
 
   const getPhaseText = (p: number) => {
     if (p < 30) return "BOOTING KERNEL...";
@@ -30,16 +29,35 @@ export function Preloader() {
     return "INITIALIZING...";
   };
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const preloaderWindow = window as Window & { __preloaderComplete?: boolean };
-    preloaderWindow.__preloaderComplete = false;
+    const completed = window.sessionStorage.getItem(PRELOADER_STORAGE_KEY) === "true";
+    preloaderWindow.__preloaderComplete = completed;
+
+    if (completed) {
+      skipPreloaderRef.current = true;
+      if (preloaderRef.current) {
+        preloaderRef.current.style.display = "none";
+      }
+      window.dispatchEvent(new CustomEvent("preloaderComplete"));
+      const hideTimer = window.setTimeout(() => setIsVisible(false), 0);
+      return () => window.clearTimeout(hideTimer);
+    }
   }, []);
+
+  // Sync asset-loading state for the interval without mutating refs during render.
+  useEffect(() => {
+    progressRef.current = progress;
+    activeRef.current = active;
+  }, [progress, active]);
 
   // Smooth fake progress animation — single interval, guarded against double-create
   useEffect(() => {
+    if (!isVisible || skipPreloaderRef.current) return;
+
     if (intervalRef.current) clearInterval(intervalRef.current);
     intervalRef.current = setInterval(() => {
-      const isLoaded = progressRef_internal.current >= 100 || !activeRef_internal.current;
+      const isLoaded = progressRef.current >= 100 || !activeRef.current;
       const maxFake = isLoaded ? 100 : 90;
       setFakeProgress((prev) => {
         const next = prev < maxFake
@@ -58,14 +76,60 @@ export function Preloader() {
         intervalRef.current = null;
       }
     };
-  }, []); // Empty deps — interval created once, never recreated
+  }, [isVisible]);
+
+  // Never let the intro block first paint forever if a WebGL/HDR asset stalls.
+  useEffect(() => {
+    if (!isVisible || skipPreloaderRef.current) return;
+
+    const failSafe = window.setTimeout(() => {
+      progressRef.current = 100;
+      activeRef.current = false;
+      setFakeProgress(100);
+    }, 5200);
+
+    return () => window.clearTimeout(failSafe);
+  }, [isVisible]);
 
   const readyToExit = fakeProgress >= 100;
 
   useGSAP(
     () => {
-      if (!isVisible) return;
+      if (!isVisible || skipPreloaderRef.current) return;
       gsap.ticker.lagSmoothing(1000, 16);
+
+      const exitPreloader = () => {
+        if (exitStartedRef.current) return;
+
+        exitStartedRef.current = true;
+        setFakeProgress(100);
+        gsap
+          .timeline({ delay: 0.2 })
+          .to([".manifesto-text", ".counter-text", ".loading-details"], {
+            opacity: 0,
+            y: -40,
+            duration: 0.6,
+            stagger: 0.1,
+            ease: "power3.inOut",
+          })
+          .to(
+            preloaderRef.current,
+            {
+              y: "-100vh",
+              duration: 1.2,
+              ease: "expo.inOut",
+              onComplete: () => {
+                (window as Window & { __preloaderComplete?: boolean }).__preloaderComplete = true;
+                window.sessionStorage.setItem(PRELOADER_STORAGE_KEY, "true");
+                window.dispatchEvent(new CustomEvent("preloaderComplete"));
+                setIsVisible(false);
+              },
+            },
+            "-=0.2"
+          );
+      };
+
+      const forcedExit = gsap.delayedCall(5.4, exitPreloader);
 
       if (!introPlayedRef.current) {
         introPlayedRef.current = true;
@@ -97,42 +161,33 @@ export function Preloader() {
             },
             "-=0.45"
           );
+      } else {
+        gsap.set([".manifesto-text", ".counter-text"], {
+          opacity: 1,
+          y: 0,
+        });
+        gsap.set(".loading-details", { opacity: 1 });
       }
       // phaseRef update moved to the interval — no DOM mutation needed here
 
-      if (!readyToExit || exitStartedRef.current) return;
+      if (!readyToExit) {
+        return () => {
+          forcedExit.kill();
+        };
+      }
 
-      exitStartedRef.current = true;
-      gsap
-        .timeline({ delay: 0.2 }) // tiny delay at 100%
-        .to([".manifesto-text", ".counter-text", ".loading-details"], {
-          opacity: 0,
-          y: -40,
-          duration: 0.6,
-          stagger: 0.1,
-          ease: "power3.inOut",
-        })
-        .to(
-          preloaderRef.current,
-          {
-            y: "-100vh",
-            duration: 1.2,
-            ease: "expo.inOut",
-            onComplete: () => {
-              (window as Window & { __preloaderComplete?: boolean }).__preloaderComplete = true;
-              window.dispatchEvent(new CustomEvent("preloaderComplete"));
-              setIsVisible(false);
-            },
-          },
-          "-=0.2"
-        );
+      exitPreloader();
+
+      return () => {
+        forcedExit.kill();
+      };
     },
     // Only re-run for boolean state changes, not every fakeProgress tick
     { dependencies: [isVisible, readyToExit], scope: preloaderRef }
   );
 
   useEffect(() => {
-    if (!isVisible) return;
+    if (!isVisible || skipPreloaderRef.current) return;
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     return () => {

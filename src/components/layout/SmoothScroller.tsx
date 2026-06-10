@@ -3,6 +3,7 @@
 import { ReactLenis } from "lenis/react";
 import { useEffect, useRef, useCallback, type ComponentProps, type ReactNode } from "react";
 import { ScrollTrigger, gsap, setupGsap } from "@/lib/gsap";
+import { useReducedMotionPreference } from "@/lib/useReducedMotion";
 
 type SmoothScrollerProps = {
   children: ReactNode;
@@ -13,6 +14,7 @@ type LenisRefApi = { lenis?: LenisInstance | null };
 
 export default function SmoothScroller({ children }: SmoothScrollerProps) {
   const lenisRef = useRef<LenisInstance | null>(null);
+  const prefersReducedMotion = useReducedMotionPreference();
 
   useEffect(() => {
     setupGsap();
@@ -36,6 +38,25 @@ export default function SmoothScroller({ children }: SmoothScrollerProps) {
       });
     }
 
+    const restoreHashScroll = () => {
+      if (!window.location.hash) return;
+
+      const target = document.querySelector<HTMLElement>(window.location.hash);
+      if (!target) return;
+
+      ScrollTrigger.refresh();
+      lenisRef.current?.scrollTo(target, {
+        offset: -88,
+        immediate: true,
+      });
+    };
+
+    const hashTimers = [
+      window.setTimeout(restoreHashScroll, 500),
+      window.setTimeout(restoreHashScroll, 1400),
+      window.setTimeout(restoreHashScroll, 2800),
+    ];
+
     /* Refresh ScrollTrigger on resize (handles zoom changes, orientation, etc.) */
     let resizeTimer: ReturnType<typeof setTimeout>;
     const onResize = () => {
@@ -48,6 +69,7 @@ export default function SmoothScroller({ children }: SmoothScrollerProps) {
       gsap.ticker.remove(update);
       window.removeEventListener("resize", onResize);
       clearTimeout(resizeTimer);
+      hashTimers.forEach((timer) => window.clearTimeout(timer));
     };
   }, []);
 
@@ -66,12 +88,12 @@ export default function SmoothScroller({ children }: SmoothScrollerProps) {
     <ReactLenis
       root
       options={{
-        lerp: 0.1,
-        duration: 1.2,
-        smoothWheel: true,
+        lerp: prefersReducedMotion ? 1 : 0.1,
+        duration: prefersReducedMotion ? 0 : 1.2,
+        smoothWheel: !prefersReducedMotion,
         // Lenis v1 uses `syncTouch`; false is equivalent to disabling smoothTouch.
         syncTouch: false,
-        touchMultiplier: 2,
+        touchMultiplier: prefersReducedMotion ? 1 : 2,
         autoResize: true,
         autoRaf: false, // we drive RAF via gsap.ticker
       }}

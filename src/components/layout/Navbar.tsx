@@ -2,11 +2,12 @@
 
 import { useLenis } from "lenis/react";
 import { useGSAP } from "@gsap/react";
-import { AnimatePresence, motion } from "framer-motion";
+
 import { Menu, X } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { ScrollTrigger, gsap, setupGsap } from "@/lib/gsap";
+import { gsap, setupGsap } from "@/lib/gsap";
+import { cinematicChapterPalettes } from "@/lib/motion";
 
 const navigationItems = [
   { label: "About", id: "about" },
@@ -18,18 +19,6 @@ const navigationItems = [
   { label: "Sports", id: "sports" },
   { label: "Contact", id: "contact" },
 ] as const;
-
-const sectionPalettes: Record<string, { primary: string; secondary: string; tertiary: string; }> = {
-  hero: { primary: "#ffffff", secondary: "#e2e8f0", tertiary: "#94a3b8" },
-  about: { primary: "#ff00ff", secondary: "#4a00e0", tertiary: "#b000ff" },
-  work: { primary: "#00f2fe", secondary: "#4facfe", tertiary: "#00c6ff" },
-  projects: { primary: "#b2ff05", secondary: "#00b09b", tertiary: "#74ff00" },
-  skills: { primary: "#b2ff05", secondary: "#00b09b", tertiary: "#74ff00" },
-  journey: { primary: "#00f2fe", secondary: "#4facfe", tertiary: "#00c6ff" },
-  research: { primary: "#ff0844", secondary: "#ffb199", tertiary: "#ff4560" },
-  sports: { primary: "#7c3aed", secondary: "#3b82f6", tertiary: "#8b5cf6" },
-  contact: { primary: "#f97316", secondary: "#ea580c", tertiary: "#fcd34d" },
-};
 
 export function Navbar() {
   setupGsap();
@@ -89,7 +78,8 @@ export function Navbar() {
     const observerCallback: IntersectionObserverCallback = (entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
-          setActiveSection(entry.target.id);
+          const id = entry.target.id === "hero-tracker" ? "hero" : entry.target.id;
+          setActiveSection(id);
         }
       });
     };
@@ -103,7 +93,7 @@ export function Navbar() {
 
     // Let the DOM settle from GSAP Hero pins or framer-motion animations
     const initTimer = setTimeout(() => {
-      const allSections = ["hero", ...navigationItems.map(i => i.id)];
+      const allSections = ["hero-tracker", ...navigationItems.map(i => i.id)];
       allSections.forEach((id) => {
         const section = document.getElementById(id);
         if (section) observer.observe(section);
@@ -120,7 +110,10 @@ export function Navbar() {
   // style.setProperty() + CSS @property in globals.css handles smooth
   // color transitions natively — no GSAP tweens that accumulate over time.
   useEffect(() => {
-    const palette = sectionPalettes[activeSection] ?? sectionPalettes.hero;
+    const palette =
+      cinematicChapterPalettes[
+        activeSection as keyof typeof cinematicChapterPalettes
+      ] ?? cinematicChapterPalettes.hero;
     const el = document.documentElement;
     el.style.setProperty("--accent-primary", palette.primary);
     el.style.setProperty("--accent-secondary", palette.secondary);
@@ -201,27 +194,16 @@ export function Navbar() {
                 {item.label}
               </button>
               {/* Animated active indicator glow */}
-              <AnimatePresence>
-                {activeSection === item.id && (
-                  <motion.span
-                    layoutId="nav-active-pill"
-                    className="absolute inset-0 rounded-full pointer-events-none border"
-                    style={{
-                      boxShadow: "0 0 20px 2px color-mix(in srgb, var(--accent-primary) 40%, transparent)",
-                      background: "color-mix(in srgb, var(--accent-primary) 15%, transparent)",
-                      borderColor: "color-mix(in srgb, var(--accent-primary) 30%, transparent)",
-                    }}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{
-                      type: "spring",
-                      stiffness: 400,
-                      damping: 30,
-                    }}
-                  />
-                )}
-              </AnimatePresence>
+              {activeSection === item.id && (
+                <span
+                  className="absolute inset-0 rounded-full pointer-events-none border animate-in fade-in zoom-in-95 duration-300"
+                  style={{
+                    boxShadow: "0 0 20px 2px color-mix(in srgb, var(--accent-primary) 40%, transparent)",
+                    background: "color-mix(in srgb, var(--accent-primary) 15%, transparent)",
+                    borderColor: "color-mix(in srgb, var(--accent-primary) 30%, transparent)",
+                  }}
+                />
+              )}
             </div>
           ))}
         </nav>
