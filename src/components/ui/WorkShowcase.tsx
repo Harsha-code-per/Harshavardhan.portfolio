@@ -116,11 +116,13 @@ export function WorkShowcase() {
 
             <div className="relative z-10 w-full max-w-7xl mx-auto flex flex-col lg:flex-row gap-16 lg:items-center">
               <div className="flex-1">
-                <div className="flex items-center gap-4 mb-6">
-                  <span className="w-12 h-[2px] bg-[var(--accent-primary)]" />
-                  <p className="font-mono text-xs uppercase tracking-[0.3em] text-[var(--accent-primary-light)]">
-                    First Team Signal
+                <div className="mb-8 border-l-2 border-[var(--accent-primary)] pl-4">
+                  <p className="font-mono text-[10px] font-bold uppercase tracking-[0.34em] text-[var(--accent-primary-light)]">
+                    03 // PROOF
                   </p>
+                  <h2 className="mt-2 text-3xl font-black uppercase leading-none text-white tracking-tight">
+                    EXPERIENCE & ARCHITECTURE
+                  </h2>
                 </div>
                 <h2 className="text-[clamp(3.5rem,7vw,7.5rem)] font-black uppercase leading-[0.85] tracking-tighter text-white">
                   Ready For<br/>The Real<br/>Room.

@@ -1,10 +1,10 @@
 import { Footer } from "@/components/layout/Footer";
-import { MaskedAbout } from "@/components/ui/MaskedAbout";
+import { About } from "@/components/ui/About";
 
 export default function AboutPage() {
   return (
     <main className="bg-[var(--bg-base)] pt-24">
-      <MaskedAbout />
+      <About />
       <Footer />
     </main>
   );

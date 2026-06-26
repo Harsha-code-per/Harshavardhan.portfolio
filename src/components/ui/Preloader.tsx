@@ -4,30 +4,37 @@ import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useProgress } from "@react-three/drei";
 import { useGSAP } from "@gsap/react";
 import { gsap } from "@/lib/gsap";
+import { sound } from "@/lib/sound";
 
 const PRELOADER_STORAGE_KEY = "portfolio-preloader-complete";
 
+const BOOT_LOGS = [
+  "SYSTEM INITIALIZATION V3.5...",
+  "CPU CONFIG: CORE ENGINE ENGAGED",
+  "RAM MAP: CACHE STACK PARSING [256MB]",
+  "SHADERS: VERTEX BUILD PIPELINE COMPILED",
+  "TICKER: BINDING GSAP GLOBAL ticker LOOP",
+  "CANVAS: CREATING THREE.JS WEBGL RENDER SYSTEM",
+  "GLTF SOURCE: FETCHING 3D ASSET PACKETS",
+  "DRACO EXTENSION: DECOMPRESSING RETRO COMPUTER DATA",
+  "STATE SYNC: ZUSTAND INTERFACE STORE INITIALIZED",
+  "PRELOADING SYSTEMS: LOAD COMPLETE",
+  "MONITOR CALIBRATION: INITIATING DEGAUSS SEQUENCE",
+  "SYSTEM ONLINE. BROADCAST CHANNELS ARMED."
+];
+
 export function Preloader() {
   const { progress, active } = useProgress();
-  // Use refs to read inside interval without re-creating it
   const progressRef = useRef(progress);
   const activeRef = useRef(active);
   const [fakeProgress, setFakeProgress] = useState(0);
   const [isVisible, setIsVisible] = useState(true);
   const preloaderRef = useRef<HTMLDivElement>(null);
+  const consoleRef = useRef<HTMLDivElement>(null);
   const introPlayedRef = useRef(false);
   const exitStartedRef = useRef(false);
   const skipPreloaderRef = useRef(false);
-  const phaseRef = useRef<HTMLParagraphElement>(null);
-  // Guard against double-interval in React StrictMode
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
-
-  const getPhaseText = (p: number) => {
-    if (p < 30) return "BOOTING KERNEL...";
-    if (p < 60) return "LOADING ASSETS...";
-    if (p < 90) return "CALIBRATING EXPERIENCE...";
-    return "INITIALIZING...";
-  };
 
   useLayoutEffect(() => {
     const preloaderWindow = window as Window & { __preloaderComplete?: boolean };
@@ -45,31 +52,27 @@ export function Preloader() {
     }
   }, []);
 
-  // Sync asset-loading state for the interval without mutating refs during render.
+  // Sync assets progress
   useEffect(() => {
     progressRef.current = progress;
     activeRef.current = active;
   }, [progress, active]);
 
-  // Smooth fake progress animation — single interval, guarded against double-create
+  // Smooth fake progress animation
   useEffect(() => {
     if (!isVisible || skipPreloaderRef.current) return;
 
     if (intervalRef.current) clearInterval(intervalRef.current);
     intervalRef.current = setInterval(() => {
       const isLoaded = progressRef.current >= 100 || !activeRef.current;
-      const maxFake = isLoaded ? 100 : 90;
+      const maxFake = isLoaded ? 100 : 95; // Cap at 95 until model is loaded
       setFakeProgress((prev) => {
-        const next = prev < maxFake
-          ? Math.min(prev + (prev < 50 ? 1.5 : prev < 80 ? 0.8 : 0.4), maxFake)
+        return prev < maxFake
+          ? Math.min(prev + (prev < 40 ? 2.5 : prev < 75 ? 1.2 : 0.6), maxFake)
           : prev;
-        // Update phase text directly in the interval — no GSAP hook needed
-        if (phaseRef.current) {
-          phaseRef.current.innerText = getPhaseText(next);
-        }
-        return next;
       });
-    }, 50);
+    }, 45);
+
     return () => {
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
@@ -78,7 +81,7 @@ export function Preloader() {
     };
   }, [isVisible]);
 
-  // Never let the intro block first paint forever if a WebGL/HDR asset stalls.
+  // Failsafe in case model stalls
   useEffect(() => {
     if (!isVisible || skipPreloaderRef.current) return;
 
@@ -86,12 +89,30 @@ export function Preloader() {
       progressRef.current = 100;
       activeRef.current = false;
       setFakeProgress(100);
-    }, 5200);
+    }, 4500);
 
     return () => window.clearTimeout(failSafe);
   }, [isVisible]);
 
   const readyToExit = fakeProgress >= 100;
+
+  // Split boot logs count
+  const visibleLogsCount = Math.min(
+    Math.floor((fakeProgress / 100) * (BOOT_LOGS.length + 1)),
+    BOOT_LOGS.length
+  );
+  const visibleLogs = BOOT_LOGS.slice(0, visibleLogsCount);
+
+  // Play a tactical high-pitched beep whenever a new log line shows up
+  useEffect(() => {
+    if (visibleLogsCount > 0 && visibleLogsCount <= BOOT_LOGS.length) {
+      sound.playBeep();
+    }
+    // Auto scroll the mock console to show new lines
+    if (consoleRef.current) {
+      consoleRef.current.scrollTop = consoleRef.current.scrollHeight;
+    }
+  }, [visibleLogsCount]);
 
   useGSAP(
     () => {
@@ -103,20 +124,23 @@ export function Preloader() {
 
         exitStartedRef.current = true;
         setFakeProgress(100);
+
+        // Sound trigger! Generates the retro startup hum/whine
+        sound.playCRTBoot();
+
         gsap
-          .timeline({ delay: 0.2 })
-          .to([".manifesto-text", ".counter-text", ".loading-details"], {
+          .timeline({ delay: 0.1 })
+          .to(".preloader-console", {
             opacity: 0,
-            y: -40,
-            duration: 0.6,
-            stagger: 0.1,
+            y: -30,
+            duration: 0.5,
             ease: "power3.inOut",
           })
           .to(
             preloaderRef.current,
             {
               y: "-100vh",
-              duration: 1.2,
+              duration: 1.1,
               ease: "expo.inOut",
               onComplete: () => {
                 (window as Window & { __preloaderComplete?: boolean }).__preloaderComplete = true;
@@ -129,46 +153,19 @@ export function Preloader() {
           );
       };
 
-      const forcedExit = gsap.delayedCall(5.4, exitPreloader);
+      const forcedExit = gsap.delayedCall(4.8, exitPreloader);
 
       if (!introPlayedRef.current) {
         introPlayedRef.current = true;
         gsap
           .timeline()
-          .to(".manifesto-text", {
-            y: 0,
+          .to(".preloader-console", {
             opacity: 1,
-            duration: 0.9,
+            scale: 1,
+            duration: 0.7,
             ease: "expo.out",
-            delay: 0.2,
-          })
-          .to(
-            ".counter-text",
-            {
-              y: 0,
-              opacity: 1,
-              duration: 0.9,
-              ease: "expo.out",
-            },
-            "-=0.65"
-          )
-          .to(
-            ".loading-details",
-            {
-              opacity: 1,
-              duration: 0.8,
-              ease: "power2.out",
-            },
-            "-=0.45"
-          );
-      } else {
-        gsap.set([".manifesto-text", ".counter-text"], {
-          opacity: 1,
-          y: 0,
-        });
-        gsap.set(".loading-details", { opacity: 1 });
+          });
       }
-      // phaseRef update moved to the interval — no DOM mutation needed here
 
       if (!readyToExit) {
         return () => {
@@ -182,7 +179,6 @@ export function Preloader() {
         forcedExit.kill();
       };
     },
-    // Only re-run for boolean state changes, not every fakeProgress tick
     { dependencies: [isVisible, readyToExit], scope: preloaderRef }
   );
 
@@ -200,35 +196,68 @@ export function Preloader() {
   return (
     <div
       ref={preloaderRef}
-      className="flex flex-col items-center justify-center text-[var(--text-primary)] overflow-hidden"
+      className="flex flex-col items-center justify-center overflow-hidden z-[9999999] bg-[#050507]"
       style={{
         position: "fixed",
         top: 0,
         left: 0,
         right: 0,
         bottom: 0,
-        zIndex: 999999,
-        backgroundColor: "var(--bg-base)",
+        backgroundColor: "#050507",
       }}
     >
-      <div className="overflow-hidden mb-4">
-        <p className="manifesto-text text-xs md:text-sm tracking-[0.3em] text-white/70 font-medium uppercase opacity-0 translate-y-full">
-          Immersive Experiences Ahead
-        </p>
-      </div>
-      <div className="overflow-hidden">
-        <h2 className="counter-text text-[clamp(5rem,15vw,12rem)] font-black leading-none opacity-0 translate-y-full text-transparent bg-clip-text bg-gradient-to-b from-white to-white/20">
-          {Math.floor(fakeProgress)}%
-        </h2>
-      </div>
-      <div className="absolute bottom-10 left-10 text-xs font-mono text-[var(--text-secondary)] loading-details opacity-0">
-        <p ref={phaseRef}>{getPhaseText(fakeProgress)}</p>
-        <div className="mt-2 h-1 w-32 bg-white/10 rounded-full overflow-hidden">
-          <div 
-            className="h-full bg-white/80 shadow-[0_0_10px_rgba(255,255,255,0.5)] transition-all duration-75 ease-linear" 
-            style={{ width: `${fakeProgress}%` }}
-          />
+      {/* Screen Glitch overlay */}
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_40%,rgba(0,0,0,0.5))] pointer-events-none z-10" />
+      <div className="cinematic-grid pointer-events-none absolute inset-0 opacity-[0.12] z-0" />
+      
+      {/* Terminal Container */}
+      <div className="preloader-console w-[90%] max-w-lg border border-white/10 rounded bg-[#0a0a0f]/90 p-5 font-mono text-xs opacity-0 scale-95 shadow-[0_30px_100px_rgba(0,0,0,0.8)] backdrop-blur relative z-20">
+        
+        {/* Terminal Header */}
+        <div className="flex items-center justify-between border-b border-white/10 pb-2 mb-4 text-white/50 text-[10px] uppercase tracking-wider">
+          <div className="flex items-center gap-2">
+            <span className="h-2 w-2 rounded-full bg-orange-500 animate-pulse" />
+            <span>Telemetry Link // Online</span>
+          </div>
+          <span>PORT_443</span>
         </div>
+
+        {/* Logs Stream */}
+        <div 
+          ref={consoleRef}
+          className="h-48 overflow-y-auto mb-5 space-y-1.5 scroll-smooth pr-2 select-none"
+          style={{ scrollbarWidth: "none" }}
+        >
+          {visibleLogs.map((log, i) => (
+            <div key={i} className="flex gap-2.5 items-start text-white/70">
+              <span className="text-[var(--accent-primary-light)] font-bold shrink-0">&gt;</span>
+              <p className="leading-relaxed">{log}</p>
+            </div>
+          ))}
+          
+          {visibleLogsCount < BOOT_LOGS.length && (
+            <div className="flex gap-2.5 items-center">
+              <span className="text-[var(--accent-primary-light)] font-bold shrink-0">&gt;</span>
+              <span className="h-3.5 w-2 bg-[var(--accent-primary)] animate-pulse" />
+            </div>
+          )}
+        </div>
+
+        {/* Progress Bar & Percentage */}
+        <div className="border-t border-white/10 pt-4 flex items-center justify-between gap-6">
+          <div className="flex-1">
+            <div className="h-1 bg-white/5 rounded overflow-hidden">
+              <div 
+                className="h-full bg-[var(--accent-primary)] shadow-[0_0_12px_var(--accent-primary-glow)] transition-all duration-75 ease-linear"
+                style={{ width: `${fakeProgress}%` }}
+              />
+            </div>
+          </div>
+          <span className="font-bold text-[var(--accent-primary-light)] text-[14px] leading-none shrink-0 min-w-10 text-right">
+            {Math.floor(fakeProgress)}%
+          </span>
+        </div>
+
       </div>
     </div>
   );

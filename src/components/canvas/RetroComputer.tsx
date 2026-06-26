@@ -107,7 +107,15 @@ export function Model(props: React.ComponentProps<'group'>) {
       </group>
       <mesh geometry={nodes.kb_base_low001_M_Keyboard_0.geometry} material={materials.M_Keyboard} position={[0.04, 0.756, 6.778]} rotation={[-Math.PI, 0.126, 0]} />
       <mesh geometry={nodes.SM_Keyboard_Lid_M_Keyboard_Translucent_0.geometry} material={materials.M_Keyboard_Translucent} position={[8.402, 2.044, 8.468]} rotation={[3.123, 0.126, 0.002]} />
-      <mesh geometry={nodes.SM_Monitor_M_Monitor_0.geometry} material={materials.M_Monitor} position={[-0.801, 6.601, -3.287]} rotation={[Math.PI / 2, 0, 0]} />
+      
+      {/* Dynamic CRT Glowing Monitor Screen */}
+      <mesh 
+        geometry={nodes.SM_Monitor_M_Monitor_0.geometry} 
+        material={materials.M_Monitor} 
+        position={[-0.801, 6.601, -3.287]} 
+        rotation={[Math.PI / 2, 0, 0]}
+      />
+
       <mesh geometry={nodes.strip_low_M_Details_0.geometry} material={materials.M_Details} position={[4.159, 0.963, -12.62]} rotation={[-2.809, 0.338, 1.019]} />
       <mesh geometry={nodes.SM_Cables_M_Details_0.geometry} material={materials.M_Details} position={[12.352, 6.021, -3.062]} rotation={[Math.PI / 2, 0, 0.244]} />
       <mesh geometry={nodes.ductTape_low_M_Details_0.geometry} material={materials.M_Details} position={[0.171, 0.208, -15.174]} rotation={[3.094, -0.031, -0.009]} />

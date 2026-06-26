@@ -4,6 +4,7 @@ import { ReactLenis } from "lenis/react";
 import { useEffect, useRef, useCallback, type ComponentProps, type ReactNode } from "react";
 import { ScrollTrigger, gsap, setupGsap } from "@/lib/gsap";
 import { useReducedMotionPreference } from "@/lib/useReducedMotion";
+import { useModeStore } from "@/lib/store";
 
 type SmoothScrollerProps = {
   children: ReactNode;
@@ -15,6 +16,23 @@ type LenisRefApi = { lenis?: LenisInstance | null };
 export default function SmoothScroller({ children }: SmoothScrollerProps) {
   const lenisRef = useRef<LenisInstance | null>(null);
   const prefersReducedMotion = useReducedMotionPreference();
+  const isRecruiterMode = useModeStore((state) => state.isRecruiterMode);
+
+  useEffect(() => {
+    // Reset scroll position to top instantly when mode toggles
+    if (lenisRef.current) {
+      lenisRef.current.scrollTo(0, { immediate: true });
+    } else {
+      window.scrollTo(0, 0);
+    }
+
+    // Delay ScrollTrigger recalculation slightly to allow DOM layout to swap and settle
+    const timer = setTimeout(() => {
+      ScrollTrigger.refresh(true);
+    }, 150);
+
+    return () => clearTimeout(timer);
+  }, [isRecruiterMode]);
 
   useEffect(() => {
     setupGsap();

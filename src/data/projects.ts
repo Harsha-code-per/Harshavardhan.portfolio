@@ -47,4 +47,16 @@ export const projects: Project[] = [
     repoUrl: "https://github.com/Harsha-code-per/decode-somnia",
     siteUrl: "https://decode-somnia.vercel.app",
   },
+  {
+    slug: "aura",
+    title: "Aura",
+    oneLiner: "India's Localized Carbon Footprint Platform",
+    summary:
+      "A full-stack, AI-powered carbon footprint tracker and ecosystem feed built specifically for India. Empowering households to measure, analyze, and offset daily emissions with natural language logs.",
+    impact: "Engineered a 6-stage model cascade fallback, offline regex heuristics, and server-side memory caching.",
+    stack: ["Next.js", "Firebase", "Gemini", "Tailwind CSS", "Vitest"],
+    accent: "from-teal-400/45 to-emerald-500/35",
+    repoUrl: "https://github.com/Harsha-code-per/Aura",
+    siteUrl: "https://auracarbonai.vercel.app/",
+  },
 ];

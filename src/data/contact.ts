@@ -2,8 +2,6 @@ import {
   GITHUB_URL,
   LINKEDIN_URL,
   PRIMARY_EMAIL,
-  WHATSAPP_DISPLAY,
-  WHATSAPP_NUMBER,
 } from "@/data/profile";
 
 export type ContactLink = {
@@ -42,12 +40,6 @@ export const contactContent: ContactContent = {
       label: "GitHub",
       value: "Explore source projects",
       href: GITHUB_URL,
-      external: true,
-    },
-    {
-      label: "WhatsApp",
-      value: WHATSAPP_DISPLAY,
-      href: `https://wa.me/${WHATSAPP_NUMBER}`,
       external: true,
     },
   ],

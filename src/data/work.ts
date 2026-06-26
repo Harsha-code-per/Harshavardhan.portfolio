@@ -10,10 +10,10 @@ export type WorkEntry = {
 
 export const workExperience: WorkEntry[] = [
   {
-    period: "Dec 2025 - Apr 2026",
+    period: "Dec 2nd 2025 - Apr 4th 2026",
     role: "AI Engineer Intern",
     organization: "Zensphere Academy",
-    location: "Online",
+    location: "Chennai",
     overview:
       "Engineered interactive voice agents using LiveKit and Azure AI Foundry, integrating LLMs to automate complex speaking assessments and real-time linguistic feedback.",
     outcomes: [

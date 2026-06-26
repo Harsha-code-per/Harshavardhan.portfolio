@@ -1,3 +1,6 @@
+"use client";
+
+import { useModeStore } from "@/lib/store";
 import { CinematicDirector } from "@/components/layout/CinematicDirector";
 import { Footer } from "@/components/layout/Footer";
 import { About } from "@/components/ui/About";
@@ -10,8 +13,15 @@ import { SkillsBento } from "@/components/ui/SkillsBento";
 import { SportsSection } from "@/components/ui/SportsSection";
 import { TimelineExperience } from "@/components/ui/TimelineExperience";
 import { WorkShowcase } from "@/components/ui/WorkShowcase";
+import { RecruiterView } from "@/components/ui/RecruiterView";
 
 export default function Home() {
+  const isRecruiterMode = useModeStore((state) => state.isRecruiterMode);
+
+  if (isRecruiterMode) {
+    return <RecruiterView />;
+  }
+
   return (
     <CinematicDirector>
       <div id="hero-tracker" className="absolute top-0 w-full h-[100vh] pointer-events-none" />

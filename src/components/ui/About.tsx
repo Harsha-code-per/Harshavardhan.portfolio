@@ -89,13 +89,9 @@ export function About() {
       const textEl = textRef.current;
       if (!section || !textEl) return;
 
-      const heading = section.querySelector<HTMLElement>("[data-about-heading]");
+      const headingTargets = gsap.utils.toArray<HTMLElement>("[data-about-reveal]", section);
       const hudItems = gsap.utils.toArray<HTMLElement>("[data-about-hud]", section);
       const bentoCards = gsap.utils.toArray<HTMLElement>(".bento-container > div", section);
-
-      // 1. Split Text for the massive heading
-      const splitHeading = new SplitType(heading as HTMLElement, { types: "lines,words" });
-      const headingTargets = splitHeading.lines && splitHeading.lines.length > 0 ? splitHeading.lines : splitHeading.words ?? [];
 
       // 2. Split Text for the scrub body paragraph
       const splitBody = new SplitType(textEl, { types: "words" });
@@ -166,7 +162,6 @@ export function About() {
         revealTimeline.kill();
         scrubTween.scrollTrigger?.kill();
         scrubTween.kill();
-        splitHeading.revert();
         splitBody.revert();
       };
     },
@@ -218,13 +213,22 @@ export function About() {
               </div>
             </div>
 
-            <h2
-              data-about-heading
-              className="max-w-[16ch] text-balance text-[clamp(2.2rem,4.8vw,4.5rem)] font-[var(--font-space)] font-black uppercase leading-[0.85] tracking-tight text-white"
+            <div data-about-reveal className="mb-10 border-l-2 border-[var(--accent-primary)] pl-4">
+              <p className="font-mono text-[10px] font-bold uppercase tracking-[0.34em] text-[var(--accent-primary-light)]">
+                02 // SIGNAL
+              </p>
+              <h2 className="mt-2 text-3xl font-black uppercase leading-none text-white tracking-tight">
+                ORIGIN & CORE PHILOSOPHY
+              </h2>
+            </div>
+
+            <h3
+              data-about-reveal
+              className="max-w-[16ch] text-balance text-[clamp(2.2rem,4.5vw,4rem)] font-[var(--font-space)] font-black uppercase leading-[0.85] tracking-tight text-white"
               style={{ perspective: "1000px" }}
             >
               {aboutContent.title}
-            </h2>
+            </h3>
             
             <p
               ref={textRef}
