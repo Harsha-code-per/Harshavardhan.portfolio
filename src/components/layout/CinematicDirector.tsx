@@ -103,12 +103,12 @@ export function CinematicDirector({ children }: CinematicDirectorProps) {
     >
       <aside
         aria-hidden="true"
-        className="pointer-events-none fixed right-6 top-1/2 z-[900] hidden -translate-y-1/2 items-center gap-4 lg:flex"
+        className="pointer-events-none fixed right-6 top-1/2 z-900 hidden -translate-y-1/2 items-center gap-4 lg:flex"
       >
         <div className="relative h-40 w-px overflow-hidden bg-white/10">
           <div
             ref={progressRef}
-            className="absolute left-0 top-0 h-full w-full origin-top scale-y-0 bg-[var(--accent-primary)] shadow-[0_0_18px_var(--accent-primary-glow)]"
+            className="absolute left-0 top-0 h-full w-full origin-top scale-y-0 bg-accent-primary shadow-[0_0_18px_var(--accent-primary-glow)]"
           />
         </div>
         <div className="[writing-mode:vertical-rl]">
@@ -116,7 +116,7 @@ export function CinematicDirector({ children }: CinematicDirectorProps) {
             {String(activeChapterIndex + 1).padStart(2, "0")} /{" "}
             {String(cinematicChapters.length).padStart(2, "0")}
           </p>
-          <p className="mt-4 font-mono text-[0.68rem] uppercase tracking-[0.38em] text-[var(--accent-primary-light)]">
+          <p className="mt-4 font-mono text-[0.68rem] uppercase tracking-[0.38em] text-accent-primary-light">
             {cinematicChapters[activeChapterIndex].label}
           </p>
         </div>

@@ -84,7 +84,7 @@ export function RecruiterView() {
             {workExperience.map((work) => (
               <div key={work.organization} className="group relative pl-4 sm:pl-6 border-l border-zinc-800">
                 {/* Timeline Dot */}
-                <div className="absolute -left-[4.5px] top-1.5 h-2 w-2 rounded-full bg-zinc-800 group-hover:bg-amber-400 transition-colors" />
+                <div className="absolute left-[-4.5px] top-1.5 h-2 w-2 rounded-full bg-zinc-800 group-hover:bg-amber-400 transition-colors" />
 
                 <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1.5">
                   <h3 className="text-lg font-bold text-white leading-none">

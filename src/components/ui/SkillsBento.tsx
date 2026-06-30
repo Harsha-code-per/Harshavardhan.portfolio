@@ -373,14 +373,14 @@ export function SkillsBento() {
     >
       <div 
         ref={containerRef} 
-        className="relative z-10 mx-auto grid w-full max-w-[1400px] gap-8 px-[clamp(1rem,5vw,4rem)] lg:grid-cols-[0.42fr_0.58fr] lg:gap-10 lg:h-[75vh] lg:min-h-[600px] lg:max-h-[850px] lg:px-8"
+        className="relative z-10 mx-auto grid w-full max-w-350 gap-8 px-[clamp(1rem,5vw,4rem)] lg:grid-cols-[0.42fr_0.58fr] lg:gap-10 lg:h-[75vh] lg:min-h-150 lg:max-h-212.5 lg:px-8"
       >
         {/* Left Side Column: Accordion Menu */}
         <div className="flex flex-col justify-between">
           <div>
             {/* Cinematic Section Header */}
-            <div className="mb-8 border-l-2 border-[var(--accent-primary)] pl-4">
-              <p className="font-mono text-[10px] font-bold uppercase tracking-[0.34em] text-[var(--accent-primary-light)]">
+            <div className="mb-8 border-l-2 border-accent-primary pl-4">
+              <p className="font-mono text-[10px] font-bold uppercase tracking-[0.34em] text-accent-primary-light">
                 05 // STACK
               </p>
               <h2 className="mt-2 text-3xl font-black uppercase leading-none text-white tracking-tight">
@@ -401,7 +401,7 @@ export function SkillsBento() {
                     onClick={() => setActiveIndex(index)}
                     className={`w-full text-left relative overflow-hidden rounded-xl border p-5 transition-all duration-500 cursor-pointer ${
                       isActive 
-                        ? "border-white/10 bg-white/[0.02]" 
+                        ? "border-white/10 bg-white/2" 
                         : "border-white/5 bg-transparent hover:border-white/10"
                     }`}
                     style={{
@@ -439,7 +439,7 @@ export function SkillsBento() {
                             <div className="flex items-center justify-between border-b border-white/5 pb-1.5 text-white/40">
                               <span>SYSTEM_DIAGNOSTICS</span>
                               <span className="flex items-center gap-1.5">
-                                <span className="h-1.5 w-1.5 rounded-full bg-[var(--active-accent)] animate-pulse" style={{ backgroundColor: accent }} />
+                                <span className="h-1.5 w-1.5 rounded-full animate-pulse" style={{ backgroundColor: accent }} />
                                 <span style={{ color: accent }}>COMPILED // OK</span>
                               </span>
                             </div>
@@ -508,7 +508,7 @@ export function SkillsBento() {
         <div 
           onMouseMove={handleMouseMove}
           onMouseLeave={handleMouseLeave}
-          className="relative rounded-xl border bg-black/40 backdrop-blur-md overflow-hidden flex flex-col justify-between p-6 sm:p-8 min-h-[460px] lg:h-full transition-all duration-500"
+          className="relative rounded-xl border bg-black/40 backdrop-blur-md overflow-hidden flex flex-col justify-between p-6 sm:p-8 min-h-115 lg:h-full transition-all duration-500"
           style={{
             borderColor: `color-mix(in srgb, ${activeAccent} 32%, rgba(255,255,255,0.06))`,
             boxShadow: `0 34px 100px rgba(0,0,0,0.65), 0 0 25px color-mix(in srgb, ${activeAccent} 6%, transparent)`
@@ -523,7 +523,7 @@ export function SkillsBento() {
           {/* Coordinates Header Overlay */}
           <div className="relative z-10 flex items-center justify-between border-b border-white/5 pb-4 mb-4 text-[9px] font-mono tracking-widest text-white/30">
             <div className="flex items-center gap-1.5">
-              <span className="h-1.5 w-1.5 rounded-full bg-[var(--active-accent)] animate-ping" style={{ backgroundColor: activeAccent }} />
+              <span className="h-1.5 w-1.5 rounded-full animate-ping" style={{ backgroundColor: activeAccent }} />
               <span>SYS_ACCELERATED // CHANNEL_0{activeIndex + 1}</span>
             </div>
             <span>RENDER: PARTICLES_3D_MORPH</span>
@@ -541,7 +541,7 @@ export function SkillsBento() {
                 return (
                   <div
                     key={item}
-                    className="tech-badge flex items-center gap-3 p-3.5 rounded-lg border border-white/5 bg-black/72 backdrop-blur-md transition-all duration-300 hover:border-[var(--active-accent)] hover:bg-white/[0.03] hover:translate-y-[-2px]"
+                    className="tech-badge flex items-center gap-3 p-3.5 rounded-lg border border-white/5 bg-black/72 backdrop-blur-md transition-all duration-300 hover:border-(--active-accent) hover:bg-white/3 hover:-translate-y-0.5"
                     style={{
                       '--active-accent': activeAccent
                     } as React.CSSProperties}

@@ -254,24 +254,24 @@ export function ResearchSection() {
       {/* --- Tactical Crosshair Target Lines (Visible on Desktop hover) --- */}
       <div
         ref={lineHRef}
-        className={`pointer-events-none absolute left-0 right-0 h-[1px] border-t border-dashed border-[var(--accent-primary)]/15 z-40 transition-opacity duration-300 hidden lg:block ${
+        className={`pointer-events-none absolute left-0 right-0 h-px border-t border-dashed border-accent-primary/15 z-40 transition-opacity duration-300 hidden lg:block ${
           isHovering ? "opacity-100" : "opacity-0"
         }`}
         style={{ top: "0px" }}
       />
       <div
         ref={lineVRef}
-        className={`pointer-events-none absolute top-0 bottom-0 w-[1px] border-l border-dashed border-[var(--accent-primary)]/15 z-40 transition-opacity duration-300 hidden lg:block ${
+        className={`pointer-events-none absolute top-0 bottom-0 w-px border-l border-dashed border-accent-primary/15 z-40 transition-opacity duration-300 hidden lg:block ${
           isHovering ? "opacity-100" : "opacity-0"
         }`}
         style={{ left: "0px" }}
       />
 
       {/* --- Custom HUD Viewfinder Brackets --- */}
-      <div className="hud-fade-up [animation-delay:150ms] absolute left-6 top-6 h-8 w-8 border-l border-t border-[var(--accent-primary)]/30 pointer-events-none" />
-      <div className="hud-fade-up [animation-delay:150ms] absolute right-6 top-6 h-8 w-8 border-r border-t border-[var(--accent-primary)]/30 pointer-events-none" />
-      <div className="hud-fade-up [animation-delay:150ms] absolute left-6 bottom-6 h-8 w-8 border-l border-b border-[var(--accent-primary)]/30 pointer-events-none" />
-      <div className="hud-fade-up [animation-delay:150ms] absolute right-6 bottom-6 h-8 w-8 border-r border-b border-[var(--accent-primary)]/30 pointer-events-none" />
+      <div className="hud-fade-up [animation-delay:150ms] absolute left-6 top-6 h-8 w-8 border-l border-t border-accent-primary/30 pointer-events-none" />
+      <div className="hud-fade-up [animation-delay:150ms] absolute right-6 top-6 h-8 w-8 border-r border-t border-accent-primary/30 pointer-events-none" />
+      <div className="hud-fade-up [animation-delay:150ms] absolute left-6 bottom-6 h-8 w-8 border-l border-b border-accent-primary/30 pointer-events-none" />
+      <div className="hud-fade-up [animation-delay:150ms] absolute right-6 bottom-6 h-8 w-8 border-r border-b border-accent-primary/30 pointer-events-none" />
 
       {/* --- Custom Targeting Crosshair & Telemetry Box (Desktop hover) --- */}
       <div
@@ -280,18 +280,18 @@ export function ResearchSection() {
           isHovering ? "opacity-100" : "opacity-0"
         }`}
       >
-        <div className="absolute inset-0 rounded-full border border-[var(--accent-primary)] opacity-25" />
-        <div className="absolute left-1/2 top-1/2 h-1 w-1 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[var(--accent-primary)]" />
-        <div className="absolute left-1/2 top-0 h-2.5 w-[1px] -translate-x-1/2 bg-[var(--accent-primary)]" />
-        <div className="absolute bottom-0 left-1/2 h-2.5 w-[1px] -translate-x-1/2 bg-[var(--accent-primary)]" />
-        <div className="absolute left-0 top-1/2 h-[1px] w-2.5 -translate-y-1/2 bg-[var(--accent-primary)]" />
-        <div className="absolute right-0 top-1/2 h-[1px] w-2.5 -translate-y-1/2 bg-[var(--accent-primary)]" />
-        <Crosshair className="absolute -bottom-5 -right-5 h-3.5 w-3.5 text-[var(--accent-primary)] opacity-40" />
+        <div className="absolute inset-0 rounded-full border border-accent-primary opacity-25" />
+        <div className="absolute left-1/2 top-1/2 h-1 w-1 -translate-x-1/2 -translate-y-1/2 rounded-full bg-accent-primary" />
+        <div className="absolute left-1/2 top-0 h-2.5 w-px -translate-x-1/2 bg-accent-primary" />
+        <div className="absolute bottom-0 left-1/2 h-2.5 w-px -translate-x-1/2 bg-accent-primary" />
+        <div className="absolute left-0 top-1/2 h-px w-2.5 -translate-y-1/2 bg-accent-primary" />
+        <div className="absolute right-0 top-1/2 h-px w-2.5 -translate-y-1/2 bg-accent-primary" />
+        <Crosshair className="absolute -bottom-5 -right-5 h-3.5 w-3.5 text-accent-primary opacity-40" />
 
         {/* Live Coordinate telemetry stats */}
         <div
           ref={coordsBoxRef}
-          className="absolute font-mono text-[9px] text-[var(--accent-primary-light)] space-y-0.5 bg-black/75 backdrop-blur-md p-2 border border-[var(--accent-primary)]/20 rounded pointer-events-none z-50 shadow-[0_4px_12px_rgba(0,0,0,0.5)] w-[115px]"
+          className="absolute font-mono text-[9px] text-accent-primary-light space-y-0.5 bg-black/75 backdrop-blur-md p-2 border border-accent-primary/20 rounded pointer-events-none z-50 shadow-[0_4px_12px_rgba(0,0,0,0.5)] w-28.75"
           style={{ left: "20px", top: "20px" }}
         >
           <div>LAT: 12.9716° N</div>
@@ -303,8 +303,8 @@ export function ResearchSection() {
       {/* --- Top HUD Status Bar --- */}
       <header className="hud-fade-up [animation-delay:100ms] relative z-30 w-full max-w-7xl mx-auto px-6 md:px-12 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-white/5 pb-4">
         {/* Left Side: Chapter Dossier */}
-        <div className="border-l-2 border-[var(--accent-primary)] pl-4">
-          <p className="font-mono text-[10px] font-bold uppercase tracking-[0.34em] text-[var(--accent-primary-light)]">
+        <div className="border-l-2 border-accent-primary pl-4">
+          <p className="font-mono text-[10px] font-bold uppercase tracking-[0.34em] text-accent-primary-light">
             07 // FRONTIER
           </p>
           <h2 className="mt-1 text-2xl font-black uppercase tracking-tight text-white">
@@ -321,7 +321,7 @@ export function ResearchSection() {
             </span>
             <span className="font-mono text-xs font-bold tracking-widest text-red-500">LIVE FEED // REC</span>
           </div>
-          <div className="flex flex-col items-end border-l border-white/10 pl-6 font-mono text-[10px] text-[var(--accent-primary)]/80">
+          <div className="flex flex-col items-end border-l border-white/10 pl-6 font-mono text-[10px] text-accent-primary/80">
             <div className="flex items-center gap-1.5 font-bold uppercase tracking-wider">
               <span>UAV-360-SYS</span>
               <Radio className="h-3 w-3" />
@@ -338,22 +338,22 @@ export function ResearchSection() {
       <div className="relative z-30 flex-1 w-full max-w-7xl mx-auto px-6 md:px-12 grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch justify-center my-6 overflow-visible">
         
         {/* LEFT COLUMN: UAV Telemetry Panel */}
-        <div className="hud-fade-up [animation-delay:200ms] flex flex-col items-center justify-center h-auto lg:h-full w-full bg-white/[0.01] border border-white/5 rounded-xl p-6 relative overflow-hidden group/panel hover:border-[var(--accent-primary)]/10 transition-colors duration-500 z-20">
+        <div className="hud-fade-up [animation-delay:200ms] flex flex-col items-center justify-center h-auto lg:h-full w-full bg-white/1 border border-white/5 rounded-xl p-6 relative overflow-hidden group/panel hover:border-accent-primary/10 transition-colors duration-500 z-20">
           <div className="absolute top-3 left-4 font-mono text-[9px] text-white/35 uppercase tracking-wider flex items-center gap-2">
-            <Terminal className="h-3 w-3 text-[var(--accent-primary)]" />
+            <Terminal className="h-3 w-3 text-accent-primary" />
             SURVEILLANCE RADAR MODULE
           </div>
           
           {/* Concentric Radar dial with 3D tilting UAV wireframe inside */}
           <div 
             ref={droneContainerRef}
-            className="relative h-[250px] w-[250px] flex items-center justify-center mt-6"
+            className="relative h-62.5 w-62.5 flex items-center justify-center mt-6"
             style={{ perspective: "600px" }}
           >
             {/* Compass / Outer Radar ring */}
-            <div className="absolute inset-0 rounded-full border border-[var(--accent-primary)]/15 border-dashed scale-100" />
-            <div className="absolute inset-4 rounded-full border border-[var(--accent-primary)]/10 scale-95" />
-            <div className="absolute inset-12 rounded-full border border-[var(--accent-primary)]/5 border-dashed scale-75" />
+            <div className="absolute inset-0 rounded-full border border-accent-primary/15 border-dashed scale-100" />
+            <div className="absolute inset-4 rounded-full border border-accent-primary/10 scale-95" />
+            <div className="absolute inset-12 rounded-full border border-accent-primary/5 border-dashed scale-75" />
             
             {/* Spinning Radar sweep */}
             <div 
@@ -365,8 +365,8 @@ export function ResearchSection() {
             />
             
             {/* Radar Coordinates crosshair */}
-            <div className="absolute left-1/2 top-0 bottom-0 w-[1px] bg-white/[0.03]" />
-            <div className="absolute top-1/2 left-0 right-0 h-[1px] bg-white/[0.03]" />
+            <div className="absolute left-1/2 top-0 bottom-0 w-px bg-white/3" />
+            <div className="absolute top-1/2 left-0 right-0 h-px bg-white/3" />
 
             {/* Mock Targets */}
             <div className="absolute w-2 h-2 rounded-full bg-red-500/80 animate-pulse" style={{ top: "35%", left: "68%" }} />
@@ -412,11 +412,11 @@ export function ResearchSection() {
           <div className="w-full mt-6 bg-black/60 border border-white/5 rounded-lg p-4 font-mono text-[9px] text-white/50 space-y-1.5">
             <div className="flex justify-between border-b border-white/5 pb-1 mb-2 text-white/35 font-bold">
               <span>SYSTEM DIAGNOSTICS STREAM</span>
-              <span className="text-[var(--accent-primary-light)]">ACTIVE</span>
+              <span className="text-accent-primary-light">ACTIVE</span>
             </div>
-            <div className="h-[95px] overflow-hidden flex flex-col justify-end space-y-1">
+            <div className="h-23.75 overflow-hidden flex flex-col justify-end space-y-1">
               {logs.map((log, index) => (
-                <div key={index} className={`truncate transition-all duration-300 ${index === logs.length - 1 ? "text-[var(--accent-primary-light)] font-bold pl-1 border-l border-[var(--accent-primary)]" : "opacity-60"}`}>
+                <div key={index} className={`truncate transition-all duration-300 ${index === logs.length - 1 ? "text-accent-primary-light font-bold pl-1 border-l border-accent-primary" : "opacity-60"}`}>
                   {log}
                 </div>
               ))}
@@ -425,19 +425,19 @@ export function ResearchSection() {
         </div>
 
         {/* RIGHT COLUMN: Interactive Classified Dossier Card */}
-        <article className="hud-fade-up [animation-delay:300ms] relative flex flex-col justify-between border border-[var(--accent-primary)]/15 bg-[#0a0a0c]/85 p-6 md:p-8 rounded-xl h-auto lg:h-full w-full shadow-[0_0_40px_var(--accent-primary-glow)] transition-all duration-300 hover:border-[var(--accent-primary)]/30 z-20 overflow-hidden">
+        <article className="hud-fade-up [animation-delay:300ms] relative flex flex-col justify-between border border-accent-primary/15 bg-[#0a0a0c]/85 p-6 md:p-8 rounded-xl h-auto lg:h-full w-full shadow-[0_0_40px_var(--accent-primary-glow)] transition-all duration-300 hover:border-accent-primary/30 z-20 overflow-hidden">
           {/* Holographic scanning horizontal line overlay */}
-          <div className="pointer-events-none absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-[var(--accent-primary)]/30 to-transparent animate-[pulse_2s_infinite]" />
+          <div className="pointer-events-none absolute inset-x-0 top-0 h-0.5 bg-linear-to-r from-transparent via-accent-primary/30 to-transparent animate-[pulse_2s_infinite]" />
 
           {/* Dossier Corner bracket highlights */}
-          <div className="absolute left-4 top-4 h-3.5 w-3.5 border-l border-t border-[var(--accent-primary)]/40 pointer-events-none" />
-          <div className="absolute right-4 top-4 h-3.5 w-3.5 border-r border-t border-[var(--accent-primary)]/40 pointer-events-none" />
-          <div className="absolute bottom-4 left-4 h-3.5 w-3.5 border-l border-b border-[var(--accent-primary)]/40 pointer-events-none" />
-          <div className="absolute bottom-4 right-4 h-3.5 w-3.5 border-r border-b border-[var(--accent-primary)]/40 pointer-events-none" />
+          <div className="absolute left-4 top-4 h-3.5 w-3.5 border-l border-t border-accent-primary/40 pointer-events-none" />
+          <div className="absolute right-4 top-4 h-3.5 w-3.5 border-r border-t border-accent-primary/40 pointer-events-none" />
+          <div className="absolute bottom-4 left-4 h-3.5 w-3.5 border-l border-b border-accent-primary/40 pointer-events-none" />
+          <div className="absolute bottom-4 right-4 h-3.5 w-3.5 border-r border-b border-accent-primary/40 pointer-events-none" />
 
           {/* Card Top: Security dossiers badge */}
           <div className="flex justify-between items-center mb-4">
-            <div className="inline-flex items-center gap-2 border border-[var(--accent-primary)]/30 bg-[var(--accent-primary)]/10 px-3 py-1 text-[9px] font-mono tracking-widest text-[var(--accent-primary-light)] uppercase">
+            <div className="inline-flex items-center gap-2 border border-accent-primary/30 bg-accent-primary/10 px-3 py-1 text-[9px] font-mono tracking-widest text-accent-primary-light uppercase">
               <Shield className="h-3 w-3" />
               CONFIDENTIAL // LEVEL 3 SECURE
             </div>
@@ -457,7 +457,7 @@ export function ResearchSection() {
                   onMouseEnter={handleTabHover}
                   className={`px-3 py-1.5 border transition-all duration-300 rounded-sm cursor-pointer ${
                     isActive
-                      ? "bg-[var(--accent-primary)]/10 border-[var(--accent-primary)]/45 text-[var(--accent-primary-light)] shadow-[0_0_15px_var(--accent-primary-glow)]"
+                      ? "bg-accent-primary/10 border-accent-primary/45 text-accent-primary-light shadow-[0_0_15px_var(--accent-primary-glow)]"
                       : "border-white/5 hover:border-white/15 text-white/50 hover:text-white/80"
                   }`}
                 >
@@ -468,11 +468,11 @@ export function ResearchSection() {
           </div>
 
           {/* Tab Content Display Viewport with scrollbar custom styling */}
-          <div className="flex-1 overflow-y-auto pr-2 relative z-10 flex flex-col justify-start max-h-[260px] lg:max-h-[310px] scrollbar-thin scrollbar-thumb-zinc-800 scrollbar-track-transparent">
+          <div className="flex-1 overflow-y-auto pr-2 relative z-10 flex flex-col justify-start max-h-65 lg:max-h-77.5 scrollbar-thin scrollbar-thumb-zinc-800 scrollbar-track-transparent">
             {activeTab === 0 && (
               <div className="space-y-4">
-                <div className="flex items-center gap-2 text-[var(--accent-primary-light)]/60 text-[9px] font-mono uppercase tracking-[0.2em]">
-                  <BookOpen className="h-3.5 w-3.5 text-[var(--accent-primary)]" />
+                <div className="flex items-center gap-2 text-accent-primary-light/60 text-[9px] font-mono uppercase tracking-[0.2em]">
+                  <BookOpen className="h-3.5 w-3.5 text-accent-primary" />
                   <span>Classified Publication Dossier // {paperDetails.date}</span>
                 </div>
                 
@@ -483,7 +483,7 @@ export function ResearchSection() {
                 {/* Author Credentials */}
                 <div className="border-t border-b border-white/5 py-3 mt-3">
                   <span className="font-mono text-[9px] text-white/40 uppercase tracking-wider flex items-center gap-1.5 mb-2">
-                    <Users className="h-3 w-3 text-[var(--accent-primary)]" />
+                    <Users className="h-3 w-3 text-accent-primary" />
                     Key Investigators
                   </span>
                   <div className="space-y-1 pl-4 border-l border-white/5">
@@ -496,13 +496,13 @@ export function ResearchSection() {
                 </div>
 
                 <div className="grid grid-cols-2 gap-4 pt-1 mt-3">
-                  <div className="border-l border-[var(--accent-primary)]/20 pl-4">
+                  <div className="border-l border-accent-primary/20 pl-4">
                     <span className="font-mono text-[9px] text-white/40 uppercase tracking-wider block">PUBLISHER PLATFORM</span>
                     <span className="text-[10px] font-mono text-white/80 block mt-1 tracking-wide">
                       <TextScrambler text={paperDetails.publisher} duration={20} />
                     </span>
                   </div>
-                  <div className="border-l border-[var(--accent-primary)]/20 pl-4">
+                  <div className="border-l border-accent-primary/20 pl-4">
                     <span className="font-mono text-[9px] text-white/40 uppercase tracking-wider block">UAV SYSTEM INDEX</span>
                     <span className="text-[10px] font-mono text-white/80 block mt-1 tracking-wide">
                       DOI: {paperDetails.doi}
@@ -515,18 +515,18 @@ export function ResearchSection() {
             {activeTab === 1 && (
               <div className="space-y-4 font-mono">
                 {/* Objective Block */}
-                <div className="border-l-2 border-[var(--accent-primary)] bg-[var(--accent-primary)]/5 p-3 rounded-r-md">
-                  <span className="text-[9px] text-[var(--accent-primary-light)] font-bold uppercase tracking-widest block mb-1">
+                <div className="border-l-2 border-accent-primary bg-accent-primary/5 p-3 rounded-r-md">
+                  <span className="text-[9px] text-accent-primary-light font-bold uppercase tracking-widest block mb-1">
                     [MISSION OBJECTIVE]
                   </span>
-                  <p className="text-[10px] font-sans text-white/80 leading-relaxed leading-normal">
+                  <p className="text-[10px] font-sans text-white/80 leading-relaxed">
                     {paperDetails.objective}
                   </p>
                 </div>
 
                 {/* Abstract Block */}
                 <div className="space-y-2">
-                  <div className="flex items-center gap-2 text-[var(--accent-primary-light)]/60 text-[9px] uppercase tracking-widest border-b border-white/5 pb-1">
+                  <div className="flex items-center gap-2 text-accent-primary-light/60 text-[9px] uppercase tracking-widest border-b border-white/5 pb-1">
                     <Terminal className="h-3.5 w-3.5" />
                     <span>[ABSTRACT DIAGNOSTICS DETECTED]</span>
                   </div>
@@ -537,19 +537,19 @@ export function ResearchSection() {
 
                 {/* Symmetrical Results Table */}
                 <div className="space-y-2 pt-4">
-                  <div className="flex items-center gap-2 text-[var(--accent-primary-light)]/60 text-[9px] uppercase tracking-widest border-b border-white/5 pb-1">
-                    <Award className="h-3.5 w-3.5 text-[var(--accent-primary)]" />
+                  <div className="flex items-center gap-2 text-accent-primary-light/60 text-[9px] uppercase tracking-widest border-b border-white/5 pb-1">
+                    <Award className="h-3.5 w-3.5 text-accent-primary" />
                     <span>[PERFORMANCE COMPARISON VS BASE LINE]</span>
                   </div>
                   <div className="border border-white/5 rounded-md overflow-hidden bg-black/30 text-[10px] font-mono">
-                    <div className="grid grid-cols-[1.8fr_1fr_1fr_1fr] bg-white/[0.02] border-b border-white/5 p-2 text-white/40 font-bold uppercase tracking-wider">
+                    <div className="grid grid-cols-[1.8fr_1fr_1fr_1fr] bg-white/2 border-b border-white/5 p-2 text-white/40 font-bold uppercase tracking-wider">
                       <div>Parameter</div>
                       <div className="text-center">Base</div>
                       <div className="text-center">Proposed</div>
                       <div className="text-right">Gain</div>
                     </div>
                     {paperDetails.results.map((row, idx) => (
-                      <div key={idx} className="grid grid-cols-[1.8fr_1fr_1fr_1fr] p-2 border-b border-white/[0.03] last:border-b-0 hover:bg-white/[0.01]">
+                      <div key={idx} className="grid grid-cols-[1.8fr_1fr_1fr_1fr] p-2 border-b border-white/3 last:border-b-0 hover:bg-white/1">
                         <div className="text-white/70 truncate">{row.parameter}</div>
                         <div className="text-center text-white/50">{row.base}</div>
                         <div className="text-center text-white/90 font-bold">{row.proposed}</div>
@@ -565,30 +565,30 @@ export function ResearchSection() {
 
             {activeTab === 2 && (
               <div className="space-y-4 font-mono text-[10px] text-white/75">
-                <div className="flex items-center gap-2 text-[var(--accent-primary-light)]/60 text-[9px] uppercase tracking-widest border-b border-white/5 pb-1">
-                  <Cpu className="h-3.5 w-3.5 text-[var(--accent-primary)]" />
+                <div className="flex items-center gap-2 text-accent-primary-light/60 text-[9px] uppercase tracking-widest border-b border-white/5 pb-1">
+                  <Cpu className="h-3.5 w-3.5 text-accent-primary" />
                   <span>[SURVEILLANCE NODE SYSTEM ARCHITECTURE]</span>
                 </div>
                 
                 {/* Physical hardware breakdown */}
                 <div className="space-y-2.5">
-                  <div className="border-l border-[var(--accent-primary)]/20 pl-4 py-1">
+                  <div className="border-l border-accent-primary/20 pl-4 py-1">
                     <span className="text-[9px] text-white/45 uppercase tracking-wider block">Controller Hardware</span>
-                    <span className="text-[10px] text-[var(--accent-primary-light)] font-bold block mt-0.5">ESP32 Dual-Core (RTOS) microchip client</span>
+                    <span className="text-[10px] text-accent-primary-light font-bold block mt-0.5">ESP32 Dual-Core (RTOS) microchip client</span>
                   </div>
-                  <div className="border-l border-[var(--accent-primary)]/20 pl-4 py-1">
+                  <div className="border-l border-accent-primary/20 pl-4 py-1">
                     <span className="text-[9px] text-white/45 uppercase tracking-wider block">Imaging Payload</span>
                     <span className="text-[10px] text-white/90 block mt-0.5">360° Panoramic camera dome, FLIR Thermal Infrared, LiDAR Rangefinder</span>
                   </div>
-                  <div className="border-l border-[var(--accent-primary)]/20 pl-4 py-1">
+                  <div className="border-l border-accent-primary/20 pl-4 py-1">
                     <span className="text-[9px] text-white/45 uppercase tracking-wider block">Edge AI Intelligence</span>
                     <span className="text-[10px] text-white/90 block mt-0.5">Onboard computer vision models for threat identification (intruders, fire detection)</span>
                   </div>
-                  <div className="border-l border-[var(--accent-primary)]/20 pl-4 py-1">
+                  <div className="border-l border-accent-primary/20 pl-4 py-1">
                     <span className="text-[9px] text-white/45 uppercase tracking-wider block">Communication Uplink</span>
                     <span className="text-[10px] text-white/90 block mt-0.5">Hybrid RF, Wi-Fi, and 5G network channels; telemetry via MQTT over Secure SSL Tunnel</span>
                   </div>
-                  <div className="border-l border-[var(--accent-primary)]/20 pl-4 py-1">
+                  <div className="border-l border-accent-primary/20 pl-4 py-1">
                     <span className="text-[9px] text-white/45 uppercase tracking-wider block">Data Protection Encryption</span>
                     <span className="text-red-400 font-bold block mt-0.5">AES-256 encrypted telemetry payloads to prevent interception</span>
                   </div>
@@ -606,9 +606,9 @@ export function ResearchSection() {
                 rel="noreferrer"
                 onMouseEnter={handleTabHover}
                 onClick={() => sound.playBeep()}
-                className="group/btn relative w-full overflow-hidden border border-[var(--accent-primary)] bg-[var(--accent-primary)]/10 px-6 py-3 transition-all flex items-center justify-center hover:bg-[var(--accent-primary)] hover:shadow-[0_0_20px_var(--accent-primary)] rounded-md"
+                className="group/btn relative w-full overflow-hidden border border-accent-primary bg-accent-primary/10 px-6 py-3 transition-all flex items-center justify-center hover:bg-accent-primary hover:shadow-[0_0_20px_var(--accent-primary)] rounded-md"
               >
-                <span className="relative z-10 flex items-center gap-3 font-mono text-[10px] font-black uppercase tracking-[0.25em] text-[var(--accent-primary)] transition-colors group-hover/btn:text-black">
+                <span className="relative z-10 flex items-center gap-3 font-mono text-[10px] font-black uppercase tracking-[0.25em] text-accent-primary transition-colors group-hover/btn:text-black">
                   Establish Secure Link <ArrowUpRight className="h-4 w-4" />
                 </span>
               </a>
@@ -618,13 +618,13 @@ export function ResearchSection() {
       </div>
 
       {/* --- Bottom HUD Status Bar --- */}
-      <footer className="hud-fade-up [animation-delay:400ms] relative z-30 w-full max-w-7xl mx-auto px-6 md:px-12 flex flex-col sm:flex-row justify-between items-center border-t border-white/5 pt-4 gap-2 font-mono text-[9px] text-[var(--accent-primary)]/50 tracking-wider">
+      <footer className="hud-fade-up [animation-delay:400ms] relative z-30 w-full max-w-7xl mx-auto px-6 md:px-12 flex flex-col sm:flex-row justify-between items-center border-t border-white/5 pt-4 gap-2 font-mono text-[9px] text-accent-primary/50 tracking-wider">
         <div>
           <span>LOC: 12.9716° N, 77.5946° E</span>
           <span className="mx-3 opacity-30">|</span>
           <span>ALT: 400FT / SPD: 15KNOTS</span>
         </div>
-        <div className="flex items-center gap-2 text-[var(--accent-primary-light)]">
+        <div className="flex items-center gap-2 text-accent-primary-light">
           <Lock className="h-3 w-3 text-red-500 animate-pulse" />
           <span className="font-bold">TARGET LOCK SECURE SYSTEM LINK ENGAGED</span>
         </div>

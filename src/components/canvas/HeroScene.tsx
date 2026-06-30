@@ -168,7 +168,7 @@ export function HeroScene() {
             </Suspense>
           </Canvas>
           <div
-            className="absolute bottom-[20%] left-1/2 w-[60%] max-w-[500px] h-8 rounded-full pointer-events-none opacity-40"
+            className="absolute bottom-[20%] left-1/2 w-[60%] max-w-125 h-8 rounded-full pointer-events-none opacity-40"
             style={{
               background: "radial-gradient(ellipse at center, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 70%)",
               transform: `translateX(${isMobile ? "-50%" : "10%"})`,

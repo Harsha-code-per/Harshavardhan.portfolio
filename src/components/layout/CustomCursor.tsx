@@ -98,13 +98,13 @@ export default function CustomCursor() {
       {/* Outer follow ring */}
       <div
         ref={ringRef}
-        className="fixed top-0 left-0 h-8 w-8 rounded-full border border-white/40 pointer-events-none z-[9999999] mix-blend-difference"
+        className="fixed top-0 left-0 h-8 w-8 rounded-full border border-white/40 pointer-events-none z-9999999 mix-blend-difference"
         style={{ willChange: "transform", pointerEvents: "none" }}
       />
       {/* Inner fast dot */}
       <div
         ref={dotRef}
-        className="fixed top-0 left-0 h-2 w-2 rounded-full bg-[var(--accent-primary)] pointer-events-none z-[9999999]"
+        className="fixed top-0 left-0 h-2 w-2 rounded-full bg-accent-primary pointer-events-none z-9999999"
         style={{ willChange: "transform", pointerEvents: "none" }}
       />
     </>

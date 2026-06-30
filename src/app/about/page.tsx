@@ -3,7 +3,7 @@ import { About } from "@/components/ui/About";
 
 export default function AboutPage() {
   return (
-    <main className="bg-[var(--bg-base)] pt-24">
+    <main className="bg-background pt-24">
       <About />
       <Footer />
     </main>

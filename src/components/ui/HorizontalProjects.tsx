@@ -809,7 +809,7 @@ function InteractiveVisualizerCard({
         INTERACT
       </div>
       
-      <div className="absolute inset-0 z-10 bg-gradient-to-t from-black/80 via-transparent to-transparent pointer-events-none" />
+      <div className="absolute inset-0 z-10 bg-linear-to-t from-black/80 via-transparent to-transparent pointer-events-none" />
       <div className="absolute inset-0 z-10 shadow-[inset_0_0_60px_rgba(0,0,0,0.8)] pointer-events-none" />
       
       <InteractiveVisualizer slug={project.slug} palette={palette} isActive={isActive} />
@@ -841,7 +841,7 @@ function ProjectDossierCard({
     >
       <div className="cinematic-grid pointer-events-none absolute inset-0 opacity-[0.15]" />
       <div
-        className="pointer-events-none absolute -right-[15vw] top-1/2 aspect-square w-[42vw] -translate-y-1/2 rounded-full opacity-20 blur-[140px]"
+        className="pointer-events-none absolute right-[-15vw] top-1/2 aspect-square w-[42vw] -translate-y-1/2 rounded-full opacity-20 blur-[140px]"
         style={{ background: palette.primary }}
       />
       <span
@@ -849,13 +849,13 @@ function ProjectDossierCard({
         style={{ background: palette.primary, boxShadow: `0 0 25px ${palette.primary}` }}
       />
 
-      <div className="relative z-10 mx-auto flex w-full max-w-[1300px] flex-col lg:flex-row items-center justify-between gap-12 xl:gap-20">
+      <div className="relative z-10 mx-auto flex w-full max-w-325 flex-col lg:flex-row items-center justify-between gap-12 xl:gap-20">
         
         {/* Left Info Column */}
         <div className="flex flex-col w-full lg:max-w-[45%]">
           <div className="flex flex-wrap items-center gap-3">
             <span
-              className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-white/[0.04] transition-all"
+              className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-white/4 transition-all"
               style={{ color: palette.primary, boxShadow: `0 0 10px ${palette.glow}` }}
             >
               <Icon className="h-4 w-4" />
@@ -889,13 +889,13 @@ function ProjectDossierCard({
 
           {/* HUD Info panels */}
           <div className="mt-8 grid grid-cols-2 gap-4">
-            <div className="hud-panel rounded p-4 bg-white/[0.01] border border-white/5 backdrop-blur-sm">
+            <div className="hud-panel rounded p-4 bg-white/1 border border-white/5 backdrop-blur-sm">
               <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-white/40">
                 SIGNAL STREAM
               </p>
               <p className="mt-2 text-xs font-semibold leading-relaxed text-zinc-300">{dossier.signal}</p>
             </div>
-            <div className="hud-panel rounded p-4 bg-white/[0.01] border border-white/5 backdrop-blur-sm">
+            <div className="hud-panel rounded p-4 bg-white/1 border border-white/5 backdrop-blur-sm">
               <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-white/40">
                 IMPACT MEASURED
               </p>
@@ -908,7 +908,7 @@ function ProjectDossierCard({
             {project.stack.map((tech) => (
               <Badge
                 key={tech}
-                className="border-white/5 bg-white/[0.04] px-3 py-1 text-[9px] text-white/60 hover:bg-white/[0.08] transition-colors font-mono"
+                className="border-white/5 bg-white/4 px-3 py-1 text-[9px] text-white/60 hover:bg-white/8 transition-colors font-mono"
               >
                 {tech}
               </Badge>
@@ -940,7 +940,7 @@ function ProjectDossierCard({
                 <p className="font-mono text-[8px] uppercase tracking-[0.18em] text-white/40 leading-none">
                   OUTCOME
                 </p>
-                <p className="text-[9px] uppercase tracking-[0.1em] text-white/50 leading-none mt-1 font-mono">
+                <p className="text-[9px] uppercase tracking-widest text-white/50 leading-none mt-1 font-mono">
                   {dossier.metricLabel}
                 </p>
               </div>
@@ -949,7 +949,7 @@ function ProjectDossierCard({
         </div>
 
         {/* Right Tilt Visualizer Card */}
-        <div className="w-full lg:w-[48%] max-w-[680px] aspect-[1.3] h-auto max-h-[30rem] select-none">
+        <div className="w-full lg:w-[48%] max-w-170 aspect-[1.3] h-auto max-h-120 select-none">
           <InteractiveVisualizerCard project={project} palette={palette} isActive={isActive} />
         </div>
       </div>
@@ -961,8 +961,8 @@ function MobileProjectStack() {
   return (
     <div className="relative px-4 py-20">
       <div className="cinematic-grid pointer-events-none absolute inset-0 opacity-[0.12]" />
-      <div className="relative z-10 mb-8 border-l-2 border-[var(--accent-primary)] pl-4">
-        <p className="font-mono text-[10px] font-bold uppercase tracking-[0.34em] text-[var(--accent-primary-light)]">
+      <div className="relative z-10 mb-8 border-l-2 border-accent-primary pl-4">
+        <p className="font-mono text-[10px] font-bold uppercase tracking-[0.34em] text-accent-primary-light">
           04 // MISSIONS
         </p>
         <h2 className="mt-2 text-3xl font-black uppercase leading-none text-white tracking-tight">
@@ -994,7 +994,7 @@ function MobileProjectStack() {
               <p className="mt-4 text-xs text-white/60 leading-relaxed">{project.summary}</p>
               
               <div className="mt-6 space-y-2">
-                <div className="bg-white/[0.02] border border-white/5 rounded p-3 text-[11px]">
+                <div className="bg-white/2 border border-white/5 rounded p-3 text-[11px]">
                   <span className="font-mono text-[8px] uppercase text-white/30 tracking-wider">Outcome</span>
                   <p className="mt-1 text-white/70 font-semibold">{project.impact}</p>
                 </div>
@@ -1002,7 +1002,7 @@ function MobileProjectStack() {
 
               <div className="mt-5 flex flex-wrap gap-1.5">
                 {project.stack.map(s => (
-                  <Badge key={s} className="bg-white/[0.04] text-white/50 text-[8px] border-white/5 font-mono">{s}</Badge>
+                  <Badge key={s} className="bg-white/4 text-white/50 text-[8px] border-white/5 font-mono">{s}</Badge>
                 ))}
               </div>
 
@@ -1013,7 +1013,7 @@ function MobileProjectStack() {
                   </a>
                 )}
                 {project.siteUrl && (
-                  <a href={project.siteUrl} target="_blank" rel="noreferrer" className="flex-1 text-center py-2.5 rounded border border-white/10 text-[10px] font-mono font-bold uppercase tracking-wider text-black font-semibold" style={{ backgroundColor: palette.primary }}>
+                  <a href={project.siteUrl} target="_blank" rel="noreferrer" className="flex-1 text-center py-2.5 rounded border border-white/10 text-[10px] font-mono font-bold uppercase tracking-wider text-black" style={{ backgroundColor: palette.primary }}>
                     Launch
                   </a>
                 )}
@@ -1138,7 +1138,7 @@ function DesktopDepthProjects() {
               key={i}
               className={`h-4 w-4 rounded-full border flex items-center justify-center transition-all ${
                 i === activeIndex 
-                  ? "border-[var(--accent-primary)] text-[var(--accent-primary-light)] text-[8px] font-bold" 
+                  ? "border-accent-primary text-accent-primary-light text-[8px] font-bold" 
                   : "border-white/10 text-white/20 text-[8px]"
               }`}
             >
@@ -1151,15 +1151,15 @@ function DesktopDepthProjects() {
       {/* Overlay Status Bar */}
       <div className="absolute top-24 left-8 right-8 z-30 hidden sm:flex items-center justify-between border-b border-white/5 pb-2 text-[9px] font-mono tracking-widest text-white/30">
         <div className="flex items-center gap-2">
-          <span className="h-1.5 w-1.5 rounded-full bg-[var(--accent-primary)] animate-pulse" />
+          <span className="h-1.5 w-1.5 rounded-full bg-accent-primary animate-pulse" />
           <span>DIRECT TELEMETRY FEED ACTIVE // TARGET: STACK_LOG_0{activeIndex + 1}</span>
         </div>
         <span>SECTOR: ACTIVE_WORKBENCH</span>
       </div>
 
       {/* Editorial Section Header */}
-      <div className="absolute top-36 left-8 z-30 hidden xl:block border-l-2 border-[var(--accent-primary)] pl-4">
-        <p className="font-mono text-[10px] font-bold uppercase tracking-[0.34em] text-[var(--accent-primary-light)]">
+      <div className="absolute top-36 left-8 z-30 hidden xl:block border-l-2 border-accent-primary pl-4">
+        <p className="font-mono text-[10px] font-bold uppercase tracking-[0.34em] text-accent-primary-light">
           04 // MISSIONS
         </p>
         <h2 className="mt-2 text-3xl font-black uppercase leading-none text-white tracking-tight">

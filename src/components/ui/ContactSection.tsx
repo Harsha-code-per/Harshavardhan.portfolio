@@ -118,7 +118,7 @@ export function ContactSection() {
     <section
       id="contact"
       ref={sectionRef}
-      className="relative flex min-h-[100dvh] w-full scroll-mt-24 flex-col justify-center overflow-hidden px-[clamp(1rem,5vw,4rem)] py-20 text-white"
+      className="relative flex min-h-dvh w-full scroll-mt-24 flex-col justify-center overflow-hidden px-[clamp(1rem,5vw,4rem)] py-20 text-white"
       style={{
         background:
           "radial-gradient(circle at 50% 100%, color-mix(in srgb, var(--accent-primary) 18%, transparent), transparent 58%), radial-gradient(circle at 16% 18%, color-mix(in srgb, var(--accent-tertiary) 10%, transparent), transparent 34%), var(--bg-base)",
@@ -126,14 +126,14 @@ export function ContactSection() {
     >
       <div className="cinematic-grid pointer-events-none absolute inset-0 opacity-[0.16]" />
       
-      <div className="pointer-events-none absolute left-1/2 top-1/2 hidden aspect-square w-[42rem] -translate-x-1/2 -translate-y-1/2 rounded-full border border-white/5 lg:block">
+      <div className="pointer-events-none absolute left-1/2 top-1/2 hidden aspect-square w-2xl -translate-x-1/2 -translate-y-1/2 rounded-full border border-white/5 lg:block">
         <span className="absolute inset-[18%] rounded-full border border-white/5" />
-        <span className="absolute inset-[36%] rounded-full border border-[var(--accent-primary)]/20" />
+        <span className="absolute inset-[36%] rounded-full border border-accent-primary/20" />
       </div>
 
       {/* Editorial Section Header */}
-      <div data-contact-reveal className="relative z-10 mx-auto w-full max-w-7xl mb-12 border-l-2 border-[var(--accent-primary)] pl-4">
-        <p className="font-mono text-[10px] font-bold uppercase tracking-[0.34em] text-[var(--accent-primary-light)]">
+      <div data-contact-reveal className="relative z-10 mx-auto w-full max-w-7xl mb-12 border-l-2 border-accent-primary pl-4">
+        <p className="font-mono text-[10px] font-bold uppercase tracking-[0.34em] text-accent-primary-light">
           09 // TRANSMIT
         </p>
         <h2 className="mt-2 text-3xl font-black uppercase leading-none text-white tracking-tight">
@@ -144,13 +144,13 @@ export function ContactSection() {
       <div className="relative z-10 mx-auto grid w-full max-w-7xl gap-8 lg:grid-cols-[0.92fr_1.08fr] lg:items-stretch">
         
         {/* Left Side Panel: Transceiver Details */}
-        <div data-contact-reveal className="flex min-h-[38rem] flex-col justify-between rounded-md border border-white/10 bg-black/36 p-6 backdrop-blur-md md:p-8">
+        <div data-contact-reveal className="flex min-h-152 flex-col justify-between rounded-md border border-white/10 bg-black/36 p-6 backdrop-blur-md md:p-8">
           <div>
             <div className="flex items-center gap-3">
-              <span className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/[0.045]">
-                <RadioTower className="h-5 w-5 text-[var(--accent-primary-light)] animate-pulse" />
+              <span className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/5">
+                <RadioTower className="h-5 w-5 text-accent-primary-light animate-pulse" />
               </span>
-              <p className="font-mono text-xs uppercase tracking-[0.3em] text-[var(--accent-primary-light)]">
+              <p className="font-mono text-xs uppercase tracking-[0.3em] text-accent-primary-light">
                 Secure Transmission
               </p>
             </div>
@@ -163,12 +163,12 @@ export function ContactSection() {
               {contactContent.description}
             </p>
             
-            <p className="mt-4 text-xs uppercase tracking-[0.18em] text-[var(--accent-primary)]/70 font-mono">
+            <p className="mt-4 text-xs uppercase tracking-[0.18em] text-accent-primary/70 font-mono">
               {contactContent.availability}
             </p>
 
             {/* Transmitter Diagnostics Log Box */}
-            <div className="mt-8 border border-white/5 bg-white/[0.01] rounded-sm p-4 font-mono text-[10px] space-y-2.5 text-white/40">
+            <div className="mt-8 border border-white/5 bg-white/1 rounded-sm p-4 font-mono text-[10px] space-y-2.5 text-white/40">
               <div className="flex justify-between border-b border-white/5 pb-2 text-white/60">
                 <span className="flex items-center gap-1.5"><Cpu className="h-3.5 w-3.5" /> TELEMETRY SOURCE</span>
                 <span>HARSHA-TX-09</span>
@@ -179,7 +179,7 @@ export function ContactSection() {
               </div>
               <div className="flex justify-between">
                 <span>DEFAULT TARGET PORT</span>
-                <span className="text-[var(--accent-primary-light)]">443 / HTTPS</span>
+                <span className="text-accent-primary-light">443 / HTTPS</span>
               </div>
               <div className="flex justify-between">
                 <span>ROUTING PROTOCOL</span>
@@ -198,13 +198,13 @@ export function ContactSection() {
                 href={link.href}
                 target={link.external ? "_blank" : undefined}
                 rel={link.external ? "noreferrer" : undefined}
-                className="group flex min-h-14 min-w-0 flex-col items-start justify-center gap-1 rounded-md border border-white/10 bg-white/[0.045] px-4 py-3 transition-all hover:border-[var(--accent-primary)] hover:bg-[var(--accent-primary)]/[0.01] sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:py-0"
+                className="group flex min-h-14 min-w-0 flex-col items-start justify-center gap-1 rounded-md border border-white/10 bg-white/5 px-4 py-3 transition-all hover:border-accent-primary hover:bg-accent-primary/1 sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:py-0"
               >
                 <span className="inline-flex shrink-0 items-center gap-3 text-sm font-semibold uppercase tracking-[0.16em] text-white/78">
                   {getContactIcon(link.label)}
                   {link.label}
                 </span>
-                <span className="block max-w-full truncate text-left text-xs uppercase tracking-[0.14em] text-white/40 group-hover:text-[var(--accent-primary-light)] sm:text-right transition-colors">
+                <span className="block max-w-full truncate text-left text-xs uppercase tracking-[0.14em] text-white/40 group-hover:text-accent-primary-light sm:text-right transition-colors">
                   {link.value}
                 </span>
               </a>
@@ -222,7 +222,7 @@ export function ContactSection() {
                 </p>
                 <p className="mt-2 text-xl font-black uppercase text-white">Mission Brief</p>
               </div>
-              <Send className="h-5 w-5 text-[var(--accent-primary-light)]" />
+              <Send className="h-5 w-5 text-accent-primary-light" />
             </div>
             
             <ContactForm />

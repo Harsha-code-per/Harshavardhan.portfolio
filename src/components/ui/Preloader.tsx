@@ -196,7 +196,7 @@ export function Preloader() {
   return (
     <div
       ref={preloaderRef}
-      className="flex flex-col items-center justify-center overflow-hidden z-[9999999] bg-[#050507]"
+      className="flex flex-col items-center justify-center overflow-hidden z-9999999 bg-[#050507]"
       style={{
         position: "fixed",
         top: 0,
@@ -230,15 +230,15 @@ export function Preloader() {
         >
           {visibleLogs.map((log, i) => (
             <div key={i} className="flex gap-2.5 items-start text-white/70">
-              <span className="text-[var(--accent-primary-light)] font-bold shrink-0">&gt;</span>
+              <span className="text-accent-primary-light font-bold shrink-0">&gt;</span>
               <p className="leading-relaxed">{log}</p>
             </div>
           ))}
           
           {visibleLogsCount < BOOT_LOGS.length && (
             <div className="flex gap-2.5 items-center">
-              <span className="text-[var(--accent-primary-light)] font-bold shrink-0">&gt;</span>
-              <span className="h-3.5 w-2 bg-[var(--accent-primary)] animate-pulse" />
+              <span className="text-accent-primary-light font-bold shrink-0">&gt;</span>
+              <span className="h-3.5 w-2 bg-accent-primary animate-pulse" />
             </div>
           )}
         </div>
@@ -248,12 +248,12 @@ export function Preloader() {
           <div className="flex-1">
             <div className="h-1 bg-white/5 rounded overflow-hidden">
               <div 
-                className="h-full bg-[var(--accent-primary)] shadow-[0_0_12px_var(--accent-primary-glow)] transition-all duration-75 ease-linear"
+                className="h-full bg-accent-primary shadow-[0_0_12px_var(--accent-primary-glow)] transition-all duration-75 ease-linear"
                 style={{ width: `${fakeProgress}%` }}
               />
             </div>
           </div>
-          <span className="font-bold text-[var(--accent-primary-light)] text-[14px] leading-none shrink-0 min-w-10 text-right">
+           <span className="font-bold text-accent-primary-light text-sm leading-none shrink-0 min-w-10 text-right">
             {Math.floor(fakeProgress)}%
           </span>
         </div>

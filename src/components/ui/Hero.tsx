@@ -172,12 +172,12 @@ export function Hero() {
         <HeroScene />
       </div>
 
-      <div className="cinematic-grid pointer-events-none absolute inset-0 z-[1] opacity-[0.18]" />
-      <div className="pointer-events-none absolute inset-x-0 top-0 z-[3] h-px bg-[linear-gradient(90deg,transparent,var(--accent-primary),transparent)] opacity-70" />
+      <div className="cinematic-grid pointer-events-none absolute inset-0 z-1 opacity-[0.18]" />
+      <div className="pointer-events-none absolute inset-x-0 top-0 z-3 h-px bg-[linear-gradient(90deg,transparent,var(--accent-primary),transparent)] opacity-70" />
 
       {/* Mobile gradient: ensures text is readable over the 3D canvas */}
       <div
-        className="absolute inset-0 z-[4] pointer-events-none lg:hidden"
+        className="absolute inset-0 z-4 pointer-events-none lg:hidden"
         style={{
           background:
             "linear-gradient(to right, rgba(5,5,5,0.88) 0%, rgba(5,5,5,0.65) 55%, rgba(5,5,5,0.15) 100%)",
@@ -196,7 +196,7 @@ export function Hero() {
             <div key={item} className="flex items-center justify-between gap-3">
               <span className="text-xs text-white/65">{item}</span>
               <span className="h-1.5 w-10 overflow-hidden rounded-full bg-white/10">
-                <span className="block h-full w-4/5 rounded-full bg-[var(--accent-primary)] shadow-[0_0_14px_var(--accent-primary-glow)]" />
+                <span className="block h-full w-4/5 rounded-full bg-accent-primary shadow-[0_0_14px_var(--accent-primary-glow)]" />
               </span>
             </div>
           ))}
@@ -205,9 +205,9 @@ export function Hero() {
 
       <div
         data-hero-chrome
-        className="pointer-events-none absolute bottom-8 right-8 z-10 hidden max-w-[18rem] border-r border-[var(--accent-primary)] pr-4 text-right lg:block"
+        className="pointer-events-none absolute bottom-8 right-8 z-10 hidden max-w-[18rem] border-r border-accent-primary pr-4 text-right lg:block"
       >
-        <p className="font-mono text-[0.62rem] uppercase tracking-[0.32em] text-[var(--accent-primary-light)]">
+        <p className="font-mono text-[0.62rem] uppercase tracking-[0.32em] text-accent-primary-light">
           Chapter 01
         </p>
         <p className="mt-2 text-xs leading-relaxed text-white/55">
@@ -218,8 +218,8 @@ export function Hero() {
       <div id="hero-scroll-wrapper" className="absolute inset-0 z-10 flex flex-col justify-center pt-24 lg:pt-0 px-8 lg:px-16 pointer-events-none w-full lg:w-[55vw] xl:w-[48vw]">
         
         {/* Eyebrow */}
-        <p className="hero-anim text-[var(--accent-primary)] text-xs md:text-sm tracking-widest uppercase mb-4 flex items-center gap-4 pointer-events-auto">
-          <span className="w-6 h-px bg-[var(--accent-primary)]"></span> 
+        <p className="hero-anim text-accent-primary text-xs md:text-sm tracking-widest uppercase mb-4 flex items-center gap-4 pointer-events-auto">
+          <span className="w-6 h-px bg-accent-primary"></span> 
           AI Engineer <span className="opacity-50">&bull;</span> Full-Stack Architect
         </p>
 
@@ -242,7 +242,7 @@ export function Hero() {
 
         {/* Primary Button */}
         <div className="hero-anim mt-8 pointer-events-auto">
-          <button onClick={() => document.getElementById("work")?.scrollIntoView({ behavior: "smooth" })} className="px-8 py-3 rounded-full bg-[var(--accent-primary)] hover:bg-[var(--accent-secondary)] text-black font-semibold transition-colors shadow-[0_0_20px_var(--accent-primary-glow)]">
+          <button onClick={() => document.getElementById("work")?.scrollIntoView({ behavior: "smooth" })} className="px-8 py-3 rounded-full bg-accent-primary hover:bg-accent-secondary text-black font-semibold transition-colors shadow-[0_0_20px_var(--accent-primary-glow)]">
             View My Work
           </button>
         </div>

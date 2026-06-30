@@ -116,8 +116,8 @@ export function WorkShowcase() {
 
             <div className="relative z-10 w-full max-w-7xl mx-auto flex flex-col lg:flex-row gap-16 lg:items-center">
               <div className="flex-1">
-                <div className="mb-8 border-l-2 border-[var(--accent-primary)] pl-4">
-                  <p className="font-mono text-[10px] font-bold uppercase tracking-[0.34em] text-[var(--accent-primary-light)]">
+                <div className="mb-8 border-l-2 border-accent-primary pl-4">
+                  <p className="font-mono text-[10px] font-bold uppercase tracking-[0.34em] text-accent-primary-light">
                     03 // PROOF
                   </p>
                   <h2 className="mt-2 text-3xl font-black uppercase leading-none text-white tracking-tight">
@@ -127,25 +127,25 @@ export function WorkShowcase() {
                 <h2 className="text-[clamp(3.5rem,7vw,7.5rem)] font-black uppercase leading-[0.85] tracking-tighter text-white">
                   Ready For<br/>The Real<br/>Room.
                 </h2>
-                <p className="mt-8 max-w-[48ch] text-[clamp(1rem,1.5vw,1.25rem)] leading-relaxed text-zinc-400 font-light border-l border-[var(--accent-primary)]/50 pl-6 py-2">
+                <p className="mt-8 max-w-[48ch] text-[clamp(1rem,1.5vw,1.25rem)] leading-relaxed text-zinc-400 font-light border-l border-accent-primary/50 pl-6 py-2">
                   I am a fresher building like a production engineer: listening carefully,
                   documenting decisions, moving fast, and turning internship problems into
                   interfaces that can survive real feedback.
                 </p>
               </div>
 
-              <div className="w-full lg:w-[400px] grid gap-4 relative">
+              <div className="w-full lg:w-100 grid gap-4 relative">
                 {/* Decoration rings */}
                 <div className="absolute -inset-12 border border-white/5 rounded-full pointer-events-none" />
-                <div className="absolute -inset-24 border border-[var(--accent-primary)]/10 rounded-full pointer-events-none" />
+                <div className="absolute -inset-24 border border-accent-primary/10 rounded-full pointer-events-none" />
                 
                 {proofSignals.map((signal) => (
-                  <div key={signal.label} className="hud-panel p-6 backdrop-blur-md bg-white/[0.02] border border-white/10 rounded-xl transition-colors hover:bg-white/[0.05]">
+                  <div key={signal.label} className="hud-panel p-6 backdrop-blur-md bg-white/2 border border-white/10 rounded-xl transition-colors hover:bg-white/5">
                     <div className="flex items-end justify-between gap-5 mb-2">
                       <p className="font-mono text-[0.62rem] uppercase tracking-[0.24em] text-zinc-500">
                         {signal.label}
                       </p>
-                      <p className="text-3xl font-black leading-none text-[var(--accent-primary-light)]">
+                      <p className="text-3xl font-black leading-none text-accent-primary-light">
                         {signal.value}
                       </p>
                     </div>
@@ -224,18 +224,18 @@ export function WorkShowcase() {
 
                   {/* Right Column: Data Nodes / Outcomes */}
                   <div className="flex flex-col gap-6 relative">
-                    <div className="absolute -left-6 top-0 bottom-0 w-px bg-gradient-to-b from-transparent via-white/10 to-transparent hidden lg:block" />
+                    <div className="absolute -left-6 top-0 bottom-0 w-px bg-linear-to-b from-transparent via-white/10 to-transparent hidden lg:block" />
                     
-                    <p className="font-mono text-[0.65rem] uppercase tracking-[0.25em] text-zinc-500 pl-4 border-l border-[var(--accent-primary)]">
+                    <p className="font-mono text-[0.65rem] uppercase tracking-[0.25em] text-zinc-500 pl-4 border-l border-accent-primary">
                       Outcome Focus
                     </p>
 
                     {work.outcomes.map((outcome, i) => (
                       <div 
                         key={i} 
-                        className="group relative p-6 lg:p-8 rounded-xl border border-white/5 bg-white/[0.01] backdrop-blur-sm transition-all hover:bg-white/[0.04] hover:border-white/10"
+                        className="group relative p-6 lg:p-8 rounded-xl border border-white/5 bg-white/1 backdrop-blur-sm transition-all hover:bg-white/4 hover:border-white/10"
                       >
-                        <div className="absolute top-8 left-0 w-1 h-8 bg-white/20 transition-colors group-hover:bg-[var(--accent-primary)] rounded-r" style={{ "--accent-primary": palette.primary } as React.CSSProperties} />
+                        <div className="absolute top-8 left-0 w-1 h-8 bg-white/20 transition-colors group-hover:bg-[--accent-primary] rounded-r" style={{ "--accent-primary": palette.primary } as React.CSSProperties} />
                         <p className="text-sm md:text-base text-zinc-300 leading-relaxed pl-4">
                           {outcome}
                         </p>

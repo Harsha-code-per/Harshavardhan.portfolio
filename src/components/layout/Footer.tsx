@@ -79,7 +79,7 @@ export function Footer() {
 
       <div className="relative z-10 mx-auto grid w-full max-w-7xl gap-8 md:grid-cols-[1fr_auto] md:items-end">
         <div data-footer-reveal>
-          <p className="font-mono text-xs uppercase tracking-[0.32em] text-[var(--accent-primary-light)]">
+          <p className="font-mono text-xs uppercase tracking-[0.32em] text-accent-primary-light">
             End Of Transmission
           </p>
           <h2 className="mt-3 text-[clamp(2rem,5vw,4.7rem)] font-black uppercase leading-[0.82] text-white">
@@ -90,11 +90,11 @@ export function Footer() {
           </p>
         </div>
 
-        <div data-footer-reveal className="hud-panel rounded-md p-5 md:w-[22rem]">
+        <div data-footer-reveal className="hud-panel rounded-md p-5 md:w-88">
           <p className="font-mono text-[0.62rem] uppercase tracking-[0.28em] text-white/40">
             Signal Status
           </p>
-          <p className="mt-3 text-2xl font-black uppercase leading-tight text-[var(--accent-primary-light)]">
+          <p className="mt-3 text-2xl font-black uppercase leading-tight text-accent-primary-light">
             Available For First Team
           </p>
           <p className="mt-3 text-sm leading-relaxed text-white/50">
@@ -116,7 +116,7 @@ export function Footer() {
                   aria-label={label}
                   title={label}
                   data-cursor="hover"
-                  className="inline-flex items-center justify-center p-2.5 rounded-full border border-white/5 bg-white/[0.02] text-white/44 transition-all duration-200 hover:text-[var(--accent-primary-light)] hover:border-[var(--accent-primary)]/30 hover:bg-[var(--accent-primary)]/5 hover:-translate-y-0.5 hover:scale-105 motion-reduce:transform-none"
+                  className="inline-flex items-center justify-center p-2.5 rounded-full border border-white/5 bg-white/2 text-white/44 transition-all duration-200 hover:text-accent-primary-light hover:border-accent-primary/30 hover:bg-accent-primary/5 hover:-translate-y-0.5 hover:scale-105 motion-reduce:transform-none"
                 >
                   <Icon className="w-4.5 h-4.5" />
                 </a>

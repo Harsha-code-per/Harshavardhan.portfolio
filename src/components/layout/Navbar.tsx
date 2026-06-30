@@ -271,14 +271,14 @@ export function Navbar() {
             onMouseEnter={handleNavHover}
             className={`relative inline-flex h-9 items-center gap-2 rounded-full border px-4 font-mono text-[10px] font-bold uppercase tracking-widest transition-all cursor-pointer ${
               isRecruiterMode
-                ? "border-[var(--accent-primary)] bg-[var(--accent-primary)]/10 text-white shadow-[0_0_15px_var(--accent-primary-glow)]"
-                : "border-white/10 bg-white/[0.03] text-white/70 hover:bg-white/10 hover:text-white"
+                ? "border-accent-primary bg-accent-primary/10 text-white shadow-[0_0_15px_var(--accent-primary-glow)]"
+                : "border-white/10 bg-white/3 text-white/70 hover:bg-white/10 hover:text-white"
             }`}
             title={isRecruiterMode ? "Switch to Immersive Mode" : "Switch to Recruiter Resume Mode"}
           >
             {isRecruiterMode ? (
               <>
-                <Briefcase className="h-3.5 w-3.5 text-[var(--accent-primary-light)]" />
+                <Briefcase className="h-3.5 w-3.5 text-accent-primary-light" />
                 <span className="hidden sm:inline">Resume Active</span>
                 <span className="sm:hidden">Resume</span>
               </>
@@ -296,10 +296,10 @@ export function Navbar() {
             type="button"
             onClick={handleAudioToggle}
             onMouseEnter={handleNavHover}
-            className="relative inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-white/[0.03] text-white/70 transition-all hover:bg-white/10 hover:text-white cursor-pointer"
+            className="relative inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-white/3 text-white/70 transition-all hover:bg-white/10 hover:text-white cursor-pointer"
             title={isAudioMuted ? "Unmute System Audio" : "Mute System Audio"}
           >
-            {isAudioMuted ? <VolumeX className="h-4 w-4 text-white/50" /> : <Volume2 className="h-4 w-4 text-[var(--accent-primary-light)] animate-pulse" />}
+            {isAudioMuted ? <VolumeX className="h-4 w-4 text-white/50" /> : <Volume2 className="h-4 w-4 text-accent-primary-light animate-pulse" />}
           </button>
           
           {!isRecruiterMode && (

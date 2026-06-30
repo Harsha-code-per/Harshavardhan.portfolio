@@ -52,7 +52,7 @@ function BentoCard({ label, value }: { label: string; value: string }) {
       ref={cardRef}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      className="group relative h-full overflow-hidden rounded-2xl border border-white/10 bg-white/[0.02] p-6 backdrop-blur-sm transition-colors hover:border-white/20 hover:bg-white/[0.04]"
+      className="group relative h-full overflow-hidden rounded-2xl border border-white/10 bg-white/2 p-6 backdrop-blur-sm transition-colors hover:border-white/20 hover:bg-white/4"
       style={{ perspective: 1000 }}
     >
       <div
@@ -62,7 +62,7 @@ function BentoCard({ label, value }: { label: string; value: string }) {
         }}
       />
       <div className="relative z-10">
-        <p className="text-[0.65rem] font-bold uppercase tracking-[0.24em] text-[var(--accent-primary)]">
+        <p className="text-[0.65rem] font-bold uppercase tracking-[0.24em] text-accent-primary">
           {label}
         </p>
         <p className="mt-3 text-sm leading-relaxed text-zinc-300 md:text-base">
@@ -171,7 +171,7 @@ export function About() {
       ref={sectionRef}
       className="relative z-10 w-full overflow-hidden rounded-t-[3rem] bg-transparent shadow-[0_-20px_40px_rgba(0,0,0,0.5)] border-t border-white/5"
     >
-      <article className="relative min-h-[100dvh] w-full px-[clamp(1.5rem,5vw,4rem)] pb-24 pt-32 text-[var(--text-primary)]">
+      <article className="relative min-h-dvh w-full px-[clamp(1.5rem,5vw,4rem)] pb-24 pt-32 text-foreground">
         {/* Background elements */}
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_0%_30%,var(--accent-primary-subtle),transparent_50%)] opacity-30" />
 
@@ -179,11 +179,11 @@ export function About() {
           
           {/* Vertical Side HUD */}
           <div className="hidden lg:col-span-1 lg:flex flex-col gap-12 pt-4 border-l border-white/10 pl-4 relative">
-            <div className="absolute top-0 -left-[1px] w-[2px] h-12 bg-[var(--accent-primary)] shadow-[0_0_12px_var(--accent-primary)]" />
+            <div className="absolute top-0 -left-px w-0.5 h-12 bg-accent-primary shadow-[0_0_12px_var(--accent-primary)]" />
             
             <div data-about-hud>
               <p className="font-mono text-[0.55rem] uppercase tracking-[0.3em] text-zinc-500 mb-2">Input</p>
-              <p className="font-mono text-xs uppercase tracking-widest text-[var(--accent-primary-light)]">Curiosity</p>
+              <p className="font-mono text-xs uppercase tracking-widest text-accent-primary-light">Curiosity</p>
             </div>
             <div data-about-hud>
               <p className="font-mono text-[0.55rem] uppercase tracking-[0.3em] text-zinc-500 mb-2">Mode</p>
@@ -199,10 +199,10 @@ export function About() {
           <div className="lg:col-span-7 flex flex-col justify-center relative z-10">
             
             {/* Mobile-only horizontal HUD */}
-            <div className="flex lg:hidden flex-wrap gap-6 mb-12 border-l-2 border-[var(--accent-primary)] pl-4">
+            <div className="flex lg:hidden flex-wrap gap-6 mb-12 border-l-2 border-accent-primary pl-4">
               <div data-about-hud>
                 <p className="font-mono text-[0.55rem] uppercase tracking-[0.3em] text-zinc-500 mb-1">Mode</p>
-                <p className="font-mono text-[0.65rem] uppercase tracking-widest text-[var(--accent-primary-light)]">Builder</p>
+                <p className="font-mono text-[0.65rem] uppercase tracking-widest text-accent-primary-light">Builder</p>
               </div>
               <div data-about-hud>
                 <p className="font-mono text-[0.55rem] uppercase tracking-[0.3em] text-zinc-500 mb-1">Bias</p>
@@ -210,8 +210,8 @@ export function About() {
               </div>
             </div>
 
-            <div data-about-reveal className="mb-10 border-l-2 border-[var(--accent-primary)] pl-4">
-              <p className="font-mono text-[10px] font-bold uppercase tracking-[0.34em] text-[var(--accent-primary-light)]">
+            <div data-about-reveal className="mb-10 border-l-2 border-accent-primary pl-4">
+              <p className="font-mono text-[10px] font-bold uppercase tracking-[0.34em] text-accent-primary-light">
                 02 // SIGNAL
               </p>
               <h2 className="mt-2 text-3xl font-black uppercase leading-none text-white tracking-tight">
@@ -221,7 +221,7 @@ export function About() {
 
             <h3
               data-about-reveal
-              className="max-w-[16ch] text-balance text-[clamp(2.2rem,4.5vw,4rem)] font-[var(--font-space)] font-black uppercase leading-[0.85] tracking-tight text-white"
+              className="max-w-[16ch] text-balance text-[clamp(2.2rem,4.5vw,4rem)] font-space font-black uppercase leading-[0.85] tracking-tight text-white"
               style={{ perspective: "1000px" }}
             >
               {aboutContent.title}
@@ -229,7 +229,7 @@ export function About() {
             
             <p
               ref={textRef}
-              className="mt-12 max-w-[42rem] text-[clamp(1.1rem,2vw,1.6rem)] leading-[1.6] text-white font-light"
+              className="mt-12 max-w-2xl text-[clamp(1.1rem,2vw,1.6rem)] leading-[1.6] text-white font-light"
             >
               {aboutContent.statement} {aboutContent.bio}
             </p>

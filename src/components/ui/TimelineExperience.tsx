@@ -355,8 +355,8 @@ export function TimelineExperience() {
         {/* Left Side: Sticky HUD details */}
         <div className="flex flex-col justify-center w-full lg:max-w-[40%] text-left">
           {/* Chapter Dossier Header */}
-          <div className="mb-6 border-l-2 border-[var(--accent-primary)] pl-4">
-            <p className="font-mono text-[10px] font-bold uppercase tracking-[0.34em] text-[var(--accent-primary-light)]">
+          <div className="mb-6 border-l-2 border-accent-primary pl-4">
+            <p className="font-mono text-[10px] font-bold uppercase tracking-[0.34em] text-accent-primary-light">
               06 // PATH
             </p>
             <h2 className="mt-2 text-3xl font-black uppercase leading-none text-white tracking-tight">
@@ -371,18 +371,18 @@ export function TimelineExperience() {
           </div>
 
           {/* Scramble HUD Telemetry Box */}
-          <div className="hud-panel p-6 bg-black/60 backdrop-blur-md rounded-xl border border-white/10 w-full max-w-[340px]">
+          <div className="hud-panel p-6 bg-black/60 backdrop-blur-md rounded-xl border border-white/10 w-full max-w-85">
             <p className="font-mono text-[8px] tracking-[0.24em] text-white/40 mb-2.5 uppercase">Time Telemetry Sync</p>
-            <div className="font-mono text-base sm:text-lg lg:text-xl xl:text-2xl font-black text-[var(--accent-primary-light)]">
+            <div className="font-mono text-base sm:text-lg lg:text-xl xl:text-2xl font-black text-accent-primary-light">
               <DateScrambler dateText={journeyMilestones[activeIndex].year} />
             </div>
           </div>
 
           {/* Warp Status Indicators */}
-          <div className="mt-6 border border-white/5 bg-white/[0.01] rounded-sm p-4 font-mono text-[9px] w-full max-w-[340px] space-y-2.5 text-white/45 hidden sm:block">
+          <div className="mt-6 border border-white/5 bg-white/1 rounded-sm p-4 font-mono text-[9px] w-full max-w-85 space-y-2.5 text-white/45 hidden sm:block">
             <div className="flex justify-between border-b border-white/5 pb-1.5 text-white/60">
               <span>PATH NAVIGATION</span>
-              <span className="text-[var(--accent-primary-light)] font-bold">ENGAGED</span>
+              <span className="text-accent-primary-light font-bold">ENGAGED</span>
             </div>
             <div className="flex justify-between">
               <span>WARP SPEED FACTOR</span>
@@ -396,7 +396,7 @@ export function TimelineExperience() {
         </div>
 
         {/* Right Side: 3D Holographic Card Viewport */}
-        <div className="relative w-full h-[400px] sm:h-[480px] lg:h-[550px] lg:max-w-[55%] flex items-center justify-center mt-8 lg:mt-0" style={{ perspective: "1200px" }}>
+        <div className="relative w-full h-100 sm:h-120 lg:h-137.5 lg:max-w-[55%] flex items-center justify-center mt-8 lg:mt-0" style={{ perspective: "1200px" }}>
           {journeyMilestones.map((milestone, i) => {
             const isActive = i === activeIndex;
             const isPast = i < activeIndex;
@@ -418,7 +418,7 @@ export function TimelineExperience() {
             return (
               <article
                 key={`card-${milestone.id}`}
-                className={`absolute w-full max-w-[480px] transition-all duration-700 ease-out ${
+                className={`absolute w-full max-w-120 transition-all duration-700 ease-out ${
                   isActive ? "pointer-events-auto opacity-100 z-20" : "pointer-events-none opacity-0 z-10"
                 }`}
                 style={{
@@ -427,7 +427,7 @@ export function TimelineExperience() {
                 }}
               >
                 <div 
-                  className="group relative flex flex-col overflow-hidden rounded-[2rem] border p-8 shadow-[0_20px_60px_rgba(0,0,0,0.5)] backdrop-blur-2xl bg-black/48"
+                  className="group relative flex flex-col overflow-hidden rounded-4xl border p-8 shadow-[0_20px_60px_rgba(0,0,0,0.5)] backdrop-blur-2xl bg-black/48"
                   style={{
                     borderColor: isActive ? `color-mix(in srgb, ${accent} 35%, rgba(255,255,255,0.06))` : "rgba(255,255,255,0.05)",
                     boxShadow: isActive 
@@ -437,18 +437,18 @@ export function TimelineExperience() {
                 >
                   {/* Ambient Glow */}
                   <div
-                    className="pointer-events-none absolute -right-32 -top-32 h-[30rem] w-[30rem] rounded-full opacity-10 blur-[100px] transition-opacity duration-700 group-hover:opacity-20"
+                    className="pointer-events-none absolute -right-32 -top-32 h-120 w-120 rounded-full opacity-10 blur-[100px] transition-opacity duration-700 group-hover:opacity-20"
                     style={{ background: accent }}
                   />
 
                   {/* Massive Watermark Year */}
-                  <div className="pointer-events-none absolute -bottom-10 -right-4 font-mono text-[14vw] font-black leading-none text-white/[0.015] md:text-[8vw] select-none">
+                  <div className="pointer-events-none absolute -bottom-10 -right-4 font-mono text-[14vw] font-black leading-none text-white/1.5 md:text-[8vw] select-none">
                     {yearWatermark}
                   </div>
 
                   <div className="relative z-10 flex h-full flex-col">
                     <div className="flex items-center gap-4">
-                      <span className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-white/[0.03] border border-white/10 shadow-inner">
+                      <span className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-white/3 border border-white/10 shadow-inner">
                         <Icon className="h-5 w-5" style={{ color: accent }} />
                       </span>
                       <span className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-white/50">

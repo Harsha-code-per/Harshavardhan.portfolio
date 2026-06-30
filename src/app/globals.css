@@ -65,6 +65,37 @@
   --font-mono:
     ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
     "Courier New", monospace;
+
+  /* Custom BG Colors */
+  --color-bg-base: var(--bg-base);
+  --color-bg-surface: var(--bg-surface);
+  --color-bg-elevated: var(--bg-elevated);
+  --color-bg-overlay: var(--bg-overlay);
+
+  /* Custom Accent Colors */
+  --color-accent-primary: var(--accent-primary);
+  --color-accent-primary-light: var(--accent-primary-light);
+  --color-accent-primary-glow: var(--accent-primary-glow);
+  --color-accent-primary-subtle: var(--accent-primary-subtle);
+  --color-accent-secondary: var(--accent-secondary);
+  --color-accent-secondary-light: var(--accent-secondary-light);
+  --color-accent-secondary-glow: var(--accent-secondary-glow);
+  --color-accent-secondary-subtle: var(--accent-secondary-subtle);
+  --color-accent-tertiary: var(--accent-tertiary);
+  --color-accent-tertiary-light: var(--accent-tertiary-light);
+  --color-accent-tertiary-glow: var(--accent-tertiary-glow);
+
+  /* Custom Text/Ink Colors */
+  --color-ink-primary: var(--text-primary);
+  --color-ink-secondary: var(--text-secondary);
+  --color-ink-muted: var(--text-muted);
+  --color-ink-ghost: var(--text-ghost);
+
+  /* Custom Borders */
+  --color-border-default: var(--border-default);
+  --color-border-hover: var(--border-hover);
+  --color-border-active: var(--border-active);
+  --color-border: var(--border-default); /* maps to border class */
 }
 
 html {

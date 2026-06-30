@@ -5,6 +5,7 @@ import CustomCursor from "@/components/layout/CustomCursor";
 import { Navbar } from "@/components/layout/Navbar";
 import SmoothScroller from "@/components/layout/SmoothScroller";
 import { Preloader } from "@/components/ui/Preloader";
+import { GITHUB_URL, LINKEDIN_URL, PROFILE_NAME, SITE_URL } from "@/data/profile";
 import "./globals.css";
 
 const spaceGrotesk = Space_Grotesk({
@@ -25,11 +26,12 @@ export const metadata: Metadata = {
     "Portfolio",
     "Harshavardhan",
   ],
-  authors: [{ name: "Harshavardhan K" }],
+  authors: [{ name: PROFILE_NAME }],
   openGraph: {
     title: "Harshavardhan K | AI Engineer & Full-Stack Architect",
     description:
       "Building AI-powered systems and cinematic web interfaces — where deep engineering meets visual storytelling.",
+    url: SITE_URL,
     type: "website",
     locale: "en_US",
     siteName: "Harshavardhan K Portfolio",
@@ -62,12 +64,12 @@ export default function RootLayout({
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "Person",
-              name: "Harshavardhan K",
+              name: PROFILE_NAME,
               jobTitle: "AI Engineer & Full-Stack Architect",
-              url: "https://harshavardhan.dev",
+              url: SITE_URL,
               sameAs: [
-                "https://www.linkedin.com/in/harshavardhan-k-5bb7112b7",
-                "https://github.com/Harsha-code-per",
+                LINKEDIN_URL,
+                GITHUB_URL,
               ],
             }),
           }}

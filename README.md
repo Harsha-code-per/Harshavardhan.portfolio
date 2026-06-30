@@ -1,36 +1,97 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🌌 Harshavardhan K // Cinematic Portfolio System
 
-## Getting Started
+> **Awwwards-inspired portfolio blending deep AI engineering logic with ultra-fluid motion choreography and interactive WebGL simulations.**
+> 
+> Primary Domain: [www.harshavardhan-k.me](https://www.harshavardhan-k.me)
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## ⚡ Core Philosophy
+This system is engineered not just as a portfolio, but as a **Cinematic Interface Layer**. It is built on a custom HUD (Heads-Up Display) aesthetic that moves seamlessly across immersive experiences and responsive recruiter-first layouts.
+
+```
+                  ┌───────────────────────────────┐
+                  │      Immersive Mode / 3D      │
+                  └───────────────┬───────────────┘
+                                  │
+                       [Audio-Visual Toggles]
+                                  │
+                  ┌───────────────▼───────────────┐
+                  │      Recruiter Mode / HUD     │
+                  └───────────────────────────────┘
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🛠️ Tech Stack & Architecture
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+This system uses cutting-edge web technologies, carefully optimized for fast initial load and flawless 60 FPS performance.
 
-## Learn More
+*   **Framework:** [Next.js 16 (App Router)](https://nextjs.org) — Static site generation (SSG) with React Server Components.
+*   **Libraries:** React 19, TypeScript 6.
+*   **Styling & Theme:** [Tailwind CSS v4](https://tailwindcss.com) — Leverages CSS-first `@theme` variables for lightning-fast styling compilation.
+*   **Motion Choreography:** [GSAP (GreenSock)](https://gsap.com) + `@gsap/react` — Micro-interactions, timeline-based sequencing, and coordinate tracking.
+*   **WebGL Rendering:** Three.js + [React Three Fiber](https://r3f.docs.pmnd.rs/) + `@react-three/drei` — High-performance 3D scene representation with adaptive mobile GPU scaling.
+*   **Smooth Scroll:** [Lenis Scroll](https://lenis.darkroom.engineering) — Physics-based scroll interpolation synchronized with GSAP ScrollTrigger.
+*   **State Management:** [Zustand](https://zustand.docs.pmnd.rs) — Lightweight global state hooks for sound toggles and recruiter mode routing.
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 💎 Features
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### 1. WebGL Hero Scene (`src/components/canvas/HeroScene.tsx`)
+Interactive retro-futuristic terminal rendering using custom 3D mesh pipelines. Dynamic device pixel ratio (DPR) calculation reduces mobile battery drain while preserving crystal-clear resolutions on Retina screens.
 
-## Deploy on Vercel
+### 2. 3D Particle Morph Canvas (`src/components/ui/SkillsBento.tsx`)
+Interactive HTML5 canvas displaying high-density particles that organically morph into layout grid nodes based on active competency coordinates.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### 3. Biometric Pulse Waveform (`src/components/ui/SportsSection.tsx`)
+A mathematically model-generated real-time ECG biometric waveform matching active play workloads (up to 138 BPM simulation) when tracking sports conditioning categories.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### 4. Resend Telemetry Gateway (`src/app/actions/sendEmail.ts`)
+Serverless contact broadcasting system using secure Next.js Server Actions linked directly to the Resend SMTP layer.
+
+### 5. Multi-Mode Layout
+*   **Immersive Mode:** Space, motion, 3D animations, and cinematic scroll triggers.
+*   **Recruiter Mode:** Clear, structured grid optimizing reading flow and immediate access to print-friendly experience milestones.
+
+---
+
+## ⚙️ Development & Deployment
+
+### Local Configuration
+
+1.  **Clone & Install Dependencies:**
+    ```bash
+    git clone https://github.com/Harsha-code-per/Harshavardhan.portfolio.git
+    cd Harshavardhan.portfolio
+    pnpm install
+    ```
+
+2.  **Environment Setup:**
+    Create a `.env.local` file:
+    ```env
+    RESEND_API_KEY=your_resend_api_key_here
+    ```
+
+3.  **Start Development Server:**
+    ```bash
+    pnpm run dev
+    ```
+
+4.  **Production Verification:**
+    ```bash
+    pnpm run build
+    ```
+
+---
+
+## 📈 Performance & SEO Focus
+*   **Asset Cleansing:** Clean project footprint with zero redundant public boilerplate logos.
+*   **Favicon Routing:** Internal Next.js routing for `/icon.png` and `/apple-icon.png` mappings.
+*   **JSON-LD Structured Data:** Full schema validation (`Person` type) synced directly from the global profile configuration in `profile.ts`.
+*   **Vercel Optimized:** Deployed globally with optimized build caches and serverless edge functions.
+
+---
+*Transmission Established // Harshavardhan K © 2026*
+

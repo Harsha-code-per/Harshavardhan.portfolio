@@ -66,12 +66,12 @@ function BiometricWaveform({ isActive, hoverValue }: { isActive: boolean; hoverV
   }, [isActive, hoverValue]);
 
   return (
-    <div className="w-full mt-8 rounded border border-white/5 bg-white/[0.01] p-4 relative overflow-hidden flex flex-col justify-between">
+    <div className="w-full mt-8 rounded border border-white/5 bg-white/1 p-4 relative overflow-hidden flex flex-col justify-between">
       <div className="flex justify-between items-center text-[8px] font-mono text-white/30 border-b border-white/5 pb-2 mb-2">
         <span>BIOMETRIC_PULSE_FEED</span>
         <span className="flex items-center gap-1">
-          <span className="h-1.5 w-1.5 rounded-full bg-[var(--accent-primary)] animate-pulse" />
-          <span className="text-[var(--accent-primary-light)] font-bold">{hoverValue !== null ? "LOAD: DETECTED (138 BPM)" : "SYS: NORMAL (68 BPM)"}</span>
+          <span className="h-1.5 w-1.5 rounded-full bg-accent-primary animate-pulse" />
+          <span className="text-accent-primary-light font-bold">{hoverValue !== null ? "LOAD: DETECTED (138 BPM)" : "SYS: NORMAL (68 BPM)"}</span>
         </span>
       </div>
       <svg viewBox="0 0 300 60" className="w-full h-10">
@@ -194,7 +194,7 @@ export function SportsSection() {
     <section
       id="sports"
       ref={sectionRef}
-      className="relative min-h-[100dvh] scroll-mt-24 overflow-hidden px-[clamp(1rem,5vw,4rem)] py-20 text-white flex items-center"
+      className="relative min-h-dvh scroll-mt-24 overflow-hidden px-[clamp(1rem,5vw,4rem)] py-20 text-white flex items-center"
       style={{
         background:
           "linear-gradient(135deg, rgba(255,255,255,0.015) 0 1px, transparent 1px 22px), radial-gradient(circle at 10% 20%, color-mix(in srgb, var(--accent-primary) 12%, transparent), transparent 40%), radial-gradient(circle at 85% 80%, color-mix(in srgb, var(--accent-secondary) 12%, transparent), transparent 40%), var(--bg-base)",
@@ -209,8 +209,8 @@ export function SportsSection() {
       <div className="relative z-10 mx-auto w-full max-w-7xl">
         
         {/* Editorial Section Header */}
-        <div data-sports-heading className="mb-12 border-l-2 border-[var(--accent-primary)] pl-4">
-          <p className="font-mono text-[10px] font-bold uppercase tracking-[0.34em] text-[var(--accent-primary-light)]">
+        <div data-sports-heading className="mb-12 border-l-2 border-accent-primary pl-4">
+          <p className="font-mono text-[10px] font-bold uppercase tracking-[0.34em] text-accent-primary-light">
             08 // DISCIPLINE
           </p>
           <h2 className="mt-2 text-3xl font-black uppercase leading-none text-white tracking-tight">
@@ -221,20 +221,20 @@ export function SportsSection() {
         <div className="grid w-full gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
           
           {/* Left Side: Dynamic Visual HUD (Badminton Court SVG or Gym Circular Gauges) */}
-          <div data-sports-hud-reveal className="relative rounded-md border border-white/10 bg-black/40 p-6 backdrop-blur-md min-h-[460px] flex flex-col justify-between overflow-hidden shadow-2xl">
+          <div data-sports-hud-reveal className="relative rounded-md border border-white/10 bg-black/40 p-6 backdrop-blur-md min-h-115 flex flex-col justify-between overflow-hidden shadow-2xl">
             <div className="pointer-events-none absolute inset-0 opacity-[0.08] bg-[radial-gradient(ellipse_at_center,var(--accent-primary),transparent_70%)]" />
             
             {/* Diagnostic Header */}
             <div className="relative z-10 flex items-center justify-between border-b border-white/10 pb-4">
               <div>
-                <p className="font-mono text-[0.56rem] uppercase tracking-[0.32em] text-[var(--accent-primary-light)]">
+                <p className="font-mono text-[0.56rem] uppercase tracking-[0.32em] text-accent-primary-light">
                   Diagnostic Telemetry
                 </p>
                 <h3 className="text-lg font-black uppercase tracking-wider mt-1 text-white">
                   {activeCategory === "badminton" ? "Badminton Court Matrix" : "Biometric Strength Grid"}
                 </h3>
               </div>
-              <span className="font-mono text-[0.62rem] uppercase tracking-[0.2em] border border-white/10 px-2.5 py-1 bg-white/[0.02] text-white/50">
+              <span className="font-mono text-[0.62rem] uppercase tracking-[0.2em] border border-white/10 px-2.5 py-1 bg-white/2 text-white/50">
                 {activeCategory === "badminton" ? "System: Active" : "Regimen: Engaged"}
               </span>
             </div>
@@ -243,7 +243,7 @@ export function SportsSection() {
             <div className="relative z-10 flex-1 flex items-center justify-center my-6">
               {activeCategory === "badminton" ? (
                 /* --- Interactive Badminton Court Visualizer --- */
-                <div className="w-full max-w-[420px] aspect-[1.6] relative flex items-center justify-center">
+                <div className="w-full max-w-105 aspect-[1.6] relative flex items-center justify-center">
                   <svg viewBox="0 0 200 120" className="w-full h-full drop-shadow-[0_0_20px_rgba(var(--accent-primary),0.1)]">
                     <defs>
                       <linearGradient id="smashGlow" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -354,14 +354,14 @@ export function SportsSection() {
                     {hoveredZone !== null ? (
                       <>
                         <div className="flex items-center gap-3">
-                          <span className="p-1.5 rounded-sm bg-[var(--accent-primary)]/10 text-[var(--accent-primary)] border border-[var(--accent-primary)]/20">
+                          <span className="p-1.5 rounded-sm bg-accent-primary/10 text-accent-primary border border-accent-primary/20">
                             {(() => {
                               const IconComp = courtZones[hoveredZone].Icon;
                               return <IconComp className="h-4 w-4" />;
                             })()}
                           </span>
                           <div>
-                            <p className="font-mono text-[0.62rem] uppercase tracking-wider text-[var(--accent-primary-light)]">
+                            <p className="font-mono text-[0.62rem] uppercase tracking-wider text-accent-primary-light">
                               {courtZones[hoveredZone].name}
                             </p>
                             <p className="text-[10px] text-white/50 leading-none mt-1">
@@ -380,7 +380,7 @@ export function SportsSection() {
                       </>
                     ) : (
                       <div className="flex items-center gap-2 text-white/40 justify-center w-full py-1 text-[10px] font-mono tracking-wider">
-                        <ShieldAlert className="h-3.5 w-3.5 animate-pulse text-[var(--accent-primary)]/70" />
+                        <ShieldAlert className="h-3.5 w-3.5 animate-pulse text-accent-primary/70" />
                         <span>HOVER COURT HOTSPOTS TO INITIATE ZONE DIAGNOSTICS</span>
                       </div>
                     )}
@@ -388,7 +388,7 @@ export function SportsSection() {
                 </div>
               ) : (
                 /* --- Strength & Flexibility Circular Dials --- */
-                <div className="flex flex-col items-center w-full max-w-[400px]">
+                <div className="flex flex-col items-center w-full max-w-100">
                   <div className="grid grid-cols-2 gap-x-8 gap-y-6 w-full">
                     {activeData.metrics.map((metric, idx) => {
                       const radius = 32;
@@ -440,7 +440,7 @@ export function SportsSection() {
                           <p className="mt-3 text-xs font-bold uppercase tracking-wider text-white text-center leading-none">
                             {metric.label}
                           </p>
-                          <p className="mt-1 font-mono text-[9px] uppercase tracking-widest text-[var(--accent-primary-light)] text-center">
+                          <p className="mt-1 font-mono text-[9px] uppercase tracking-widest text-accent-primary-light text-center">
                             {metric.value}
                           </p>
                         </div>
@@ -456,8 +456,8 @@ export function SportsSection() {
           {/* Diagnostic Footer */}
           <div className="relative z-10 border-t border-white/10 pt-4 grid grid-cols-3 gap-2">
             {activeStatusTags.map(({ label, value, Icon }) => (
-              <div key={label} className="border border-white/5 bg-white/[0.01] rounded-sm p-2 text-center">
-                <Icon className="h-3.5 w-3.5 mx-auto text-[var(--accent-primary-light)] opacity-70" />
+              <div key={label} className="border border-white/5 bg-white/1 rounded-sm p-2 text-center">
+                <Icon className="h-3.5 w-3.5 mx-auto text-accent-primary-light opacity-70" />
                 <p className="mt-1.5 font-mono text-[0.52rem] uppercase tracking-widest text-white/36 leading-none">
                   {label}
                 </p>
@@ -474,7 +474,7 @@ export function SportsSection() {
         <div className="flex flex-col justify-center">
           
           <div data-sports-heading>
-            <p className="font-mono text-xs uppercase tracking-[0.34em] text-[var(--accent-primary-light)]">
+            <p className="font-mono text-xs uppercase tracking-[0.34em] text-accent-primary-light">
               Discipline Layer
             </p>
             <h2 className="mt-4 text-[clamp(2.5rem,6vw,5.2rem)] font-black uppercase leading-[0.78] text-white">
@@ -496,16 +496,16 @@ export function SportsSection() {
                   onClick={() => setActiveCategory(sport.category)}
                   className={`group relative w-full text-left overflow-hidden rounded-md border p-6 transition-all duration-300 cursor-pointer ${
                     isActive 
-                      ? "border-[var(--accent-primary)] bg-[var(--accent-primary)]/[0.03] shadow-[0_0_30px_var(--accent-primary-glow)]" 
-                      : "border-white/10 bg-black/20 hover:border-white/25 hover:bg-white/[0.02]"
+                      ? "border-accent-primary bg-accent-primary/3 shadow-[0_0_30px_var(--accent-primary-glow)]" 
+                      : "border-white/10 bg-black/20 hover:border-white/25 hover:bg-white/2"
                   }`}
                 >
                   <div className="relative z-10 flex items-start gap-4">
                     {/* Icon indicator */}
                     <span className={`inline-flex h-12 w-12 items-center justify-center rounded-full border transition-all duration-300 ${
                       isActive 
-                        ? "border-[var(--accent-primary)]/40 bg-[var(--accent-primary)]/10 text-[var(--accent-primary)]" 
-                        : "border-white/10 bg-white/[0.04] text-white/60"
+                        ? "border-accent-primary/40 bg-accent-primary/10 text-accent-primary" 
+                        : "border-white/10 bg-white/4 text-white/60"
                     }`}>
                       {sport.category === "badminton" ? (
                         <Flame className="h-5 w-5" />
@@ -518,13 +518,13 @@ export function SportsSection() {
                     <div className="flex-1">
                       <div className="flex items-center gap-3">
                         <span className={`font-mono text-[0.62rem] uppercase tracking-[0.24em] ${
-                          isActive ? "text-[var(--accent-primary-light)]" : "text-white/40"
+                          isActive ? "text-accent-primary-light" : "text-white/40"
                         }`}>
                           {sport.category === "badminton" ? "Active Play" : "Conditioning"}
                         </span>
                         <span className="h-px flex-1 bg-white/5" />
                         <ChevronRightIcon className={`h-4 w-4 transition-transform duration-300 ${
-                          isActive ? "text-[var(--accent-primary)] translate-x-1" : "text-white/20"
+                          isActive ? "text-accent-primary translate-x-1" : "text-white/20"
                         }`} />
                       </div>
                       <h3 className="mt-2 text-xl font-black uppercase leading-tight text-white">
@@ -539,7 +539,7 @@ export function SportsSection() {
                         <div className="mt-5 space-y-2.5 border-t border-white/10 pt-4 transition-all duration-500">
                           {sport.highlights.map((highlight) => (
                             <div key={highlight} className="flex items-start gap-2 text-xs text-white/60 leading-relaxed">
-                              <span className="h-1.5 w-1.5 rounded-full bg-[var(--accent-primary)] mt-1.5 shrink-0" />
+                              <span className="h-1.5 w-1.5 rounded-full bg-accent-primary mt-1.5 shrink-0" />
                               <span>{highlight}</span>
                             </div>
                           ))}
