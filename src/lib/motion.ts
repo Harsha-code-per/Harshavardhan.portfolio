@@ -13,7 +13,6 @@ export const cinematicDuration = {
   chapter: 1.6,
 } as const;
 
-export const heroHandoffScroll = "+=200%";
 
 export const cinematicChapters = [
   {
@@ -72,16 +71,13 @@ export const cinematicChapters = [
   },
 ] as const;
 
-export type CinematicChapter = (typeof cinematicChapters)[number];
-export type CinematicChapterId = CinematicChapter["id"];
-export type CinematicPalette = CinematicChapter["palette"];
 
 export const cinematicChapterPalettes = cinematicChapters.reduce(
   (palettes, chapter) => {
     palettes[chapter.id] = chapter.palette;
     return palettes;
   },
-  {} as Record<CinematicChapterId, CinematicPalette>
+  {} as Record<(typeof cinematicChapters)[number]["id"], (typeof cinematicChapters)[number]["palette"]>
 );
 
 export function getShouldReduceMotion() {
