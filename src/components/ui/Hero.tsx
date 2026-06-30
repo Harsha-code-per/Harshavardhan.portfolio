@@ -242,7 +242,12 @@ export function Hero() {
 
         {/* Primary Button */}
         <div className="hero-anim mt-8 pointer-events-auto">
-          <button onClick={() => document.getElementById("work")?.scrollIntoView({ behavior: "smooth" })} className="px-8 py-3 rounded-full bg-accent-primary hover:bg-accent-secondary text-black font-semibold transition-colors shadow-[0_0_20px_var(--accent-primary-glow)]">
+          <button
+            data-cursor="view"
+            data-cursor-label="WORK"
+            onClick={() => document.getElementById("work")?.scrollIntoView({ behavior: "smooth" })}
+            className="px-8 py-3 rounded-full bg-accent-primary hover:bg-accent-secondary text-black font-semibold transition-colors shadow-[0_0_20px_var(--accent-primary-glow)]"
+          >
             View My Work
           </button>
         </div>

@@ -7,7 +7,6 @@ import { publications } from "@/data/publications";
 import { workExperience } from "@/data/work";
 import { ScrollTrigger, setupGsap } from "@/lib/gsap";
 import { useReducedMotionPreference } from "@/lib/useReducedMotion";
-import { sound } from "@/lib/sound";
 
 type JourneyMilestone = {
   id: string;
@@ -247,7 +246,6 @@ export function TimelineExperience() {
           }
           if (currentActive !== activeIndexRef.current) {
             setActiveIndex(currentActive);
-            sound.playClick(); // trigger click telemetry beep!
           }
         },
       });

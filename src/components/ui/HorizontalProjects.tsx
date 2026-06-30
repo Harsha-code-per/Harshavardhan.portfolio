@@ -13,7 +13,6 @@ import { Badge } from "@/components/ui/badge";
 import { Project, projects } from "@/data/projects";
 import { gsap, setupGsap } from "@/lib/gsap";
 import { useReducedMotionPreference } from "@/lib/useReducedMotion";
-import { sound } from "@/lib/sound";
 import { useModeStore } from "@/lib/store";
 
 function GithubIcon(props: React.SVGProps<SVGSVGElement>) {
@@ -119,9 +118,7 @@ function MagneticButton({ children, href, primaryColor }: { children: React.Reac
     });
   };
 
-  const handleClick = () => {
-    sound.playClick();
-  };
+
 
   return (
     <a
@@ -131,7 +128,7 @@ function MagneticButton({ children, href, primaryColor }: { children: React.Reac
       rel="noreferrer"
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      onClick={handleClick}
+      data-cursor="view"
       className="magnetic-btn relative inline-flex min-h-12 items-center justify-center gap-3 rounded-full border border-white/10 bg-black/40 px-6 text-xs font-bold uppercase tracking-[0.18em] text-white shadow-lg transition-all hover:bg-white/5 cursor-pointer"
       style={{ boxShadow: `0 0 15px color-mix(in srgb, ${primaryColor} 15%, transparent)` }}
     >
@@ -775,7 +772,6 @@ function InteractiveVisualizerCard({
   };
 
   const handleMouseEnter = () => {
-    sound.playStaticHover();
     if (cursorRef.current) {
       gsap.to(cursorRef.current, { opacity: 1, scale: 1, duration: 0.3 });
     }
@@ -798,6 +794,7 @@ function InteractiveVisualizerCard({
       onMouseMove={handleMouseMove}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
+      data-cursor="drag"
       className="group relative overflow-hidden rounded-2xl border border-white/10 shadow-2xl cursor-none w-full h-full bg-[#050507]"
       style={{ transformStyle: "preserve-3d" }}
     >
@@ -1081,7 +1078,6 @@ function DesktopDepthProjects() {
 
             if (currentActive !== activeIndexRef.current) {
               setActiveIndex(currentActive);
-              sound.playBeep(); // Audio feedback when shifting cards!
 
               // Dynamically update document accent colors
               const palette = dossierPalettes[currentActive % dossierPalettes.length];

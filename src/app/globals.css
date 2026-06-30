@@ -141,13 +141,7 @@ section {
   }
 }
 
-/* ── Custom cursor ──────────────────────────────────────────────────── */
-/* Hide native cursor globally if pointer is fine */
-@media (pointer: fine) {
-  * {
-    cursor: none !important;
-  }
-}
+
 
 /* ── Gradient text ──────────────────────────────────────────────────── */
 .glow-violet {

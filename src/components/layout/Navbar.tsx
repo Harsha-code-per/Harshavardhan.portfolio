@@ -3,12 +3,11 @@
 import { useLenis } from "lenis/react";
 import { useGSAP } from "@gsap/react";
 
-import { Menu, X, Volume2, VolumeX, Briefcase, Compass } from "lucide-react";
+import { Menu, X, Briefcase, Compass } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { gsap, setupGsap } from "@/lib/gsap";
 import { cinematicChapterPalettes } from "@/lib/motion";
-import { sound } from "@/lib/sound";
 import { useModeStore } from "@/lib/store";
 
 const navigationItems = [
@@ -30,49 +29,18 @@ export function Navbar() {
   const navRef = useRef<HTMLElement | null>(null);
   const overlayRef = useRef<HTMLDivElement | null>(null);
   
-  const { isRecruiterMode, isAudioMuted, toggleRecruiterMode, setAudioMuted } = useModeStore();
+  const { isRecruiterMode, toggleRecruiterMode } = useModeStore();
   const [activeSection, setActiveSection] = useState("hero");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const isHomePage = pathname === "/";
 
-  // Hydrate audio settings from localStorage on client-side mount
-  useEffect(() => {
-    const saved = localStorage.getItem("sys_audio_muted");
-    if (saved !== null) {
-      setAudioMuted(saved === "true");
-    } else {
-      setAudioMuted(true);
-    }
-  }, [setAudioMuted]);
-
-  // Synchronize initial sound system mute state
-  useEffect(() => {
-    sound.setMute(isAudioMuted);
-  }, [isAudioMuted]);
-
-  const handleNavHover = () => {
-    sound.playStaticHover();
-  };
-
   const handleNavClick = (id: string) => {
-    sound.playClick();
     scrollToSection(id);
-  };
-
-  const handleAudioToggle = () => {
-    const nextMuted = !isAudioMuted;
-    setAudioMuted(nextMuted);
-    sound.setMute(nextMuted);
-    if (!nextMuted) {
-      // Small verification chirp
-      sound.playClick();
-    }
   };
 
   const handleRecruiterToggle = () => {
     toggleRecruiterMode();
-    sound.playClick();
   };
 
   const scrollToSection = (id: string) => {
@@ -238,11 +206,10 @@ export function Navbar() {
                   type="button"
                   data-cursor="hover"
                   onClick={() => handleNavClick(item.id)}
-                  onMouseEnter={handleNavHover}
                   className={`relative z-10 text-sm font-medium uppercase tracking-[0.16em] transition-colors duration-200 ${
                     activeSection === item.id
                       ? "text-foreground"
-                      : "text-(--text-secondary) hover:text-foreground"
+                      : "text-ink-secondary hover:text-foreground"
                   }`}
                 >
                   {item.label}
@@ -264,11 +231,9 @@ export function Navbar() {
         )}
 
         <div className="flex items-center gap-3">
-          {/* Recruiter / Immersive Toggle */}
           <button
             type="button"
             onClick={handleRecruiterToggle}
-            onMouseEnter={handleNavHover}
             className={`relative inline-flex h-9 items-center gap-2 rounded-full border px-4 font-mono text-[10px] font-bold uppercase tracking-widest transition-all cursor-pointer ${
               isRecruiterMode
                 ? "border-accent-primary bg-accent-primary/10 text-white shadow-[0_0_15px_var(--accent-primary-glow)]"
@@ -291,16 +256,7 @@ export function Navbar() {
             )}
           </button>
 
-          {/* Audio Toggle */}
-          <button
-            type="button"
-            onClick={handleAudioToggle}
-            onMouseEnter={handleNavHover}
-            className="relative inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-white/3 text-white/70 transition-all hover:bg-white/10 hover:text-white cursor-pointer"
-            title={isAudioMuted ? "Unmute System Audio" : "Mute System Audio"}
-          >
-            {isAudioMuted ? <VolumeX className="h-4 w-4 text-white/50" /> : <Volume2 className="h-4 w-4 text-accent-primary-light animate-pulse" />}
-          </button>
+
           
           {!isRecruiterMode && (
             <button
@@ -331,10 +287,9 @@ export function Navbar() {
               type="button"
               data-mobile-link
               onClick={() => handleNavClick(item.id)}
-              onMouseEnter={handleNavHover}
               className={`text-3xl font-black uppercase tracking-widest transition-colors ${
                 activeSection === item.id
-                  ? "text-(--accent-primary-light)"
+                  ? "text-accent-primary-light"
                   : "text-foreground"
               }`}
             >

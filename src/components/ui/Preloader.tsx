@@ -4,7 +4,6 @@ import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useProgress } from "@react-three/drei";
 import { useGSAP } from "@gsap/react";
 import { gsap } from "@/lib/gsap";
-import { sound } from "@/lib/sound";
 
 const PRELOADER_STORAGE_KEY = "portfolio-preloader-complete";
 
@@ -103,11 +102,7 @@ export function Preloader() {
   );
   const visibleLogs = BOOT_LOGS.slice(0, visibleLogsCount);
 
-  // Play a tactical high-pitched beep whenever a new log line shows up
   useEffect(() => {
-    if (visibleLogsCount > 0 && visibleLogsCount <= BOOT_LOGS.length) {
-      sound.playBeep();
-    }
     // Auto scroll the mock console to show new lines
     if (consoleRef.current) {
       consoleRef.current.scrollTop = consoleRef.current.scrollHeight;
@@ -124,9 +119,6 @@ export function Preloader() {
 
         exitStartedRef.current = true;
         setFakeProgress(100);
-
-        // Sound trigger! Generates the retro startup hum/whine
-        sound.playCRTBoot();
 
         gsap
           .timeline({ delay: 0.1 })

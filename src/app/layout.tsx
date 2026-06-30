@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Space_Grotesk } from "next/font/google";
 import { Toaster } from "sonner";
-import CustomCursor from "@/components/layout/CustomCursor";
 import { Navbar } from "@/components/layout/Navbar";
 import SmoothScroller from "@/components/layout/SmoothScroller";
 import { Preloader } from "@/components/ui/Preloader";
@@ -79,7 +78,6 @@ export default function RootLayout({
         className={`${spaceGrotesk.variable} bg-[#0a0a0f] text-[#f8fafc] font-sans antialiased overflow-x-hidden`}
       >
         <Preloader />
-        <CustomCursor />
         <Navbar />
         <SmoothScroller>{children}</SmoothScroller>
         <Toaster theme="dark" richColors position="bottom-right" />

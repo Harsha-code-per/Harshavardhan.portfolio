@@ -6,7 +6,6 @@ import { projects } from "@/data/projects";
 import { skillCategories } from "@/data/skills";
 import { ContactForm } from "@/components/ui/ContactForm";
 import { Badge } from "@/components/ui/badge";
-import { sound } from "@/lib/sound";
 import { 
   Download, 
   Briefcase, 
@@ -20,14 +19,6 @@ import {
 export function RecruiterView() {
   const toggleRecruiterMode = useModeStore((state) => state.toggleRecruiterMode);
 
-  const handleDownloadClick = () => {
-    sound.playClick();
-  };
-
-  const handleHover = () => {
-    sound.playStaticHover();
-  };
-
   return (
     <div className="min-h-screen bg-[#09090b] text-[#f4f4f5] px-6 py-28 md:py-36 flex flex-col items-center">
       <div className="w-full max-w-4xl space-y-16">
@@ -39,7 +30,7 @@ export function RecruiterView() {
             <span>Recruiter mode enabled // Immersive animation layers suspended</span>
           </div>
           <button 
-            onClick={() => { toggleRecruiterMode(); sound.playClick(); }}
+            onClick={toggleRecruiterMode}
             className="flex items-center gap-1.5 px-3 py-1 rounded bg-amber-500/10 border border-amber-500/20 hover:bg-amber-500/20 text-[10px] uppercase font-bold tracking-widest text-amber-300 transition-all cursor-pointer"
           >
             <Compass className="h-3 w-3" /> Immersive Mode
@@ -63,8 +54,6 @@ export function RecruiterView() {
           <a 
             href="/Harshavardhan_K_Resume.pdf"
             download
-            onClick={handleDownloadClick}
-            onMouseEnter={handleHover}
             className="inline-flex items-center gap-2 px-5 py-3 rounded bg-amber-500 hover:bg-amber-600 text-zinc-950 font-bold uppercase text-xs tracking-wider transition-colors shadow-lg shadow-amber-500/10 cursor-pointer self-start"
           >
             <Download className="h-4 w-4" /> Download Resume
@@ -138,7 +127,6 @@ export function RecruiterView() {
                           href={project.repoUrl} 
                           target="_blank" 
                           rel="noreferrer"
-                          onClick={() => sound.playClick()}
                           className="p-1.5 text-zinc-400 hover:text-white transition-colors"
                           title="View Repository"
                         >
@@ -150,7 +138,6 @@ export function RecruiterView() {
                           href={project.siteUrl} 
                           target="_blank" 
                           rel="noreferrer"
-                          onClick={() => sound.playClick()}
                           className="p-1.5 text-zinc-400 hover:text-white transition-colors"
                           title="Launch Site"
                         >
@@ -224,7 +211,7 @@ export function RecruiterView() {
         <footer className="border-t border-zinc-800 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-mono text-zinc-500">
           <span>&copy; {new Date().getFullYear()} Harshavardhan K // All rights reserved</span>
           <button 
-            onClick={() => { toggleRecruiterMode(); sound.playClick(); }}
+            onClick={toggleRecruiterMode}
             className="text-amber-500 hover:text-amber-400 hover:underline transition-colors cursor-pointer"
           >
             Return to Cinematic Immersive Mode &rarr;

@@ -4,7 +4,7 @@ import { useRef, useState, useEffect } from "react";
 import { ArrowUpRight, Crosshair, Radio, Battery, Lock, Shield, Terminal, Cpu, Users, Award, BookOpen } from "lucide-react";
 
 import { gsap, setupGsap } from "@/lib/gsap";
-import { sound } from "@/lib/sound";
+
 
 // Text scrambler component that shuffles text on change
 function TextScrambler({ text = "", duration = 25, speed = 1 }: { text?: string; duration?: number; speed?: number }) {
@@ -192,12 +192,7 @@ export function ResearchSection() {
   };
 
   const handleTabChange = (index: number) => {
-    sound.playBeep();
     setActiveTab(index);
-  };
-
-  const handleTabHover = () => {
-    sound.playStaticHover();
   };
 
   return (
@@ -454,7 +449,6 @@ export function ResearchSection() {
                 <button
                   key={index}
                   onClick={() => handleTabChange(index)}
-                  onMouseEnter={handleTabHover}
                   className={`px-3 py-1.5 border transition-all duration-300 rounded-sm cursor-pointer ${
                     isActive
                       ? "bg-accent-primary/10 border-accent-primary/45 text-accent-primary-light shadow-[0_0_15px_var(--accent-primary-glow)]"
@@ -604,8 +598,6 @@ export function ResearchSection() {
                 href={`https://ieeexplore.ieee.org/document/${paperDetails.doi.split(".").pop()}`}
                 target="_blank"
                 rel="noreferrer"
-                onMouseEnter={handleTabHover}
-                onClick={() => sound.playBeep()}
                 className="group/btn relative w-full overflow-hidden border border-accent-primary bg-accent-primary/10 px-6 py-3 transition-all flex items-center justify-center hover:bg-accent-primary hover:shadow-[0_0_20px_var(--accent-primary)] rounded-md"
               >
                 <span className="relative z-10 flex items-center gap-3 font-mono text-[10px] font-black uppercase tracking-[0.25em] text-accent-primary transition-colors group-hover/btn:text-black">
