@@ -9,7 +9,6 @@ import {
   Flame, 
   Zap, 
   Move, 
-  ArrowUpRight, 
   Expand, 
   ShieldAlert 
 } from "lucide-react";
@@ -36,7 +35,6 @@ function BiometricWaveform({ isActive, hoverValue }: { isActive: boolean; hoverV
         
         const speed = hoverValue !== null ? 0.22 : 0.1;
         const amplitude = hoverValue !== null ? 24 : 11;
-        const freq = hoverValue !== null ? 0.08 : 0.045;
 
         for (let x = 0; x < width; x += 3) {
           const tPos = (x - frameRef.current * speed * 20) % 80;

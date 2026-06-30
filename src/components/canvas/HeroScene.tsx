@@ -1,11 +1,11 @@
 "use client";
 
-import { Component, type ReactNode, useEffect, useRef, useState, Suspense } from "react";
+import { useEffect, useRef, useState, Suspense } from "react";
 import * as THREE from "three";
 import { Canvas, useThree } from "@react-three/fiber";
 import { Center, Environment } from "@react-three/drei";
 import { Model as RetroComputer } from "./RetroComputer";
-import { gsap, setupGsap } from "@/lib/gsap";
+import { setupGsap } from "@/lib/gsap";
 
 function RenderTrigger() {
   const { invalidate } = useThree();

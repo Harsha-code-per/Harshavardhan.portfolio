@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useGSAP } from "@gsap/react";
 import {
   Code2,
   Triangle,
@@ -548,11 +547,14 @@ export function SkillsBento() {
                     } as React.CSSProperties}
                   >
                     {logoUrl ? (
-                      <img 
-                        src={logoUrl} 
-                        alt={`${item} logo`} 
-                        className={`h-4.5 w-4.5 shrink-0 ${item === "LLMs" ? "invert opacity-90" : ""}`}
-                      />
+                      <>
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img 
+                          src={logoUrl} 
+                          alt={`${item} logo`} 
+                          className={`h-4.5 w-4.5 shrink-0 ${item === "LLMs" ? "invert opacity-90" : ""}`}
+                        />
+                      </>
                     ) : (
                       <Icon className="h-4.5 w-4.5 shrink-0" style={{ color: activeAccent }} />
                     )}

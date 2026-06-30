@@ -197,13 +197,13 @@ class SoundEngine {
       try {
         this.crtHumOsc.stop();
         this.crtHumOsc.disconnect();
-      } catch (e) {}
+      } catch {}
       this.crtHumOsc = null;
     }
     if (this.crtHumGain) {
       try {
         this.crtHumGain.disconnect();
-      } catch (e) {}
+      } catch {}
       this.crtHumGain = null;
     }
   }

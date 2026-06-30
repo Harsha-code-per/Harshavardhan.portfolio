@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, MouseEvent, useState } from "react";
+import { useRef, MouseEvent } from "react";
 import { useGSAP } from "@gsap/react";
 import SplitType from "split-type";
 import { aboutContent } from "@/data/about";
@@ -10,7 +10,6 @@ import { useReducedMotionPreference } from "@/lib/useReducedMotion";
 
 function BentoCard({ label, value }: { label: string; value: string }) {
   const cardRef = useRef<HTMLDivElement>(null);
-  const [isHovered, setIsHovered] = useState(false);
 
   const handleMouseMove = (e: MouseEvent<HTMLDivElement>) => {
     if (!cardRef.current) return;
@@ -37,7 +36,6 @@ function BentoCard({ label, value }: { label: string; value: string }) {
   };
 
   const handleMouseLeave = () => {
-    setIsHovered(false);
     if (!cardRef.current) return;
     gsap.to(cardRef.current, {
       x: 0,
@@ -53,7 +51,6 @@ function BentoCard({ label, value }: { label: string; value: string }) {
     <div
       ref={cardRef}
       onMouseMove={handleMouseMove}
-      onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={handleMouseLeave}
       className="group relative h-full overflow-hidden rounded-2xl border border-white/10 bg-white/[0.02] p-6 backdrop-blur-sm transition-colors hover:border-white/20 hover:bg-white/[0.04]"
       style={{ perspective: 1000 }}

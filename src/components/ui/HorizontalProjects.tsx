@@ -6,14 +6,12 @@ import {
   Satellite,
   ShieldCheck,
   Activity,
-  ArrowUpRight,
   ExternalLink,
   Leaf
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Project, projects } from "@/data/projects";
 import { gsap, setupGsap } from "@/lib/gsap";
-import { cinematicEase } from "@/lib/motion";
 import { useReducedMotionPreference } from "@/lib/useReducedMotion";
 import { sound } from "@/lib/sound";
 import { useModeStore } from "@/lib/store";
