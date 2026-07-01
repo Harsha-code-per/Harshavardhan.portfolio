@@ -55,6 +55,7 @@ const techIcons: Record<string, React.ElementType> = {
   Kubernetes: Hexagon,
   "CI/CD": Settings,
   Java: Code2,
+  Django: Server,
   "Node.js": Server,
   "REST APIs": Server,
   WebRTC: Video,
@@ -88,6 +89,7 @@ const techLogos: Record<string, string> = {
   WebRTC: "webrtc/white",
   "Arch Linux": "archlinux/1793D1",
   Git: "git/F05032",
+  Django: "django/092E20",
 };
 
 const systemAccents = ["#fcd34d", "#f97316", "#00f2fe", "#b2ff05", "#ff4560"] as const;

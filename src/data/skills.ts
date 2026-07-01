@@ -28,7 +28,7 @@ export const skillCategories: SkillCategory[] = [
   {
     title: "Backend & Dev Workflow",
     description: "Secure real-time product capabilities and disciplined shipping workflows.",
-    technologies: ["Java", "Node.js", "REST APIs", "WebRTC", "Arch Linux", "Git"],
+    technologies: ["Java", "Django", "Node.js", "REST APIs", "WebRTC", "Arch Linux", "Git"],
   },
 ];
 
