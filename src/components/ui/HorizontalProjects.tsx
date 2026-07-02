@@ -800,7 +800,7 @@ function InteractiveVisualizerCard({
     >
       <div 
         ref={cursorRef} 
-        className="pointer-events-none absolute left-0 top-0 z-50 flex h-20 w-20 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-black/70 text-[9px] font-bold tracking-[0.2em] text-white backdrop-blur-sm opacity-0 scale-50 transition-colors border border-white/20"
+        className="pointer-events-none absolute left-0 top-0 z-50 flex h-20 w-20 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-black/70 text-[0.5625rem] font-bold tracking-[0.2em] text-white backdrop-blur-sm opacity-0 scale-50 transition-colors border border-white/20"
         style={{ boxShadow: `0 0 30px ${palette.glow}` }}
       >
         INTERACT
@@ -857,7 +857,7 @@ function ProjectDossierCard({
             >
               <Icon className="h-4 w-4" />
             </span>
-            <span className="font-mono text-[10px] uppercase tracking-[0.25em] text-white/40">
+            <span className="font-mono text-[0.625rem] uppercase tracking-[0.25em] text-white/40">
               MISSION 0{index + 1}
             </span>
             <span 
@@ -867,7 +867,7 @@ function ProjectDossierCard({
           </div>
 
           <p
-            className="mt-6 font-mono text-[10px] uppercase tracking-[0.3em] font-semibold"
+            className="mt-6 font-mono text-[0.625rem] uppercase tracking-[0.3em] font-semibold"
             style={{ color: palette.primary }}
           >
             {dossier.codename}
@@ -887,13 +887,13 @@ function ProjectDossierCard({
           {/* HUD Info panels */}
           <div className="mt-8 grid grid-cols-2 gap-4">
             <div className="hud-panel rounded p-4 bg-white/1 border border-white/5 backdrop-blur-sm">
-              <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-white/40">
+              <p className="font-mono text-[0.5625rem] uppercase tracking-[0.2em] text-white/40">
                 SIGNAL STREAM
               </p>
               <p className="mt-2 text-xs font-semibold leading-relaxed text-zinc-300">{dossier.signal}</p>
             </div>
             <div className="hud-panel rounded p-4 bg-white/1 border border-white/5 backdrop-blur-sm">
-              <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-white/40">
+              <p className="font-mono text-[0.5625rem] uppercase tracking-[0.2em] text-white/40">
                 IMPACT MEASURED
               </p>
               <p className="mt-2 text-xs font-semibold leading-relaxed text-zinc-300">{project.impact}</p>
@@ -905,7 +905,7 @@ function ProjectDossierCard({
             {project.stack.map((tech) => (
               <Badge
                 key={tech}
-                className="border-white/5 bg-white/4 px-3 py-1 text-[9px] text-white/60 hover:bg-white/8 transition-colors font-mono"
+                className="border-white/5 bg-white/4 px-3 py-1 text-[0.5625rem] text-white/60 hover:bg-white/8 transition-colors font-mono"
               >
                 {tech}
               </Badge>
@@ -934,10 +934,10 @@ function ProjectDossierCard({
                 {dossier.metric}
               </p>
               <div className="pb-0.5">
-                <p className="font-mono text-[8px] uppercase tracking-[0.18em] text-white/40 leading-none">
+                <p className="font-mono text-[0.5rem] uppercase tracking-[0.18em] text-white/40 leading-none">
                   OUTCOME
                 </p>
-                <p className="text-[9px] uppercase tracking-widest text-white/50 leading-none mt-1 font-mono">
+                <p className="text-[0.5625rem] uppercase tracking-widest text-white/50 leading-none mt-1 font-mono">
                   {dossier.metricLabel}
                 </p>
               </div>
@@ -959,7 +959,7 @@ function MobileProjectStack() {
     <div className="relative px-4 py-20">
       <div className="cinematic-grid pointer-events-none absolute inset-0 opacity-[0.12]" />
       <div className="relative z-10 mb-8 border-l-2 border-accent-primary pl-4">
-        <p className="font-mono text-[10px] font-bold uppercase tracking-[0.34em] text-accent-primary-light">
+        <p className="font-mono text-[0.625rem] font-bold uppercase tracking-[0.34em] text-accent-primary-light">
           04 // MISSIONS
         </p>
         <h2 className="mt-2 text-3xl font-black uppercase leading-none text-white tracking-tight">
@@ -983,7 +983,7 @@ function MobileProjectStack() {
             >
               <div className="flex items-center gap-2">
                 <Icon className="h-4.5 w-4.5" style={{ color: palette.primary }} />
-                <span className="font-mono text-[8px] uppercase tracking-widest text-white/45">
+                <span className="font-mono text-[0.5rem] uppercase tracking-widest text-white/45">
                   MISSION 0{index + 1}
                 </span>
               </div>
@@ -991,26 +991,26 @@ function MobileProjectStack() {
               <p className="mt-4 text-xs text-white/60 leading-relaxed">{project.summary}</p>
               
               <div className="mt-6 space-y-2">
-                <div className="bg-white/2 border border-white/5 rounded p-3 text-[11px]">
-                  <span className="font-mono text-[8px] uppercase text-white/30 tracking-wider">Outcome</span>
+                <div className="bg-white/2 border border-white/5 rounded p-3 text-[0.6875rem]">
+                  <span className="font-mono text-[0.5rem] uppercase text-white/30 tracking-wider">Outcome</span>
                   <p className="mt-1 text-white/70 font-semibold">{project.impact}</p>
                 </div>
               </div>
 
               <div className="mt-5 flex flex-wrap gap-1.5">
                 {project.stack.map(s => (
-                  <Badge key={s} className="bg-white/4 text-white/50 text-[8px] border-white/5 font-mono">{s}</Badge>
+                  <Badge key={s} className="bg-white/4 text-white/50 text-[0.5rem] border-white/5 font-mono">{s}</Badge>
                 ))}
               </div>
 
               <div className="mt-8 flex gap-3">
                 {project.repoUrl && (
-                  <a href={project.repoUrl} target="_blank" rel="noreferrer" className="flex-1 text-center py-2.5 rounded border border-white/10 text-[10px] font-mono font-bold uppercase tracking-wider bg-white/5 text-white">
+                  <a href={project.repoUrl} target="_blank" rel="noreferrer" className="flex-1 text-center py-2.5 rounded border border-white/10 text-[0.625rem] font-mono font-bold uppercase tracking-wider bg-white/5 text-white">
                     Code
                   </a>
                 )}
                 {project.siteUrl && (
-                  <a href={project.siteUrl} target="_blank" rel="noreferrer" className="flex-1 text-center py-2.5 rounded border border-white/10 text-[10px] font-mono font-bold uppercase tracking-wider text-black" style={{ backgroundColor: palette.primary }}>
+                  <a href={project.siteUrl} target="_blank" rel="noreferrer" className="flex-1 text-center py-2.5 rounded border border-white/10 text-[0.625rem] font-mono font-bold uppercase tracking-wider text-black" style={{ backgroundColor: palette.primary }}>
                     Launch
                   </a>
                 )}
@@ -1123,7 +1123,7 @@ function DesktopDepthProjects() {
     <div ref={pinSectionRef} className="relative w-full h-screen overflow-hidden bg-[#050508] select-none">
       
       {/* Chapter Indicator Sidebar */}
-      <aside className="absolute left-8 top-1/2 -translate-y-1/2 z-30 hidden xl:flex flex-col gap-10 font-mono text-[9px] tracking-[0.3em] uppercase text-white/20">
+      <aside className="absolute left-8 top-1/2 -translate-y-1/2 z-30 hidden xl:flex flex-col gap-10 font-mono text-[0.5625rem] tracking-[0.3em] uppercase text-white/20">
         <div className="[writing-mode:vertical-rl] flex items-center gap-3">
           <span className="w-px h-12 bg-white/10" />
           <p className="text-white/40">CHAPTER 03 // MISSION DOSSIERS</p>
@@ -1134,8 +1134,8 @@ function DesktopDepthProjects() {
               key={i}
               className={`h-4 w-4 rounded-full border flex items-center justify-center transition-all ${
                 i === activeIndex 
-                  ? "border-accent-primary text-accent-primary-light text-[8px] font-bold" 
-                  : "border-white/10 text-white/20 text-[8px]"
+                  ? "border-accent-primary text-accent-primary-light text-[0.5rem] font-bold" 
+                  : "border-white/10 text-white/20 text-[0.5rem]"
               }`}
             >
               0{i + 1}
@@ -1145,7 +1145,7 @@ function DesktopDepthProjects() {
       </aside>
 
       {/* Overlay Status Bar */}
-      <div className="absolute top-24 left-8 right-8 z-30 hidden sm:flex items-center justify-between border-b border-white/5 pb-2 text-[9px] font-mono tracking-widest text-white/30">
+      <div className="absolute top-24 left-8 right-8 z-30 hidden sm:flex items-center justify-between border-b border-white/5 pb-2 text-[0.5625rem] font-mono tracking-widest text-white/30">
         <div className="flex items-center gap-2">
           <span className="h-1.5 w-1.5 rounded-full bg-accent-primary animate-pulse" />
           <span>DIRECT TELEMETRY FEED ACTIVE // TARGET: STACK_LOG_0{activeIndex + 1}</span>
@@ -1155,7 +1155,7 @@ function DesktopDepthProjects() {
 
       {/* Editorial Section Header */}
       <div className="absolute top-36 left-8 z-30 hidden xl:block border-l-2 border-accent-primary pl-4">
-        <p className="font-mono text-[10px] font-bold uppercase tracking-[0.34em] text-accent-primary-light">
+        <p className="font-mono text-[0.625rem] font-bold uppercase tracking-[0.34em] text-accent-primary-light">
           04 // MISSIONS
         </p>
         <h2 className="mt-2 text-3xl font-black uppercase leading-none text-white tracking-tight">
@@ -1176,7 +1176,7 @@ function DesktopDepthProjects() {
       </div>
 
       {/* Segment lines decorative */}
-      <div className="absolute bottom-6 left-8 right-8 z-30 hidden sm:flex items-center justify-between text-[9px] font-mono text-white/25">
+      <div className="absolute bottom-6 left-8 right-8 z-30 hidden sm:flex items-center justify-between text-[0.5625rem] font-mono text-white/25">
         <span>MISSION COUNT: 0{projects.length}</span>
         <span>INDEX: 0{activeIndex + 1} {"//"} 0{projects.length}</span>
       </div>

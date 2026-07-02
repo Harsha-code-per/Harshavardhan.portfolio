@@ -206,7 +206,7 @@ export function Preloader() {
       <div className="preloader-console w-[90%] max-w-lg border border-white/10 rounded bg-[#0a0a0f]/90 p-5 font-mono text-xs opacity-0 scale-95 shadow-[0_30px_100px_rgba(0,0,0,0.8)] backdrop-blur relative z-20">
         
         {/* Terminal Header */}
-        <div className="flex items-center justify-between border-b border-white/10 pb-2 mb-4 text-white/50 text-[10px] uppercase tracking-wider">
+        <div className="flex items-center justify-between border-b border-white/10 pb-2 mb-4 text-white/50 text-[0.625rem] uppercase tracking-wider">
           <div className="flex items-center gap-2">
             <span className="h-2 w-2 rounded-full bg-orange-500 animate-pulse" />
             <span>Telemetry Link // Online</span>

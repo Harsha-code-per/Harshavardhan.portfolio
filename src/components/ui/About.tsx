@@ -211,7 +211,7 @@ export function About() {
             </div>
 
             <div data-about-reveal className="mb-10 border-l-2 border-accent-primary pl-4">
-              <p className="font-mono text-[10px] font-bold uppercase tracking-[0.34em] text-accent-primary-light">
+              <p className="font-mono text-[0.625rem] font-bold uppercase tracking-[0.34em] text-accent-primary-light">
                 02 // SIGNAL
               </p>
               <h2 className="mt-2 text-3xl font-black uppercase leading-none text-white tracking-tight">

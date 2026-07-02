@@ -224,12 +224,12 @@ export function Hero() {
         </p>
 
         {/* H1 */}
-        <h1 id="hero-title" className="text-[clamp(2.5rem,min(5vw,6.5vh),5rem)] font-black uppercase leading-[0.85] tracking-tighter text-zinc-100 pointer-events-auto [clip-path:polygon(0_0,100%_0,100%_120%,0_120%)]">
+        <h1 id="hero-title" className="text-[3.5rem] font-black uppercase leading-[0.85] tracking-tighter text-zinc-100 pointer-events-auto [clip-path:polygon(0_0,100%_0,100%_120%,0_120%)]">
           Engineering<br/>The Signal<br/>Behind AI.
         </h1>
 
         {/* Subheadline */}
-        <p className="hero-anim mt-6 text-neutral-400 text-[clamp(1rem,min(1.5vw,2vh),1.25rem)] max-w-[55ch] font-light pointer-events-auto">
+        <p className="hero-anim mt-6 text-neutral-400 text-[1.1rem] max-w-[55ch] font-light pointer-events-auto">
           I build <span className="text-white font-medium">AI-powered systems</span> and shape <span className="text-[#E49B55] font-medium">cinematic interfaces</span> <br className="hidden sm:block"/>where product logic, motion, and performance move as one.
         </p>
 

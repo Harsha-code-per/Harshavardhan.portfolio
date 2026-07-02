@@ -67,7 +67,7 @@ function BiometricWaveform({ isActive, hoverValue }: { isActive: boolean; hoverV
 
   return (
     <div className="w-full mt-8 rounded border border-white/5 bg-white/1 p-4 relative overflow-hidden flex flex-col justify-between">
-      <div className="flex justify-between items-center text-[8px] font-mono text-white/30 border-b border-white/5 pb-2 mb-2">
+      <div className="flex justify-between items-center text-[0.5rem] font-mono text-white/30 border-b border-white/5 pb-2 mb-2">
         <span>BIOMETRIC_PULSE_FEED</span>
         <span className="flex items-center gap-1">
           <span className="h-1.5 w-1.5 rounded-full bg-accent-primary animate-pulse" />
@@ -221,7 +221,7 @@ export function SportsSection() {
         <div className="grid w-full gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
           
           {/* Left Side: Dynamic Visual HUD (Badminton Court SVG or Gym Circular Gauges) */}
-          <div data-sports-hud-reveal className="relative rounded-md border border-white/10 bg-black/40 p-6 backdrop-blur-md min-h-115 flex flex-col justify-between overflow-hidden shadow-2xl">
+          <div data-sports-hud-reveal className="relative rounded-md border border-white/10 bg-black/40 p-6 backdrop-blur-md min-h-[460px] flex flex-col justify-between overflow-hidden shadow-2xl">
             <div className="pointer-events-none absolute inset-0 opacity-[0.08] bg-[radial-gradient(ellipse_at_center,var(--accent-primary),transparent_70%)]" />
             
             {/* Diagnostic Header */}
@@ -243,7 +243,7 @@ export function SportsSection() {
             <div className="relative z-10 flex-1 flex items-center justify-center my-6">
               {activeCategory === "badminton" ? (
                 /* --- Interactive Badminton Court Visualizer --- */
-                <div className="w-full max-w-105 aspect-[1.6] relative flex items-center justify-center">
+                <div className="w-full max-w-[420px] aspect-[1.6] relative flex items-center justify-center">
                   <svg viewBox="0 0 200 120" className="w-full h-full drop-shadow-[0_0_20px_rgba(var(--accent-primary),0.1)]">
                     <defs>
                       <linearGradient id="smashGlow" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -388,7 +388,7 @@ export function SportsSection() {
                 </div>
               ) : (
                 /* --- Strength & Flexibility Circular Dials --- */
-                <div className="flex flex-col items-center w-full max-w-100">
+                <div className="flex flex-col items-center w-full max-w-[400px]">
                   <div className="grid grid-cols-2 gap-x-8 gap-y-6 w-full">
                     {activeData.metrics.map((metric, idx) => {
                       const radius = 32;
@@ -404,7 +404,7 @@ export function SportsSection() {
                           onMouseLeave={() => setHoveredGaugeIndex(null)}
                         >
                           <div className="relative h-20 w-20 flex items-center justify-center">
-                            <svg className="h-full w-full transform -rotate-90">
+                            <svg viewBox="0 0 80 80" className="h-full w-full transform -rotate-90">
                               {/* Background Ring */}
                               <circle
                                 cx="40"
@@ -477,7 +477,7 @@ export function SportsSection() {
             <p className="font-mono text-xs uppercase tracking-[0.34em] text-accent-primary-light">
               Discipline Layer
             </p>
-            <h2 className="mt-4 text-[clamp(2.5rem,6vw,5.2rem)] font-black uppercase leading-[0.78] text-white">
+            <h2 className="mt-4 text-[clamp(2rem,4rem,5rem)] font-black uppercase leading-[0.78] text-white">
               Pressure Trains Precision
             </h2>
             <p className="mt-6 text-base leading-relaxed text-white/60 md:text-lg">

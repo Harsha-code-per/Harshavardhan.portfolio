@@ -375,14 +375,14 @@ export function SkillsBento() {
     >
       <div 
         ref={containerRef} 
-        className="relative z-10 mx-auto grid w-full max-w-350 gap-8 px-[clamp(1rem,5vw,4rem)] lg:grid-cols-[0.42fr_0.58fr] lg:gap-10 lg:h-[75vh] lg:min-h-150 lg:max-h-212.5 lg:px-8"
+        className="relative z-10 mx-auto grid w-full max-w-7xl gap-8 px-[clamp(1rem,5vw,4rem)] lg:grid-cols-[0.42fr_0.58fr] lg:gap-10"
       >
         {/* Left Side Column: Accordion Menu */}
         <div className="flex flex-col justify-between">
           <div>
             {/* Cinematic Section Header */}
             <div className="mb-8 border-l-2 border-accent-primary pl-4">
-              <p className="font-mono text-[10px] font-bold uppercase tracking-[0.34em] text-accent-primary-light">
+              <p className="font-mono text-[0.625rem] font-bold uppercase tracking-[0.34em] text-accent-primary-light">
                 05 // STACK
               </p>
               <h2 className="mt-2 text-3xl font-black uppercase leading-none text-white tracking-tight">
@@ -437,7 +437,7 @@ export function SkillsBento() {
                           </p>
                           
                           {/* HUD Diagnostics Panel */}
-                          <div className="hud-panel w-full p-4 rounded-sm border border-white/5 bg-black/60 backdrop-blur-sm flex flex-col gap-2.5 font-mono text-[9px] text-white/50">
+                          <div className="hud-panel w-full p-4 rounded-sm border border-white/5 bg-black/60 backdrop-blur-sm flex flex-col gap-2.5 font-mono text-[0.5625rem] text-white/50">
                             <div className="flex items-center justify-between border-b border-white/5 pb-1.5 text-white/40">
                               <span>SYSTEM_DIAGNOSTICS</span>
                               <span className="flex items-center gap-1.5">
@@ -448,7 +448,7 @@ export function SkillsBento() {
                             
                             <div className="grid grid-cols-2 gap-2 text-white/50">
                               <div>
-                                <p className="text-white/30 text-[8px] uppercase tracking-wider">LOAD_MULTIPLIER</p>
+                                <p className="text-white/30 text-[0.5rem] uppercase tracking-wider">LOAD_MULTIPLIER</p>
                                 <p className="font-bold mt-0.5 text-zinc-300">
                                   {index === 0 ? "RENDER_TARGET: CLIENT/SERVER" :
                                    index === 1 ? "RENDER_PIPELINE: ACCELERATED" :
@@ -458,7 +458,7 @@ export function SkillsBento() {
                                 </p>
                               </div>
                               <div>
-                                <p className="text-white/30 text-[8px] uppercase tracking-wider">INTEGRATION_STATUS</p>
+                                <p className="text-white/30 text-[0.5rem] uppercase tracking-wider">INTEGRATION_STATUS</p>
                                 <p className="font-bold mt-0.5 text-zinc-300">
                                   {index === 0 ? "OPTIMIZATION: HIGH" :
                                    index === 1 ? "LATENCY: LOW (60FPS)" :
@@ -470,7 +470,7 @@ export function SkillsBento() {
                             </div>
 
                             <div className="w-full mt-1">
-                              <div className="flex justify-between text-white/40 text-[8px] mb-1">
+                              <div className="flex justify-between text-white/40 text-[0.5rem] mb-1">
                                 <span>COMPETENCY_INDEX</span>
                                 <span style={{ color: accent }} className="font-bold">
                                   {index === 0 ? "96%" :
@@ -510,7 +510,7 @@ export function SkillsBento() {
         <div 
           onMouseMove={handleMouseMove}
           onMouseLeave={handleMouseLeave}
-          className="relative rounded-xl border bg-black/40 backdrop-blur-md overflow-hidden flex flex-col justify-between p-6 sm:p-8 min-h-115 lg:h-full transition-all duration-500"
+          className="relative rounded-xl border bg-black/40 backdrop-blur-md overflow-hidden flex flex-col justify-between p-6 sm:p-8 min-h-[460px] lg:h-full transition-all duration-500"
           style={{
             borderColor: `color-mix(in srgb, ${activeAccent} 32%, rgba(255,255,255,0.06))`,
             boxShadow: `0 34px 100px rgba(0,0,0,0.65), 0 0 25px color-mix(in srgb, ${activeAccent} 6%, transparent)`
@@ -523,7 +523,7 @@ export function SkillsBento() {
           />
 
           {/* Coordinates Header Overlay */}
-          <div className="relative z-10 flex items-center justify-between border-b border-white/5 pb-4 mb-4 text-[9px] font-mono tracking-widest text-white/30">
+          <div className="relative z-10 flex items-center justify-between border-b border-white/5 pb-4 mb-4 text-[0.5625rem] font-mono tracking-widest text-white/30">
             <div className="flex items-center gap-1.5">
               <span className="h-1.5 w-1.5 rounded-full animate-ping" style={{ backgroundColor: activeAccent }} />
               <span>SYS_ACCELERATED // CHANNEL_0{activeIndex + 1}</span>
@@ -560,7 +560,7 @@ export function SkillsBento() {
                     ) : (
                       <Icon className="h-4.5 w-4.5 shrink-0" style={{ color: activeAccent }} />
                     )}
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-white truncate">{item}</span>
+                    <span className="text-[0.625rem] font-bold uppercase tracking-wider text-white truncate">{item}</span>
                   </div>
                 );
               })}
@@ -568,7 +568,7 @@ export function SkillsBento() {
           </div>
 
           {/* Viewport Footer Overlay */}
-          <div className="relative z-10 border-t border-white/5 pt-4 text-[8px] font-mono tracking-widest text-white/20 flex justify-between">
+          <div className="relative z-10 border-t border-white/5 pt-4 text-[0.5rem] font-mono tracking-widest text-white/20 flex justify-between">
             <span>GRID: RESOLVED_COMPILER_OK</span>
             <span>INDEX: 0{activeIndex + 1} {"//"} 05</span>
           </div>

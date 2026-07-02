@@ -133,7 +133,7 @@ export function ContactSection() {
 
       {/* Editorial Section Header */}
       <div data-contact-reveal className="relative z-10 mx-auto w-full max-w-7xl mb-12 border-l-2 border-accent-primary pl-4">
-        <p className="font-mono text-[10px] font-bold uppercase tracking-[0.34em] text-accent-primary-light">
+        <p className="font-mono text-[0.625rem] font-bold uppercase tracking-[0.34em] text-accent-primary-light">
           09 // TRANSMIT
         </p>
         <h2 className="mt-2 text-3xl font-black uppercase leading-none text-white tracking-tight">
@@ -168,7 +168,7 @@ export function ContactSection() {
             </p>
 
             {/* Transmitter Diagnostics Log Box */}
-            <div className="mt-8 border border-white/5 bg-white/1 rounded-sm p-4 font-mono text-[10px] space-y-2.5 text-white/40">
+            <div className="mt-8 border border-white/5 bg-white/1 rounded-sm p-4 font-mono text-[0.625rem] space-y-2.5 text-white/40">
               <div className="flex justify-between border-b border-white/5 pb-2 text-white/60">
                 <span className="flex items-center gap-1.5"><Cpu className="h-3.5 w-3.5" /> TELEMETRY SOURCE</span>
                 <span>HARSHA-TX-09</span>

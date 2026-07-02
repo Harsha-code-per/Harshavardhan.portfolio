@@ -31,7 +31,7 @@ export function RecruiterView() {
           </div>
           <button 
             onClick={toggleRecruiterMode}
-            className="flex items-center gap-1.5 px-3 py-1 rounded bg-amber-500/10 border border-amber-500/20 hover:bg-amber-500/20 text-[10px] uppercase font-bold tracking-widest text-amber-300 transition-all cursor-pointer"
+            className="flex items-center gap-1.5 px-3 py-1 rounded bg-amber-500/10 border border-amber-500/20 hover:bg-amber-500/20 text-[0.625rem] uppercase font-bold tracking-widest text-amber-300 transition-all cursor-pointer"
           >
             <Compass className="h-3 w-3" /> Immersive Mode
           </button>
@@ -95,7 +95,7 @@ export function RecruiterView() {
 
                 <div className="mt-4 flex flex-wrap gap-1.5">
                   {work.technologies.map((t) => (
-                    <Badge key={t} className="bg-zinc-900 text-zinc-400 border-zinc-800 text-[10px] font-mono">{t}</Badge>
+                    <Badge key={t} className="bg-zinc-900 text-zinc-400 border-zinc-800 text-[0.625rem] font-mono">{t}</Badge>
                   ))}
                 </div>
               </div>
@@ -150,12 +150,12 @@ export function RecruiterView() {
                 </div>
 
                 <div className="mt-6">
-                  <div className="text-[10px] text-zinc-500 font-mono uppercase mb-2 border-b border-zinc-850 pb-1">Outcome</div>
+                  <div className="text-[0.625rem] text-zinc-500 font-mono uppercase mb-2 border-b border-zinc-850 pb-1">Outcome</div>
                   <p className="text-xs text-zinc-300 font-semibold">{project.impact}</p>
 
                   <div className="mt-4 flex flex-wrap gap-1.5">
                     {project.stack.map(s => (
-                      <Badge key={s} className="bg-zinc-900 text-zinc-500 border-zinc-800 text-[9px] font-mono">{s}</Badge>
+                      <Badge key={s} className="bg-zinc-900 text-zinc-500 border-zinc-800 text-[0.5625rem] font-mono">{s}</Badge>
                     ))}
                   </div>
                 </div>
@@ -182,7 +182,7 @@ export function RecruiterView() {
                 <p className="text-xs text-zinc-450 leading-relaxed mb-4">{cat.description}</p>
                 <div className="flex flex-wrap gap-1.5">
                   {cat.technologies.map(t => (
-                    <Badge key={t} className="bg-zinc-900 text-zinc-400 border-zinc-800 text-[9px] font-mono">{t}</Badge>
+                    <Badge key={t} className="bg-zinc-900 text-zinc-400 border-zinc-800 text-[0.5625rem] font-mono">{t}</Badge>
                   ))}
                 </div>
               </div>

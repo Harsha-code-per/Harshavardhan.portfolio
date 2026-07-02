@@ -99,6 +99,12 @@
 }
 
 html {
+  /* Fluid rem system — 0.833vw = 16px at 1920px reference viewport.
+     All rem-based Tailwind classes scale proportionally with viewport width.
+     Tier 1 (1080p family 1280–1920px): 10px floor  →  16px
+     Tier 2 (1440p family 1920–2560px): 16px         →  21px
+     Tier 3 (4K+ family 2560px+):       21px         →  24px ceiling */
+  font-size: clamp(10px, 0.833vw, 24px);
   scroll-behavior: auto;
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */

@@ -348,13 +348,13 @@ export function TimelineExperience() {
         </svg>
       </div>
 
-      <div className="relative z-20 mx-auto flex w-full max-w-7xl h-full flex-col lg:flex-row items-center justify-between px-6 md:px-12 py-24">
+      <div className="relative z-20 mx-auto flex w-full max-w-7xl h-full flex-col lg:flex-row items-center justify-between px-[clamp(1rem,5vw,4rem)] py-24">
         
         {/* Left Side: Sticky HUD details */}
         <div className="flex flex-col justify-center w-full lg:max-w-[40%] text-left">
           {/* Chapter Dossier Header */}
           <div className="mb-6 border-l-2 border-accent-primary pl-4">
-            <p className="font-mono text-[10px] font-bold uppercase tracking-[0.34em] text-accent-primary-light">
+            <p className="font-mono text-[0.625rem] font-bold uppercase tracking-[0.34em] text-accent-primary-light">
               06 // PATH
             </p>
             <h2 className="mt-2 text-3xl font-black uppercase leading-none text-white tracking-tight">
@@ -370,14 +370,14 @@ export function TimelineExperience() {
 
           {/* Scramble HUD Telemetry Box */}
           <div className="hud-panel p-6 bg-black/60 backdrop-blur-md rounded-xl border border-white/10 w-full max-w-85">
-            <p className="font-mono text-[8px] tracking-[0.24em] text-white/40 mb-2.5 uppercase">Time Telemetry Sync</p>
+            <p className="font-mono text-[0.5rem] tracking-[0.24em] text-white/40 mb-2.5 uppercase">Time Telemetry Sync</p>
             <div className="font-mono text-base sm:text-lg lg:text-xl xl:text-2xl font-black text-accent-primary-light">
               <DateScrambler dateText={journeyMilestones[activeIndex].year} />
             </div>
           </div>
 
           {/* Warp Status Indicators */}
-          <div className="mt-6 border border-white/5 bg-white/1 rounded-sm p-4 font-mono text-[9px] w-full max-w-85 space-y-2.5 text-white/45 hidden sm:block">
+          <div className="mt-6 border border-white/5 bg-white/1 rounded-sm p-4 font-mono text-[0.5625rem] w-full max-w-85 space-y-2.5 text-white/45 hidden sm:block">
             <div className="flex justify-between border-b border-white/5 pb-1.5 text-white/60">
               <span>PATH NAVIGATION</span>
               <span className="text-accent-primary-light font-bold">ENGAGED</span>

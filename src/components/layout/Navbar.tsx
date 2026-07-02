@@ -234,7 +234,7 @@ export function Navbar() {
           <button
             type="button"
             onClick={handleRecruiterToggle}
-            className={`relative inline-flex h-9 items-center gap-2 rounded-full border px-4 font-mono text-[10px] font-bold uppercase tracking-widest transition-all cursor-pointer ${
+            className={`relative inline-flex h-9 items-center gap-2 rounded-full border px-4 font-mono text-[0.625rem] font-bold uppercase tracking-widest transition-all cursor-pointer ${
               isRecruiterMode
                 ? "border-accent-primary bg-accent-primary/10 text-white shadow-[0_0_15px_var(--accent-primary-glow)]"
                 : "border-white/10 bg-white/3 text-white/70 hover:bg-white/10 hover:text-white"

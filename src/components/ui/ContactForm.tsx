@@ -106,7 +106,7 @@ export function ContactForm() {
     <form onSubmit={handleSubmit} className="w-full space-y-6">
       {/* Dynamic Terminal Screen Output */}
       <div className="relative border border-white/10 bg-black/60 rounded-sm p-4 h-32 flex flex-col justify-end space-y-1 overflow-hidden shadow-inner">
-        <div className="absolute right-3 top-3 flex items-center gap-1.5 font-mono text-[8px] text-white/30">
+        <div className="absolute right-3 top-3 flex items-center gap-1.5 font-mono text-[0.5rem] text-white/30">
           <Activity className="h-3 w-3 text-accent-primary animate-pulse" />
           <span>CONSOLE SHIELD ACTIVE</span>
         </div>
@@ -115,7 +115,7 @@ export function ContactForm() {
 
       {/* Holographic Frequency Alignment Tuner */}
       <div className="space-y-2.5 p-3.5 border border-white/5 bg-white/1 rounded-sm">
-        <div className="flex justify-between items-center text-[10px] font-mono uppercase">
+        <div className="flex justify-between items-center text-[0.625rem] font-mono uppercase">
           <span className="text-white/40 flex items-center gap-1.5">
             <Sliders className="h-3.5 w-3.5 text-accent-primary" />
             Signal Frequency Align
@@ -133,7 +133,7 @@ export function ContactForm() {
           onChange={handleFrequencyChange}
           className="w-full h-1 bg-white/10 rounded-lg appearance-none cursor-pointer accent-accent-primary"
         />
-        <div className="flex justify-between text-[8px] font-mono text-white/30">
+        <div className="flex justify-between text-[0.5rem] font-mono text-white/30">
           <span>400.00 MHz</span>
           <span>499.99 MHz</span>
         </div>
@@ -142,7 +142,7 @@ export function ContactForm() {
       {/* Cockpit inputs */}
       <div className="space-y-4">
         <div className="space-y-1">
-          <label htmlFor="name" className="font-mono text-[10px] uppercase tracking-wider text-white/40">
+          <label htmlFor="name" className="font-mono text-[0.625rem] uppercase tracking-wider text-white/40">
             NAME://
           </label>
           <input
@@ -157,7 +157,7 @@ export function ContactForm() {
         </div>
 
         <div className="space-y-1">
-          <label htmlFor="email" className="font-mono text-[10px] uppercase tracking-wider text-white/40">
+          <label htmlFor="email" className="font-mono text-[0.625rem] uppercase tracking-wider text-white/40">
             EMAIL://
           </label>
           <input
@@ -172,7 +172,7 @@ export function ContactForm() {
         </div>
 
         <div className="space-y-1">
-          <label htmlFor="message" className="font-mono text-[10px] uppercase tracking-wider text-white/40">
+          <label htmlFor="message" className="font-mono text-[0.625rem] uppercase tracking-wider text-white/40">
             MESSAGE://
           </label>
           <textarea
