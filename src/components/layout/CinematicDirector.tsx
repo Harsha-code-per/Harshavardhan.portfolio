@@ -41,9 +41,8 @@ export function CinematicDirector({ children }: CinematicDirectorProps) {
       if (progress) {
         triggers.push(
           ScrollTrigger.create({
-            trigger: document.documentElement,
-            start: "top top",
-            end: "bottom bottom",
+            start: 0,
+            end: "max",
             invalidateOnRefresh: true,
             onUpdate: (self) => {
               gsap.set(progress, {
@@ -68,13 +67,17 @@ export function CinematicDirector({ children }: CinematicDirectorProps) {
             end: "top 20%",
             scrub: prefersReducedMotion ? false : true,
             invalidateOnRefresh: true,
-            onEnter: () => {
-              applyChapterPalette(chapter);
-              setActiveChapterIndex(index);
+            onToggle: (self) => {
+              if (self.isActive) {
+                applyChapterPalette(chapter);
+                setActiveChapterIndex(index);
+              }
             },
-            onEnterBack: () => {
-              applyChapterPalette(chapter);
-              setActiveChapterIndex(index);
+            onRefresh: (self) => {
+              if (self.isActive) {
+                applyChapterPalette(chapter);
+                setActiveChapterIndex(index);
+              }
             },
             animation: prefersReducedMotion
               ? undefined

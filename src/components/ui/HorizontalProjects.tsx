@@ -1123,10 +1123,10 @@ function DesktopDepthProjects() {
     <div ref={pinSectionRef} className="relative w-full h-screen overflow-hidden bg-[#050508] select-none">
       
       {/* Chapter Indicator Sidebar */}
-      <aside className="absolute left-8 top-1/2 -translate-y-1/2 z-30 hidden xl:flex flex-col gap-10 font-mono text-[0.5625rem] tracking-[0.3em] uppercase text-white/20">
+      <aside className="absolute left-8 bottom-20 z-30 hidden xl:flex flex-col gap-6 font-mono text-[0.5625rem] tracking-[0.3em] uppercase text-white/20">
         <div className="[writing-mode:vertical-rl] flex items-center gap-3">
-          <span className="w-px h-12 bg-white/10" />
-          <p className="text-white/40">CHAPTER 03 // MISSION DOSSIERS</p>
+          <span className="w-px h-8 bg-white/10" />
+          <p className="text-white/40">CHAPTER 04 // MISSION DOSSIERS</p>
         </div>
         <div className="flex flex-col gap-5 items-center">
           {projects.map((_, i) => (

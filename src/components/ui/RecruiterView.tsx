@@ -19,12 +19,318 @@ import {
 export function RecruiterView() {
   const toggleRecruiterMode = useModeStore((state) => state.toggleRecruiterMode);
 
+  const downloadResumeHtml = () => {
+    const htmlContent = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Harshavardhan_K_Resume</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      color: #1f2937;
+      line-height: 1.5;
+      margin: 40px auto;
+      max-width: 800px;
+      padding: 0 24px;
+      background-color: #ffffff;
+    }
+    
+    a {
+      color: #2563eb;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    
+    header {
+      text-align: center;
+      margin-bottom: 25px;
+      border-bottom: 2.5px solid #f1f5f9;
+      padding-bottom: 20px;
+    }
+    
+    h1 {
+      font-size: 28px;
+      font-weight: 800;
+      color: #0f172a;
+      margin: 0 0 5px 0;
+      letter-spacing: -0.025em;
+    }
+    
+    .title {
+      font-size: 13px;
+      font-weight: 700;
+      color: #d97706;
+      margin: 0 0 10px 0;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+    }
+    
+    .contact-info {
+      font-size: 13px;
+      color: #4b5563;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+    }
+    
+    .contact-info span:not(:last-child)::after {
+      content: " |";
+      color: #d1d5db;
+      margin-left: 12px;
+    }
+    
+    section {
+      margin-bottom: 25px;
+    }
+    
+    h2 {
+      font-size: 14px;
+      font-weight: 700;
+      color: #0f172a;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      border-bottom: 1px solid #cbd5e1;
+      padding-bottom: 6px;
+      margin: 25px 0 15px 0;
+    }
+    
+    .item {
+      margin-bottom: 20px;
+    }
+    
+    .item-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 4px;
+    }
+    
+    .item-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: #0f172a;
+    }
+    
+    .item-org {
+      font-weight: 600;
+      color: #4b5563;
+    }
+    
+    .item-period {
+      font-size: 11px;
+      font-weight: 600;
+      color: #b45309;
+      font-family: monospace;
+    }
+    
+    .item-location {
+      font-size: 11px;
+      color: #4b5563;
+      margin-bottom: 6px;
+      font-style: italic;
+    }
+    
+    .item-overview {
+      font-size: 13px;
+      color: #374151;
+      margin: 0 0 8px 0;
+    }
+    
+    ul {
+      margin: 0;
+      padding-left: 20px;
+    }
+    
+    li {
+      font-size: 12px;
+      color: #374151;
+      margin-bottom: 4px;
+    }
+    
+    .tech-stack {
+      margin-top: 8px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    
+    .tech-badge {
+      font-size: 10px;
+      font-family: monospace;
+      background-color: #f3f4f6;
+      color: #374151;
+      padding: 2px 6px;
+      border-radius: 4px;
+      border: 1px solid #e5e7eb;
+    }
+    
+    .skills-grid {
+      display: grid;
+      grid-template-cols: 1fr;
+      gap: 15px;
+    }
+    @media (min-width: 600px) {
+      .skills-grid {
+        grid-template-cols: 1fr 1fr;
+      }
+    }
+    
+    .skill-cat {
+      background-color: #f9fafb;
+      border: 1px solid #f3f4f6;
+      padding: 12px 15px;
+      border-radius: 6px;
+    }
+    
+    .skill-cat-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: #0f172a;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    
+    .skill-cat-desc {
+      font-size: 11px;
+      color: #4b5563;
+      margin: 0 0 10px 0;
+    }
+    
+    .print-btn {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background-color: #d97706;
+      color: #ffffff;
+      border: none;
+      padding: 12px 24px;
+      font-size: 11px;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      border-radius: 50px;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .print-btn:hover {
+      background-color: #b45309;
+    }
+    
+    @media print {
+      body {
+        margin: 0;
+        padding: 0;
+        max-width: 100%;
+      }
+      .print-btn {
+        display: none !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <button class="print-btn" onclick="window.print()">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+    Save to PDF / Print
+  </button>
+
+  <header>
+    <h1>Harshavardhan K</h1>
+    <div class="title">AI Engineer & Full-Stack Architect</div>
+    <div class="contact-info">
+      <span>Email: <a href="mailto:harshak1805@gmail.com">harshak1805@gmail.com</a></span>
+      <span>Portfolio: <a href="https://www.harshavardhan-k.me" target="_blank">harshavardhan-k.me</a></span>
+      <span>GitHub: <a href="https://github.com/Harsha-code-per" target="_blank">github.com/Harsha-code-per</a></span>
+      <span>Chennai, India</span>
+    </div>
+  </header>
+
+  <section>
+    <h2>Work History</h2>
+    ${workExperience.map(work => `
+      <div class="item">
+        <div class="item-header">
+          <span class="item-title">${work.role} <span style="color:#d1d5db;font-weight:normal;">&bull;</span> <span class="item-org">${work.organization}</span></span>
+          <span class="item-period">${work.period}</span>
+        </div>
+        <div class="item-location">${work.location}</div>
+        <p class="item-overview">${work.overview}</p>
+        <ul>
+          ${work.outcomes.map(outcome => `<li>${outcome}</li>`).join("")}
+        </ul>
+        <div class="tech-stack">
+          ${work.technologies.map(tech => `<span class="tech-badge">${tech}</span>`).join("")}
+        </div>
+      </div>
+    `).join("")}
+  </section>
+
+  <section>
+    <h2>Selected Projects</h2>
+    ${projects.map(project => `
+      <div class="item">
+        <div class="item-header">
+          <span class="item-title">${project.title}</span>
+          <span class="item-period">
+            ${project.siteUrl ? `<a href="${project.siteUrl}" target="_blank" style="margin-right:12px;">Live Site &rarr;</a>` : ""}
+            ${project.repoUrl ? `<a href="${project.repoUrl}" target="_blank">Codebase &rarr;</a>` : ""}
+          </span>
+        </div>
+        <p class="item-overview" style="margin-top: 4px;">${project.summary}</p>
+        <p class="item-overview" style="font-size:12px; color:#4b5563;"><strong>Outcome:</strong> ${project.impact}</p>
+        <div class="tech-stack">
+          ${project.stack.map(tech => `<span class="tech-badge">${tech}</span>`).join("")}
+        </div>
+      </div>
+    `).join("")}
+  </section>
+
+  <section>
+    <h2>Technical Competencies</h2>
+    <div class="skills-grid">
+      ${skillCategories.map(cat => `
+        <div class="skill-cat">
+          <div class="skill-cat-title">${cat.title}</div>
+          <p class="skill-cat-desc">${cat.description}</p>
+          <div class="tech-stack">
+            ${cat.technologies.map(tech => `<span class="tech-badge">${tech}</span>`).join("")}
+          </div>
+        </div>
+      `).join("")}
+    </div>
+  </section>
+
+</body>
+</html>`;
+
+    const blob = new Blob([htmlContent], { type: "text/html" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "Harshavardhan_K_Resume.html";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
   return (
     <div className="min-h-screen bg-[#09090b] text-[#f4f4f5] px-6 py-28 md:py-36 flex flex-col items-center">
       <div className="w-full max-w-4xl space-y-16">
         
         {/* Recruiter Banner Notice */}
-        <div className="border border-amber-500/20 bg-amber-500/5 rounded-lg p-4 flex items-center justify-between text-xs sm:text-sm text-amber-300 font-mono tracking-wide">
+        <div className="no-print border border-amber-500/20 bg-amber-500/5 rounded-lg p-4 flex items-center justify-between text-xs sm:text-sm text-amber-300 font-mono tracking-wide">
           <div className="flex items-center gap-3">
             <span className="h-2 w-2 rounded-full bg-amber-500 animate-pulse" />
             <span>Recruiter mode enabled // Immersive animation layers suspended</span>
@@ -51,13 +357,12 @@ export function RecruiterView() {
             </p>
           </div>
 
-          <a 
-            href="/Harshavardhan_K_Resume.pdf"
-            download
-            className="inline-flex items-center gap-2 px-5 py-3 rounded bg-amber-500 hover:bg-amber-600 text-zinc-950 font-bold uppercase text-xs tracking-wider transition-colors shadow-lg shadow-amber-500/10 cursor-pointer self-start"
+          <button 
+            onClick={downloadResumeHtml}
+            className="no-print inline-flex items-center gap-2 px-5 py-3 rounded bg-amber-500 hover:bg-amber-600 text-zinc-950 font-bold uppercase text-xs tracking-wider transition-colors shadow-lg shadow-amber-500/10 cursor-pointer self-start"
           >
             <Download className="h-4 w-4" /> Download Resume
-          </a>
+          </button>
         </header>
 
         {/* Section: Work Experience */}
@@ -191,8 +496,8 @@ export function RecruiterView() {
         </section>
 
         {/* Section: Quick Contact */}
-        <section className="space-y-6">
-          <div className="flex items-center gap-3 border-b border-zinc-850 pb-2">
+        <section className="no-print space-y-6">
+          <div className="flex items-center gap-3 border-b border-zinc-855 pb-2">
             <Mail className="h-5 w-5 text-amber-400" />
             <h2 className="text-xl font-bold uppercase tracking-wider text-white">
               Get in Touch
@@ -208,7 +513,7 @@ export function RecruiterView() {
         </section>
 
         {/* Footer */}
-        <footer className="border-t border-zinc-800 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-mono text-zinc-500">
+        <footer className="no-print border-t border-zinc-800 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-mono text-zinc-500">
           <span>&copy; {new Date().getFullYear()} Harshavardhan K // All rights reserved</span>
           <button 
             onClick={toggleRecruiterMode}
