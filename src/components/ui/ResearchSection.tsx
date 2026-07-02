@@ -60,6 +60,7 @@ export function ResearchSection() {
 
   const [isHovering, setIsHovering] = useState(false);
   const [activeTab, setActiveTab] = useState(0);
+  const [mobileView, setMobileView] = useState<"radar" | "dossier">("radar");
 
 
   // Paper structured details from co-authored publication context
@@ -330,10 +331,34 @@ export function ResearchSection() {
       </header>
 
       {/* --- Center Interactive Console Area --- */}
-      <div className="relative z-30 flex-1 w-full max-w-7xl mx-auto px-[clamp(1rem,5vw,4rem)] grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch justify-center my-6 overflow-visible">
+      <div className="relative z-30 flex-1 w-full max-w-7xl mx-auto px-[clamp(1rem,5vw,4rem)] flex flex-col lg:grid lg:grid-cols-2 gap-6 items-stretch justify-center my-6 overflow-visible">
         
+        {/* Mobile View Toggler (Radar / Dossier) */}
+        <div className="flex w-full gap-2 p-1 border border-white/5 bg-black/40 rounded-lg lg:hidden no-print z-30 relative mb-2">
+          <button
+            onClick={() => setMobileView("radar")}
+            className={`flex-1 text-center py-2.5 font-mono text-[0.625rem] font-bold uppercase tracking-widest transition-all rounded cursor-pointer ${
+              mobileView === "radar"
+                ? "bg-accent-primary/15 text-accent-primary-light border border-accent-primary/30 shadow-[0_0_12px_var(--accent-primary-glow)]"
+                : "text-white/40 border border-transparent hover:text-white/70"
+            }`}
+          >
+            📡 Radar Feed
+          </button>
+          <button
+            onClick={() => setMobileView("dossier")}
+            className={`flex-1 text-center py-2.5 font-mono text-[0.625rem] font-bold uppercase tracking-widest transition-all rounded cursor-pointer ${
+              mobileView === "dossier"
+                ? "bg-accent-primary/15 text-accent-primary-light border border-accent-primary/30 shadow-[0_0_12px_var(--accent-primary-glow)]"
+                : "text-white/40 border border-transparent hover:text-white/70"
+            }`}
+          >
+            📁 Intel Dossier
+          </button>
+        </div>
+
         {/* LEFT COLUMN: UAV Telemetry Panel */}
-        <div className="hud-fade-up [animation-delay:200ms] flex flex-col items-center justify-center h-auto lg:h-full w-full bg-white/1 border border-white/5 rounded-xl p-6 relative overflow-hidden group/panel hover:border-accent-primary/10 transition-colors duration-500 z-20">
+        <div className={`hud-fade-up [animation-delay:200ms] flex-col items-center justify-center h-auto lg:h-full w-full bg-white/1 border border-white/5 rounded-xl p-6 relative overflow-hidden group/panel hover:border-accent-primary/10 transition-colors duration-500 z-20 ${mobileView === "radar" ? "flex" : "hidden lg:flex"}`}>
           <div className="absolute top-3 left-4 font-mono text-[0.5625rem] text-white/35 uppercase tracking-wider flex items-center gap-2">
             <Terminal className="h-3 w-3 text-accent-primary" />
             SURVEILLANCE RADAR MODULE
@@ -422,7 +447,7 @@ export function ResearchSection() {
         <article 
           onMouseEnter={() => setIsHovering(false)}
           onMouseLeave={() => setIsHovering(true)}
-          className="hud-fade-up [animation-delay:300ms] relative flex flex-col justify-between border border-accent-primary/15 bg-[#0a0a0c]/85 p-6 md:p-8 rounded-xl h-auto lg:h-full w-full shadow-[0_0_40px_var(--accent-primary-glow)] transition-all duration-300 hover:border-accent-primary/30 z-20 overflow-hidden"
+          className={`hud-fade-up [animation-delay:300ms] relative flex-col justify-between border border-accent-primary/15 bg-[#0a0a0c]/85 p-6 md:p-8 rounded-xl h-auto lg:h-full w-full shadow-[0_0_40px_var(--accent-primary-glow)] transition-all duration-300 hover:border-accent-primary/30 z-20 overflow-hidden ${mobileView === "dossier" ? "flex" : "hidden lg:flex"}`}
         >
           {/* Holographic scanning horizontal line overlay */}
           <div className="pointer-events-none absolute inset-x-0 top-0 h-0.5 bg-linear-to-r from-transparent via-accent-primary/30 to-transparent animate-[pulse_2s_infinite]" />

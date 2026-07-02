@@ -955,10 +955,36 @@ function ProjectDossierCard({
 }
 
 function MobileProjectStack() {
+  const [activeCard, setActiveCard] = useState(0);
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  const handleScroll = () => {
+    if (!scrollRef.current) return;
+    const scrollLeft = scrollRef.current.scrollLeft;
+    const containerWidth = scrollRef.current.offsetWidth;
+    const children = scrollRef.current.children;
+    
+    let closestIndex = 0;
+    let closestDistance = Infinity;
+    const containerCenter = scrollLeft + containerWidth / 2;
+
+    for (let i = 0; i < children.length; i++) {
+      const el = children[i] as HTMLElement;
+      const childCenter = el.offsetLeft + el.offsetWidth / 2;
+      const distance = Math.abs(containerCenter - childCenter);
+      if (distance < closestDistance) {
+        closestDistance = distance;
+        closestIndex = i;
+      }
+    }
+    setActiveCard(closestIndex);
+  };
+
   return (
-    <div className="relative px-4 py-20">
+    <div className="relative px-4 py-20 bg-[#050508]">
       <div className="cinematic-grid pointer-events-none absolute inset-0 opacity-[0.12]" />
-      <div className="relative z-10 mb-8 border-l-2 border-accent-primary pl-4">
+      
+      <div className="relative z-10 mb-6 border-l-2 border-accent-primary pl-4">
         <p className="font-mono text-[0.625rem] font-bold uppercase tracking-[0.34em] text-accent-primary-light">
           04 // MISSIONS
         </p>
@@ -967,7 +993,20 @@ function MobileProjectStack() {
         </h2>
       </div>
 
-      <div className="relative z-10 flex flex-col gap-6">
+      {/* Swipe Telemetry Hint */}
+      <div className="relative z-10 flex justify-between items-center text-[0.5625rem] font-mono tracking-widest text-white/30 uppercase mb-4 px-1.5 pb-2 border-b border-white/5">
+        <span>MISSION 0{activeCard + 1} {"//"} 0{projects.length}</span>
+        <span className="flex items-center gap-1.5 animate-pulse text-accent-primary-light">
+          SWIPE TO EXPLORE ➔
+        </span>
+      </div>
+
+      {/* Horizontal Snap Scroll Container */}
+      <div 
+        ref={scrollRef}
+        onScroll={handleScroll}
+        className="relative z-10 flex gap-4 overflow-x-auto snap-x snap-mandatory scrollbar-none pb-4 px-1.5"
+      >
         {projects.map((project, index) => {
           const palette = dossierPalettes[index % dossierPalettes.length];
           const dossier = projectDossiers[index % projectDossiers.length];
@@ -976,48 +1015,77 @@ function MobileProjectStack() {
           return (
             <article 
               key={project.slug} 
-              className="rounded-xl border border-white/5 px-5 py-8 bg-black/40 backdrop-blur"
+              className="w-[85vw] max-w-[320px] shrink-0 snap-center rounded-xl border border-white/5 px-5 py-7 bg-black/50 backdrop-blur-md flex flex-col justify-between"
               style={{
-                background: `radial-gradient(circle at 80% 20%, ${palette.field}, transparent 40%), #07070a`,
+                background: `radial-gradient(circle at 80% 20%, ${palette.field}, transparent 45%), #07070a`,
+                borderColor: `color-mix(in srgb, ${palette.glow} 15%, rgba(255,255,255,0.05))`
               }}
             >
-              <div className="flex items-center gap-2">
-                <Icon className="h-4.5 w-4.5" style={{ color: palette.primary }} />
-                <span className="font-mono text-[0.5rem] uppercase tracking-widest text-white/45">
-                  MISSION 0{index + 1}
-                </span>
-              </div>
-              <h3 className="mt-4 text-2xl font-black uppercase text-white tracking-tight">{project.title}</h3>
-              <p className="mt-4 text-xs text-white/60 leading-relaxed">{project.summary}</p>
-              
-              <div className="mt-6 space-y-2">
-                <div className="bg-white/2 border border-white/5 rounded p-3 text-[0.6875rem]">
-                  <span className="font-mono text-[0.5rem] uppercase text-white/30 tracking-wider">Outcome</span>
-                  <p className="mt-1 text-white/70 font-semibold">{project.impact}</p>
+              <div>
+                <div className="flex items-center gap-2">
+                  <Icon className="h-4 w-4" style={{ color: palette.primary }} />
+                  <span className="font-mono text-[0.5rem] uppercase tracking-widest text-white/40">
+                    MISSION 0{index + 1}
+                  </span>
+                </div>
+                <h3 className="mt-4 text-xl font-black uppercase text-white tracking-tight">{project.title}</h3>
+                <p className="mt-3.5 text-xs text-white/60 leading-relaxed">{project.summary}</p>
+                
+                <div className="mt-5 space-y-2">
+                  <div className="bg-white/2 border border-white/5 rounded p-3 text-[0.625rem]">
+                    <span className="font-mono text-[0.45rem] uppercase text-white/30 tracking-wider block mb-1">Outcome</span>
+                    <p className="text-white/70 font-semibold leading-relaxed">{project.impact}</p>
+                  </div>
                 </div>
               </div>
 
-              <div className="mt-5 flex flex-wrap gap-1.5">
-                {project.stack.map(s => (
-                  <Badge key={s} className="bg-white/4 text-white/50 text-[0.5rem] border-white/5 font-mono">{s}</Badge>
-                ))}
-              </div>
+              <div>
+                <div className="mt-5 flex flex-wrap gap-1.5">
+                  {project.stack.map(s => (
+                    <Badge key={s} className="bg-white/4 text-white/50 text-[0.5rem] border-white/5 font-mono">{s}</Badge>
+                  ))}
+                </div>
 
-              <div className="mt-8 flex gap-3">
-                {project.repoUrl && (
-                  <a href={project.repoUrl} target="_blank" rel="noreferrer" className="flex-1 text-center py-2.5 rounded border border-white/10 text-[0.625rem] font-mono font-bold uppercase tracking-wider bg-white/5 text-white">
-                    Code
-                  </a>
-                )}
-                {project.siteUrl && (
-                  <a href={project.siteUrl} target="_blank" rel="noreferrer" className="flex-1 text-center py-2.5 rounded border border-white/10 text-[0.625rem] font-mono font-bold uppercase tracking-wider text-black" style={{ backgroundColor: palette.primary }}>
-                    Launch
-                  </a>
-                )}
+                <div className="mt-6 flex gap-3">
+                  {project.repoUrl && (
+                    <a href={project.repoUrl} target="_blank" rel="noreferrer" className="flex-1 text-center py-2.5 rounded border border-white/10 text-[0.625rem] font-mono font-bold uppercase tracking-wider bg-white/5 text-white cursor-pointer">
+                      Code
+                    </a>
+                  )}
+                  {project.siteUrl && (
+                    <a href={project.siteUrl} target="_blank" rel="noreferrer" className="flex-1 text-center py-2.5 rounded border border-white/10 text-[0.625rem] font-mono font-bold uppercase tracking-wider text-black cursor-pointer" style={{ backgroundColor: palette.primary }}>
+                      Launch
+                    </a>
+                  )}
+                </div>
               </div>
             </article>
           );
         })}
+      </div>
+
+      {/* Swipe Page Dots */}
+      <div className="relative z-10 flex justify-center items-center gap-2 mt-4 no-print">
+        {projects.map((_, index) => (
+          <button
+            key={index}
+            onClick={() => {
+              if (scrollRef.current) {
+                const el = scrollRef.current.children[index] as HTMLElement;
+                scrollRef.current.scrollTo({
+                  left: el.offsetLeft - 16,
+                  behavior: "smooth"
+                });
+              }
+            }}
+            className={`h-1 rounded-full transition-all duration-300 ${
+              index === activeCard 
+                ? "w-5 bg-accent-primary shadow-[0_0_8px_var(--accent-primary-glow)]" 
+                : "w-1 bg-white/20"
+            }`}
+            aria-label={`Go to slide ${index + 1}`}
+          />
+        ))}
       </div>
     </div>
   );

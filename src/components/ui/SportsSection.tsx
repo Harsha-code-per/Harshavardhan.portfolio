@@ -98,6 +98,7 @@ export function SportsSection() {
   const [hoveredZone, setHoveredZone] = useState<number | null>(null);
   const [hoveredGaugeIndex, setHoveredGaugeIndex] = useState<number | null>(null);
   const [isSectionVisible, setIsSectionVisible] = useState(false);
+  const [mobileView, setMobileView] = useState<"court" | "biometrics">("court");
 
   // Monitor visibility to pause background rendering when out of viewport
   useEffect(() => {
@@ -218,10 +219,34 @@ export function SportsSection() {
           </h2>
         </div>
 
-        <div className="grid w-full gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
+        {/* Mobile View Toggler (Court / Biometrics) */}
+        <div className="flex w-full gap-2 p-1 border border-white/5 bg-black/40 rounded-lg lg:hidden no-print z-30 relative mb-4">
+          <button
+            onClick={() => setMobileView("court")}
+            className={`flex-1 text-center py-2.5 font-mono text-[0.625rem] font-bold uppercase tracking-widest transition-all rounded cursor-pointer ${
+              mobileView === "court"
+                ? "bg-accent-primary/15 text-accent-primary-light border border-accent-primary/30 shadow-[0_0_12px_var(--accent-primary-glow)]"
+                : "text-white/40 border border-transparent hover:text-white/70"
+            }`}
+          >
+            🏟️ Play Court
+          </button>
+          <button
+            onClick={() => setMobileView("biometrics")}
+            className={`flex-1 text-center py-2.5 font-mono text-[0.625rem] font-bold uppercase tracking-widest transition-all rounded cursor-pointer ${
+              mobileView === "biometrics"
+                ? "bg-accent-primary/15 text-accent-primary-light border border-accent-primary/30 shadow-[0_0_12px_var(--accent-primary-glow)]"
+                : "text-white/40 border border-transparent hover:text-white/70"
+            }`}
+          >
+            📊 Biometrics
+          </button>
+        </div>
+
+        <div className="flex flex-col lg:grid w-full gap-6 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
           
           {/* Left Side: Dynamic Visual HUD (Badminton Court SVG or Gym Circular Gauges) */}
-          <div data-sports-hud-reveal className="relative rounded-md border border-white/10 bg-black/40 p-6 backdrop-blur-md min-h-[460px] flex flex-col justify-between overflow-hidden shadow-2xl">
+          <div data-sports-hud-reveal className={`relative rounded-md border border-white/10 bg-black/40 p-6 backdrop-blur-md min-h-[380px] lg:min-h-[460px] flex-col justify-between overflow-hidden shadow-2xl ${mobileView === "court" ? "flex" : "hidden lg:flex"}`}>
             <div className="pointer-events-none absolute inset-0 opacity-[0.08] bg-[radial-gradient(ellipse_at_center,var(--accent-primary),transparent_70%)]" />
             
             {/* Diagnostic Header */}
@@ -471,7 +496,7 @@ export function SportsSection() {
         </div>
 
         {/* Right Side: Tab Selectors & Core Highlights */}
-        <div className="flex flex-col justify-center">
+        <div className={`flex-col justify-center ${mobileView === "biometrics" ? "flex" : "hidden lg:flex"}`}>
           
           <div data-sports-heading>
             <p className="font-mono text-xs uppercase tracking-[0.34em] text-accent-primary-light">

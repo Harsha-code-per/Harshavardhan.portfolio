@@ -78,8 +78,12 @@ export default function RootLayout({
         className={`${spaceGrotesk.variable} bg-[#0a0a0f] text-[#f8fafc] font-sans antialiased overflow-x-hidden`}
       >
         <Preloader />
-        <Navbar />
-        <SmoothScroller>{children}</SmoothScroller>
+        <div className="relative z-10">
+          <SmoothScroller>{children}</SmoothScroller>
+        </div>
+        <div className="relative z-[9999]">
+          <Navbar />
+        </div>
         <Toaster theme="dark" richColors position="bottom-right" />
       </body>
     </html>

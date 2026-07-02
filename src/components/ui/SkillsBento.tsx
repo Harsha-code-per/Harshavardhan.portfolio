@@ -201,6 +201,9 @@ export function SkillsBento() {
       const activeIdx = activeIndexRef.current;
       const currentAccent = systemAccents[activeIdx % systemAccents.length];
 
+      const isMobileSize = width < 600;
+      const scale = isMobileSize ? 0.65 : 1;
+
       // Dynamic nodes for AI network strand
       const hubs: { x: number; y: number }[] = [];
       if (activeIdx === 2) {
@@ -209,7 +212,7 @@ export function SkillsBento() {
         for (let i = 0; i < numHubs; i++) {
           hubs.push({
             x: spacingX * (i + 1),
-            y: height * 0.5 + Math.sin(frame * 0.025 + i) * 45
+            y: height * 0.5 + Math.sin(frame * 0.025 + i) * (45 * scale)
           });
         }
       }
@@ -246,9 +249,9 @@ export function SkillsBento() {
           const cy = Math.floor((isoIdx / cols) % rowsCount);
           const cz = Math.floor(isoIdx / (cols * rowsCount));
 
-          const spacingX = 35;
-          const spacingY = 18;
-          const spacingZ = 22;
+          const spacingX = 35 * scale;
+          const spacingY = 18 * scale;
+          const spacingZ = 22 * scale;
 
           const isoX = width * 0.5 + (cx - cy) * spacingX;
           const isoY = height * 0.55 + (cx + cy) * spacingY - cz * spacingZ;
@@ -261,7 +264,7 @@ export function SkillsBento() {
           const px = idx * step;
           const isStrandA = idx % 2 === 0;
           const phaseOffset = isStrandA ? 0 : Math.PI;
-          const py = height * 0.5 + Math.sin(px * 0.007 + frame * 0.03 + phaseOffset) * 75;
+          const py = height * 0.5 + Math.sin(px * 0.007 + frame * 0.03 + phaseOffset) * (75 * scale);
           
           tx = px;
           ty = py;
@@ -269,14 +272,14 @@ export function SkillsBento() {
           // AI: Neural Net Constellation
           const hubIdx = idx % hubs.length;
           const angle = (idx * 2.3) % (Math.PI * 2);
-          const rad = 25 + ((idx * 11) % 50);
+          const rad = (25 + ((idx * 11) % 50)) * scale;
           
           tx = hubs[hubIdx].x + Math.cos(angle) * rad;
           ty = hubs[hubIdx].y + Math.sin(angle) * rad;
         } else if (activeIdx === 3) {
           // Cloud: Concentric Rings
           const ringIdx = idx % 4;
-          const radius = 60 + ringIdx * 38;
+          const radius = (60 + ringIdx * 38) * scale;
           const particlesPerRing = Math.floor(particleCount / 4);
           const ringPos = Math.floor(idx / 4);
           const rotSpeed = ringIdx % 2 === 0 ? 0.006 : -0.009;
@@ -304,8 +307,9 @@ export function SkillsBento() {
           const dx = tx - mouseRef.current.x;
           const dy = ty - mouseRef.current.y;
           const dist = Math.hypot(dx, dy);
-          if (dist < 110) {
-            const force = (110 - dist) * 0.12;
+          const repelRadius = 110 * scale;
+          if (dist < repelRadius) {
+            const force = (repelRadius - dist) * 0.12;
             tx += (dx / dist) * force;
             ty += (dy / dist) * force;
           }
@@ -510,7 +514,7 @@ export function SkillsBento() {
         <div 
           onMouseMove={handleMouseMove}
           onMouseLeave={handleMouseLeave}
-          className="relative rounded-xl border bg-black/40 backdrop-blur-md overflow-hidden flex flex-col justify-between p-6 sm:p-8 min-h-[460px] lg:h-full transition-all duration-500"
+          className="relative rounded-xl border bg-black/40 backdrop-blur-md overflow-hidden flex flex-col justify-between p-6 sm:p-8 min-h-[260px] lg:min-h-[460px] lg:h-full transition-all duration-500"
           style={{
             borderColor: `color-mix(in srgb, ${activeAccent} 32%, rgba(255,255,255,0.06))`,
             boxShadow: `0 34px 100px rgba(0,0,0,0.65), 0 0 25px color-mix(in srgb, ${activeAccent} 6%, transparent)`

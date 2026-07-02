@@ -261,7 +261,7 @@ export function TimelineExperience() {
     <section
       id="journey"
       ref={sectionRef}
-      className="relative w-full h-screen bg-[#030303] overflow-hidden text-white border-t border-white/5"
+      className="relative w-full min-h-screen lg:h-screen lg:overflow-hidden bg-[#030303] py-16 lg:py-0 text-white border-t border-white/5 flex items-center"
     >
       {/* Background Warp Particles */}
       <canvas
@@ -393,8 +393,30 @@ export function TimelineExperience() {
           </div>
         </div>
 
+        {/* Mobile Years Nav (Visible on Mobile/Tablet only) */}
+        <div className="flex justify-center gap-3 mt-6 lg:hidden no-print z-30 relative w-full">
+          {journeyMilestones.map((m, idx) => {
+            const isActive = idx === activeIndex;
+            const accent = routeAccents[idx % routeAccents.length];
+            return (
+              <button
+                key={m.id}
+                onClick={() => setActiveIndex(idx)}
+                className={`px-4 py-2 font-mono text-[0.625rem] uppercase tracking-widest border transition-all duration-300 rounded bg-black/40 cursor-pointer`}
+                style={{
+                  borderColor: isActive ? accent : "rgba(255,255,255,0.05)",
+                  boxShadow: isActive ? `0 0 15px color-mix(in srgb, ${accent} 25%, transparent)` : "none",
+                  color: isActive ? "#ffffff" : "rgba(255,255,255,0.4)"
+                }}
+              >
+                {m.year}
+              </button>
+            );
+          })}
+        </div>
+
         {/* Right Side: 3D Holographic Card Viewport */}
-        <div className="relative w-full h-100 sm:h-120 lg:h-137.5 lg:max-w-[55%] flex items-center justify-center mt-8 lg:mt-0" style={{ perspective: "1200px" }}>
+        <div className="relative w-full h-100 sm:h-120 lg:h-137.5 lg:max-w-[55%] flex items-center justify-center mt-4 lg:mt-0" style={{ perspective: "1200px" }}>
           {journeyMilestones.map((milestone, i) => {
             const isActive = i === activeIndex;
             const isPast = i < activeIndex;

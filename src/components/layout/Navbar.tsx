@@ -170,134 +170,159 @@ export function Navbar() {
   );
 
   return (
-    <header
-      ref={navRef}
-      className={`fixed left-0 top-0 z-1000 w-full px-4 py-5 transition-all duration-500 ${
-        isScrolled
-          ? "nav-scrolled border-b"
-          : "bg-transparent border-b border-transparent"
-      }`}
-      style={{
-        borderColor: isScrolled ? "color-mix(in srgb, var(--accent-primary) 25%, transparent)" : "transparent",
-      }}
-    >
-      <div className="mx-auto flex w-full max-w-full px-8 lg:px-12 items-center justify-between">
-        <button
-          type="button"
-          onClick={() => {
-            if (isHomePage && lenis) {
-              lenis.scrollTo(0);
-            } else {
-              router.push("/");
-            }
-          }}
-          className="font-mono text-lg font-bold tracking-[0.18em] text-white transition-all duration-300 hover:opacity-80 whitespace-nowrap"
-          style={{ textShadow: "0 0 15px color-mix(in srgb, var(--accent-primary) 60%, transparent)" }}
-          aria-label="Go to top"
-        >
-          Harshavardhan K
-        </button>
-
-        {!isRecruiterMode && (
-          <nav className="hidden items-center gap-1 lg:flex">
-            {navigationItems.map((item) => (
-              <div key={item.id} className="relative px-3 py-1">
-                <button
-                  type="button"
-                  data-cursor="hover"
-                  onClick={() => handleNavClick(item.id)}
-                  className={`relative z-10 text-sm font-medium uppercase tracking-[0.16em] transition-colors duration-200 ${
-                    activeSection === item.id
-                      ? "text-foreground"
-                      : "text-ink-secondary hover:text-foreground"
-                  }`}
-                >
-                  {item.label}
-                </button>
-                {/* Animated active indicator glow */}
-                {activeSection === item.id && (
-                  <span
-                    className="absolute inset-0 rounded-full pointer-events-none border animate-in fade-in zoom-in-95 duration-300"
-                    style={{
-                      boxShadow: "0 0 20px 2px color-mix(in srgb, var(--accent-primary) 40%, transparent)",
-                      background: "color-mix(in srgb, var(--accent-primary) 15%, transparent)",
-                      borderColor: "color-mix(in srgb, var(--accent-primary) 30%, transparent)",
-                    }}
-                  />
-                )}
-              </div>
-            ))}
-          </nav>
-        )}
-
-        <div className="flex items-center gap-3">
+    <>
+      <header
+        ref={navRef}
+        className={`fixed left-0 top-0 z-[9999] w-full px-4 py-5 transition-all duration-500 ${
+          isScrolled
+            ? "nav-scrolled border-b"
+            : "bg-transparent border-b border-transparent"
+        }`}
+        style={{
+          borderColor: isScrolled ? "color-mix(in srgb, var(--accent-primary) 25%, transparent)" : "transparent",
+        }}
+      >
+        <div className="mx-auto flex w-full max-w-full px-8 lg:px-12 items-center justify-between">
           <button
             type="button"
-            onClick={handleRecruiterToggle}
-            className={`relative inline-flex h-9 items-center gap-2 rounded-full border px-4 font-mono text-[0.625rem] font-bold uppercase tracking-widest transition-all cursor-pointer ${
-              isRecruiterMode
-                ? "border-accent-primary bg-accent-primary/10 text-white shadow-[0_0_15px_var(--accent-primary-glow)]"
-                : "border-white/10 bg-white/3 text-white/70 hover:bg-white/10 hover:text-white"
-            }`}
-            title={isRecruiterMode ? "Switch to Immersive Mode" : "Switch to Recruiter Resume Mode"}
+            onClick={() => {
+              if (isHomePage && lenis) {
+                lenis.scrollTo(0);
+              } else {
+                router.push("/");
+              }
+            }}
+            className="font-mono text-lg font-bold tracking-[0.18em] text-white transition-all duration-300 hover:opacity-80 whitespace-nowrap"
+            style={{ textShadow: "0 0 15px color-mix(in srgb, var(--accent-primary) 60%, transparent)" }}
+            aria-label="Go to top"
           >
-            {isRecruiterMode ? (
-              <>
-                <Briefcase className="h-3.5 w-3.5 text-accent-primary-light" />
-                <span className="hidden sm:inline">Resume Active</span>
-                <span className="sm:hidden">Resume</span>
-              </>
-            ) : (
-              <>
-                <Compass className="h-3.5 w-3.5" />
-                <span className="hidden sm:inline">Immersive Mode</span>
-                <span className="sm:hidden">Immersive</span>
-              </>
-            )}
+            Harshavardhan K
           </button>
 
-
-          
           {!isRecruiterMode && (
+            <nav className="hidden items-center gap-1 lg:flex">
+              {navigationItems.map((item) => (
+                <div key={item.id} className="relative px-3 py-1">
+                  <button
+                    type="button"
+                    data-cursor="hover"
+                    onClick={() => handleNavClick(item.id)}
+                    className={`relative z-10 text-sm font-medium uppercase tracking-[0.16em] transition-colors duration-200 ${
+                      activeSection === item.id
+                        ? "text-foreground"
+                        : "text-ink-secondary hover:text-foreground"
+                    }`}
+                  >
+                    {item.label}
+                  </button>
+                  {/* Animated active indicator glow */}
+                  {activeSection === item.id && (
+                    <span
+                      className="absolute inset-0 rounded-full pointer-events-none border animate-in fade-in zoom-in-95 duration-300"
+                      style={{
+                        boxShadow: "0 0 20px 2px color-mix(in srgb, var(--accent-primary) 40%, transparent)",
+                        background: "color-mix(in srgb, var(--accent-primary) 15%, transparent)",
+                        borderColor: "color-mix(in srgb, var(--accent-primary) 30%, transparent)",
+                      }}
+                    />
+                  )}
+                </div>
+              ))}
+            </nav>
+          )}
+
+          <div className="flex items-center gap-3">
             <button
               type="button"
-              className="text-foreground lg:hidden cursor-pointer"
-              onClick={() => setIsMenuOpen((open) => !open)}
-              aria-label="Toggle menu"
+              onClick={handleRecruiterToggle}
+              className={`relative inline-flex h-9 items-center gap-2 rounded-full border px-4 font-mono text-[0.625rem] font-bold uppercase tracking-widest transition-all cursor-pointer ${
+                isRecruiterMode
+                  ? "border-accent-primary bg-accent-primary/10 text-white shadow-[0_0_15px_var(--accent-primary-glow)]"
+                  : "border-white/10 bg-white/3 text-white/70 hover:bg-white/10 hover:text-white"
+              }`}
+              title={isRecruiterMode ? "Switch to Immersive Mode" : "Switch to Recruiter Resume Mode"}
             >
-              {isMenuOpen ? <X size={22} /> : <Menu size={22} />}
+              {isRecruiterMode ? (
+                <>
+                  <Briefcase className="h-3.5 w-3.5 text-accent-primary-light" />
+                  <span className="hidden sm:inline">Resume Active</span>
+                  <span className="sm:hidden">Resume</span>
+                </>
+              ) : (
+                <>
+                  <Compass className="h-3.5 w-3.5" />
+                  <span className="hidden sm:inline">Immersive Mode</span>
+                  <span className="sm:hidden">Immersive</span>
+                </>
+              )}
             </button>
-          )}
+
+            {!isRecruiterMode && (
+              <button
+                type="button"
+                className="text-foreground lg:hidden cursor-pointer"
+                onClick={() => setIsMenuOpen((open) => !open)}
+                aria-label="Toggle menu"
+              >
+                {isMenuOpen ? <X size={22} /> : <Menu size={22} />}
+              </button>
+            )}
+          </div>
         </div>
-      </div>
+      </header>
 
       {/* ── Mobile overlay ─────────────────────────────────────── */}
       {!isRecruiterMode && (
         <div
           ref={overlayRef}
-          className={`fixed inset-0 z-990 flex flex-col items-center justify-center gap-8 bg-background transition-opacity duration-300 lg:hidden ${
+          className={`fixed inset-0 z-[9999] flex flex-col items-center justify-center gap-6 bg-black/90 backdrop-blur-2xl transition-opacity duration-300 lg:hidden ${
             isMenuOpen
               ? "pointer-events-auto opacity-100"
               : "pointer-events-none opacity-0"
           }`}
+          style={{
+            background: "radial-gradient(circle at center, rgba(var(--accent-primary-rgb, 245, 158, 11), 0.05), transparent 70%), rgba(5,5,8,0.96)",
+          }}
         >
-          {navigationItems.map((item) => (
-            <button
-              key={item.id}
-              type="button"
-              data-mobile-link
-              onClick={() => handleNavClick(item.id)}
-              className={`text-3xl font-black uppercase tracking-widest transition-colors ${
-                activeSection === item.id
-                  ? "text-accent-primary-light"
-                  : "text-foreground"
-              }`}
-            >
-              {item.label}
-            </button>
-          ))}
+          {/* Dedicated Close Button inside the overlay */}
+          <button
+            type="button"
+            onClick={() => setIsMenuOpen(false)}
+            className="absolute top-6 right-8 text-white/60 hover:text-white transition-colors cursor-pointer p-2"
+            aria-label="Close menu"
+          >
+            <X size={26} />
+          </button>
+
+          {/* Symmetrical HUD border elements */}
+          <div className="absolute top-4 left-6 font-mono text-[0.5625rem] tracking-[0.2em] text-white/30">
+            SYS_NAV_OVERLAY // SECURE_LINK
+          </div>
+
+          <nav className="flex flex-col items-center gap-6">
+            {navigationItems.map((item, index) => (
+              <button
+                key={item.id}
+                type="button"
+                data-mobile-link
+                onClick={() => handleNavClick(item.id)}
+                className={`font-mono text-xl uppercase tracking-[0.2em] transition-all duration-300 hover:scale-105 cursor-pointer ${
+                  activeSection === item.id
+                    ? "text-accent-primary-light font-black"
+                    : "text-white/60 hover:text-white"
+                }`}
+                style={{
+                  textShadow: activeSection === item.id 
+                    ? "0 0 12px color-mix(in srgb, var(--accent-primary) 50%, transparent)" 
+                    : "none"
+                }}
+              >
+                0{index + 1} {"//"} {item.label}
+              </button>
+            ))}
+          </nav>
         </div>
       )}
-    </header>
+    </>
   );
 }
