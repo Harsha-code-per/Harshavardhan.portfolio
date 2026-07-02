@@ -181,8 +181,6 @@ export function TimelineExperience() {
         ctx.strokeStyle = `color-mix(in srgb, ${p.color} ${p.alpha * 100}%, transparent)`;
         ctx.fillStyle = `color-mix(in srgb, ${p.color} ${p.alpha * 100}%, transparent)`;
         ctx.lineWidth = p.size;
-        ctx.shadowBlur = isWarping ? 10 : 0;
-        ctx.shadowColor = p.color;
 
         ctx.beginPath();
         if (isWarping) {

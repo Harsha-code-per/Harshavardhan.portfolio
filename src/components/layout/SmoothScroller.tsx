@@ -3,19 +3,6 @@
 import { ReactLenis } from "lenis/react";
 import { useEffect, useRef, useCallback, type ComponentProps, type ReactNode } from "react";
 
-if (typeof window !== "undefined") {
-  const originalWarn = console.warn;
-  console.warn = (...args: unknown[]) => {
-    if (
-      args[0] &&
-      typeof args[0] === "string" &&
-      args[0].includes("THREE.Clock: This module has been deprecated")
-    ) {
-      return;
-    }
-    originalWarn(...args);
-  };
-}
 import { ScrollTrigger, gsap, setupGsap } from "@/lib/gsap";
 import { useReducedMotionPreference } from "@/lib/useReducedMotion";
 import { useModeStore } from "@/lib/store";

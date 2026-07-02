@@ -312,10 +312,13 @@ function InteractiveVisualizer({
         const centerX = width / 2;
         const centerY = height / 2;
         
-        ctx.save();
-        ctx.shadowBlur = 24;
-        ctx.shadowColor = palette.primary;
-        
+        // Outer glow path
+        ctx.fillStyle = `color-mix(in srgb, ${palette.primary} 15%, transparent)`;
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, 60, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Inner core radial gradient
         const grad = ctx.createRadialGradient(centerX, centerY, 4, centerX, centerY, 35);
         grad.addColorStop(0, "#ffffff");
         grad.addColorStop(0.3, palette.primary);
@@ -325,7 +328,6 @@ function InteractiveVisualizer({
         ctx.beginPath();
         ctx.arc(centerX, centerY, 35, 0, Math.PI * 2);
         ctx.fill();
-        ctx.restore();
 
         (particles as SpectraveinParticle[]).forEach((p) => {
           p.angle += p.speed;
@@ -494,26 +496,19 @@ function InteractiveVisualizer({
           ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
           ctx.fill();
 
-          // Bubble stroke outline for crisp glass-like definition and glowing halo
-          ctx.save();
-          ctx.strokeStyle = `color-mix(in srgb, ${palette.primary} ${p.alpha * 85}%, transparent)`;
-          ctx.lineWidth = 1.2;
-          ctx.shadowBlur = 6;
-          ctx.shadowColor = palette.primary;
+          // Bubble stroke outline (crisp, zero shadowBlur)
+          ctx.strokeStyle = `color-mix(in srgb, ${palette.primary} ${p.alpha * 65}%, transparent)`;
+          ctx.lineWidth = 1.0;
           ctx.beginPath();
           ctx.arc(p.x, p.y, p.radius * 0.95, 0, Math.PI * 2);
           ctx.stroke();
-          ctx.restore();
         });
 
-        // Draw secondary wave (fainter, phase-shifted, using secondary purple accent)
-        ctx.save();
-        ctx.shadowBlur = 8;
-        ctx.shadowColor = palette.secondary;
-        ctx.strokeStyle = `color-mix(in srgb, ${palette.secondary} 60%, transparent)`;
-        ctx.lineWidth = 2;
+        // Draw secondary wave (fainter, phase-shifted, no shadowBlur)
+        ctx.strokeStyle = `color-mix(in srgb, ${palette.secondary} 50%, transparent)`;
+        ctx.lineWidth = 1.5;
         ctx.beginPath();
-        for (let x = 0; x < width; x += 4) {
+        for (let x = 0; x < width; x += 6) {
           let yOffset = 0;
           if (mouseRef.current.active) {
             const dist = Math.abs(x - mouseRef.current.x);
@@ -526,9 +521,8 @@ function InteractiveVisualizer({
           else ctx.lineTo(x, y);
         }
         ctx.stroke();
-        ctx.restore();
 
-        // Draw primary wave (Sleep Rose accent) with triple-layer neon glow
+        // Draw primary wave (Sleep Rose accent) with high-performance double stroke
         const getWaveY = (x: number) => {
           let yOffset = 0;
           if (mouseRef.current.active) {
@@ -540,49 +534,27 @@ function InteractiveVisualizer({
           return height * 0.65 + Math.sin(x * 0.012 + frame * 0.015) * 16 + yOffset;
         };
 
-        // Layer 1: Broad Outer Glow
-        ctx.save();
-        ctx.shadowBlur = 25;
-        ctx.shadowColor = palette.primary;
-        ctx.strokeStyle = `color-mix(in srgb, ${palette.primary} 40%, transparent)`;
-        ctx.lineWidth = 6;
+        // Pass 1: Draw outer halo
+        ctx.strokeStyle = `color-mix(in srgb, ${palette.primary} 30%, transparent)`;
+        ctx.lineWidth = 5;
         ctx.beginPath();
-        for (let x = 0; x < width; x += 4) {
+        for (let x = 0; x < width; x += 6) {
           const y = getWaveY(x);
           if (x === 0) ctx.moveTo(x, y);
           else ctx.lineTo(x, y);
         }
         ctx.stroke();
-        ctx.restore();
 
-        // Layer 2: Medium Glow
-        ctx.save();
-        ctx.shadowBlur = 10;
-        ctx.shadowColor = palette.primary;
-        ctx.strokeStyle = `color-mix(in srgb, ${palette.primary} 85%, transparent)`;
-        ctx.lineWidth = 3;
+        // Pass 2: Draw intense core
+        ctx.strokeStyle = `color-mix(in srgb, ${palette.primary} 45%, #ffffff)`;
+        ctx.lineWidth = 1.2;
         ctx.beginPath();
-        for (let x = 0; x < width; x += 4) {
+        for (let x = 0; x < width; x += 6) {
           const y = getWaveY(x);
           if (x === 0) ctx.moveTo(x, y);
           else ctx.lineTo(x, y);
         }
         ctx.stroke();
-        ctx.restore();
-
-        // Layer 3: High-Intensity White-Hot Core
-        ctx.save();
-        ctx.shadowBlur = 0;
-        ctx.strokeStyle = `color-mix(in srgb, ${palette.primary} 35%, #ffffff)`;
-        ctx.lineWidth = 1.5;
-        ctx.beginPath();
-        for (let x = 0; x < width; x += 4) {
-          const y = getWaveY(x);
-          if (x === 0) ctx.moveTo(x, y);
-          else ctx.lineTo(x, y);
-        }
-        ctx.stroke();
-        ctx.restore();
 
         // Overlay Telemetry
         ctx.font = "8px monospace";
@@ -665,12 +637,10 @@ function InteractiveVisualizer({
           ctx.arc(p.x, p.y, p.orbitRadius, 0, Math.PI * 2);
           ctx.stroke();
 
-          // Draw orbiting hydrogen/oxygen nodes (1 to 2 small nodes)
+          // Draw orbiting hydrogen/oxygen nodes (1 to 2 small nodes, no shadowBlur)
           const orbitX1 = p.x + Math.cos(p.orbitAngle) * p.orbitRadius;
           const orbitY1 = p.y + Math.sin(p.orbitAngle) * p.orbitRadius;
           ctx.fillStyle = palette.secondary;
-          ctx.shadowBlur = 4;
-          ctx.shadowColor = palette.secondary;
           ctx.beginPath();
           ctx.arc(orbitX1, orbitY1, 2, 0, Math.PI * 2);
           ctx.fill();
@@ -678,27 +648,21 @@ function InteractiveVisualizer({
           const orbitX2 = p.x + Math.cos(p.orbitAngle + Math.PI) * p.orbitRadius;
           const orbitY2 = p.y + Math.sin(p.orbitAngle + Math.PI) * p.orbitRadius;
           ctx.fillStyle = "#ffffff";
-          ctx.shadowBlur = 4;
-          ctx.shadowColor = "#ffffff";
           ctx.beginPath();
           ctx.arc(orbitX2, orbitY2, 1.5, 0, Math.PI * 2);
           ctx.fill();
           ctx.restore();
         });
 
-        // Draw an aura pulse ring around the mouse if active
+        // Draw an aura pulse ring around the mouse if active (no shadowBlur)
         if (mouseRef.current.active) {
-          ctx.save();
           const pulseRadius = (frame % 90) * 1.5;
           const pulseAlpha = Math.max(0, 1 - pulseRadius / 135);
           ctx.strokeStyle = `color-mix(in srgb, ${palette.primary} ${pulseAlpha * 35}%, transparent)`;
           ctx.lineWidth = 1.5;
-          ctx.shadowBlur = 10;
-          ctx.shadowColor = palette.primary;
           ctx.beginPath();
           ctx.arc(mouseRef.current.x, mouseRef.current.y, pulseRadius, 0, Math.PI * 2);
           ctx.stroke();
-          ctx.restore();
         }
 
         // Overlay Telemetry
@@ -743,49 +707,73 @@ function InteractiveVisualizerCard({
 }) {
   const cardRef = useRef<HTMLDivElement>(null);
   const cursorRef = useRef<HTMLDivElement>(null);
+  
+  const coordsRef = useRef({
+    x: 0,
+    y: 0,
+    targetX: 0,
+    targetY: 0,
+    rotateX: 0,
+    rotateY: 0,
+    targetRotateX: 0,
+    targetRotateY: 0,
+    isHovered: false
+  });
+
+  useEffect(() => {
+    let animationId: number;
+    
+    const updateLoop = () => {
+      const coords = coordsRef.current;
+      
+      // Perform fluid LERP (15% speed factor)
+      coords.x += (coords.targetX - coords.x) * 0.15;
+      coords.y += (coords.targetY - coords.y) * 0.15;
+      coords.rotateX += (coords.targetRotateX - coords.rotateX) * 0.15;
+      coords.rotateY += (coords.targetRotateY - coords.rotateY) * 0.15;
+
+      if (cursorRef.current) {
+        cursorRef.current.style.transform = `translate3d(calc(${coords.x}px - 50%), calc(${coords.y}px - 50%), 0) scale(${coords.isHovered ? 1 : 0.5})`;
+        cursorRef.current.style.opacity = coords.isHovered ? "1" : "0";
+      }
+
+      if (cardRef.current) {
+        cardRef.current.style.transform = `perspective(1000px) rotateX(${coords.rotateX}deg) rotateY(${coords.rotateY}deg)`;
+      }
+
+      animationId = requestAnimationFrame(updateLoop);
+    };
+
+    updateLoop();
+
+    return () => {
+      cancelAnimationFrame(animationId);
+    };
+  }, []);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!cardRef.current || !cursorRef.current) return;
+    if (!cardRef.current) return;
     const rect = cardRef.current.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
     
-    gsap.to(cursorRef.current, {
-      x,
-      y,
-      duration: 0.2,
-      ease: "power2.out"
-    });
-
+    coordsRef.current.targetX = x;
+    coordsRef.current.targetY = y;
+    
     const centerX = rect.width / 2;
     const centerY = rect.height / 2;
-    const rotateX = ((y - centerY) / centerY) * -6; 
-    const rotateY = ((x - centerX) / centerX) * 6;
-    
-    gsap.to(cardRef.current, {
-      rotateX,
-      rotateY,
-      duration: 0.5,
-      ease: "power2.out",
-      transformPerspective: 1000,
-    });
+    coordsRef.current.targetRotateX = ((y - centerY) / centerY) * -6; 
+    coordsRef.current.targetRotateY = ((x - centerX) / centerX) * 6;
   };
 
   const handleMouseEnter = () => {
-    if (cursorRef.current) {
-      gsap.to(cursorRef.current, { opacity: 1, scale: 1, duration: 0.3 });
-    }
+    coordsRef.current.isHovered = true;
   };
 
   const handleMouseLeave = () => {
-    if (!cardRef.current || !cursorRef.current) return;
-    gsap.to(cardRef.current, {
-      rotateX: 0,
-      rotateY: 0,
-      duration: 0.8,
-      ease: "elastic.out(1, 0.4)",
-    });
-    gsap.to(cursorRef.current, { opacity: 0, scale: 0.5, duration: 0.3 });
+    coordsRef.current.isHovered = false;
+    coordsRef.current.targetRotateX = 0;
+    coordsRef.current.targetRotateY = 0;
   };
 
   return (
@@ -796,12 +784,12 @@ function InteractiveVisualizerCard({
       onMouseLeave={handleMouseLeave}
       data-cursor="drag"
       className="group relative overflow-hidden rounded-2xl border border-white/10 shadow-2xl cursor-none w-full h-full bg-[#050507]"
-      style={{ transformStyle: "preserve-3d" }}
+      style={{ transformStyle: "preserve-3d", willChange: "transform" }}
     >
       <div 
         ref={cursorRef} 
-        className="pointer-events-none absolute left-0 top-0 z-50 flex h-20 w-20 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-black/70 text-[0.5625rem] font-bold tracking-[0.2em] text-white backdrop-blur-sm opacity-0 scale-50 transition-colors border border-white/20"
-        style={{ boxShadow: `0 0 30px ${palette.glow}` }}
+        className="pointer-events-none absolute left-0 top-0 z-50 flex h-20 w-20 items-center justify-center rounded-full bg-black/75 text-[0.5625rem] font-bold tracking-[0.2em] text-white border border-white/20 transition-opacity duration-300"
+        style={{ boxShadow: `0 0 30px ${palette.glow}`, willChange: "transform, opacity" }}
       >
         INTERACT
       </div>
@@ -886,13 +874,13 @@ function ProjectDossierCard({
 
           {/* HUD Info panels */}
           <div className="mt-8 grid grid-cols-2 gap-4">
-            <div className="hud-panel rounded p-4 bg-white/1 border border-white/5 backdrop-blur-sm">
+            <div className="hud-panel rounded p-4 bg-white/1 border border-white/5">
               <p className="font-mono text-[0.5625rem] uppercase tracking-[0.2em] text-white/40">
                 SIGNAL STREAM
               </p>
               <p className="mt-2 text-xs font-semibold leading-relaxed text-zinc-300">{dossier.signal}</p>
             </div>
-            <div className="hud-panel rounded p-4 bg-white/1 border border-white/5 backdrop-blur-sm">
+            <div className="hud-panel rounded p-4 bg-white/1 border border-white/5">
               <p className="font-mono text-[0.5625rem] uppercase tracking-[0.2em] text-white/40">
                 IMPACT MEASURED
               </p>

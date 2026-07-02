@@ -319,11 +319,14 @@ export function SkillsBento() {
         p.x += (tx - p.x) * p.speed;
         p.y += (ty - p.y) * p.speed;
 
-        // Draw particle
-        ctx.fillStyle = `color-mix(in srgb, ${currentAccent} ${p.alpha * 100}%, transparent)`;
-        ctx.shadowBlur = 8;
-        ctx.shadowColor = currentAccent;
+        // Draw particle halo (soft outer glow)
+        ctx.fillStyle = `color-mix(in srgb, ${currentAccent} ${p.alpha * 18}%, transparent)`;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size * 2.8, 0, Math.PI * 2);
+        ctx.fill();
 
+        // Draw solid inner core
+        ctx.fillStyle = `color-mix(in srgb, ${currentAccent} ${p.alpha * 100}%, transparent)`;
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
         ctx.fill();
