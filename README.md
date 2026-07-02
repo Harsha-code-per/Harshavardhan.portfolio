@@ -1,11 +1,10 @@
 # 🌌 HARSHAVARDHAN K // CINEMATIC PORTFOLIO SYSTEM
 
-[![Awwwards Nominee](https://img.shields.io/badge/Awwwards-Nominee-gold?style=for-the-badge&logo=awwwards&logoColor=white)](https://www.awwwards.com/)
 [![Next.js 16](https://img.shields.io/badge/Next.js-16.2-black?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org/)
 [![Three.js](https://img.shields.io/badge/Three.js-0.182-orange?style=for-the-badge&logo=three.js&logoColor=white)](https://threejs.org/)
 [![Turbopack](https://img.shields.io/badge/Turbopack-Ready-blueviolet?style=for-the-badge&logo=turbopack&logoColor=white)](https://turbo.build/)
 
-An elite, Awwwards-grade creative portfolio blending deep AI engineering diagnostics, real-time WebGL rendering, and physics-based motion choreography. Built with a responsive cyber-hud aesthetic, it seamlessly pivots between an immersive 3D space and a highly structured, print-friendly recruiter layout.
+An elite, high-performance creative portfolio blending deep AI engineering diagnostics, real-time WebGL rendering, and physics-based motion choreography. Built with a responsive cyber-hud aesthetic, it seamlessly pivots between an immersive 3D space and a highly structured, print-friendly recruiter layout.
 
 > 🌐 **Production Gateway:** [www.harshavardhan-k.me](https://www.harshavardhan-k.me)
 
