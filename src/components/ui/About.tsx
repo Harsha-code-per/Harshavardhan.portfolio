@@ -19,32 +19,20 @@ function BentoCard({ label, value }: { label: string; value: string }) {
     cardRef.current.style.setProperty("--mouse-x", `${x}px`);
     cardRef.current.style.setProperty("--mouse-y", `${y}px`);
 
-    // Magnetic pull
+    // Magnetic pull using direct style transforms (Compositor accelerated)
     const centerX = rect.width / 2;
     const centerY = rect.height / 2;
     const distanceX = x - centerX;
     const distanceY = y - centerY;
 
-    gsap.to(cardRef.current, {
-      x: distanceX * 0.05,
-      y: distanceY * 0.05,
-      rotationY: distanceX * 0.01,
-      rotationX: -distanceY * 0.01,
-      duration: 0.4,
-      ease: "power2.out",
-    });
+    cardRef.current.style.transform = `translate3d(${distanceX * 0.05}px, ${distanceY * 0.05}px, 0) rotateX(${-distanceY * 0.012}deg) rotateY(${distanceX * 0.012}deg)`;
+    cardRef.current.style.transition = "transform 0.12s cubic-bezier(0.25, 0.8, 0.25, 1)";
   };
 
   const handleMouseLeave = () => {
     if (!cardRef.current) return;
-    gsap.to(cardRef.current, {
-      x: 0,
-      y: 0,
-      rotationY: 0,
-      rotationX: 0,
-      duration: 0.7,
-      ease: "elastic.out(1, 0.3)",
-    });
+    cardRef.current.style.transform = "translate3d(0px, 0px, 0px) rotateX(0deg) rotateY(0deg)";
+    cardRef.current.style.transition = "transform 0.5s cubic-bezier(0.25, 1, 0.5, 1)";
   };
 
   return (

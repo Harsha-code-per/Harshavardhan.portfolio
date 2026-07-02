@@ -3,7 +3,7 @@
 import { useRef, useState, useEffect } from "react";
 import { ArrowUpRight, Crosshair, Radio, Battery, Lock, Shield, Terminal, Cpu, Users, Award, BookOpen } from "lucide-react";
 
-import { gsap, setupGsap } from "@/lib/gsap";
+import { setupGsap } from "@/lib/gsap";
 
 
 // Text scrambler component that shuffles text on change
@@ -61,6 +61,57 @@ export function ResearchSection() {
   const [isHovering, setIsHovering] = useState(false);
   const [activeTab, setActiveTab] = useState(0);
   const [mobileView, setMobileView] = useState<"radar" | "dossier">("radar");
+
+  const coordsRef = useRef({
+    x: 0,
+    y: 0,
+    targetX: 0,
+    targetY: 0,
+    droneRotateX: 0,
+    droneRotateY: 0,
+    droneTargetRotateX: 0,
+    droneTargetRotateY: 0,
+    isHovering: false,
+  });
+
+  useEffect(() => {
+    let animationId: number;
+
+    const updateLoop = () => {
+      const coords = coordsRef.current;
+
+      // Smooth fluid LERP (18% velocity factor)
+      coords.x += (coords.targetX - coords.x) * 0.18;
+      coords.y += (coords.targetY - coords.y) * 0.18;
+      coords.droneRotateX += (coords.droneTargetRotateX - coords.droneRotateX) * 0.12;
+      coords.droneRotateY += (coords.droneTargetRotateY - coords.droneRotateY) * 0.12;
+
+      if (cursorRef.current) {
+        cursorRef.current.style.transform = `translate3d(calc(${coords.x}px - 50%), calc(${coords.y}px - 50%), 0) scale(${coords.isHovering ? 1 : 0.5})`;
+        cursorRef.current.style.opacity = coords.isHovering ? "1" : "0";
+      }
+
+      if (lineHRef.current) {
+        lineHRef.current.style.transform = `translate3d(0, ${coords.y}px, 0)`;
+      }
+
+      if (lineVRef.current) {
+        lineVRef.current.style.transform = `translate3d(${coords.x}px, 0, 0)`;
+      }
+
+      if (droneRef.current) {
+        droneRef.current.style.transform = `perspective(1000px) rotateX(${coords.droneRotateX}deg) rotateY(${coords.droneRotateY}deg)`;
+      }
+
+      animationId = requestAnimationFrame(updateLoop);
+    };
+
+    updateLoop();
+
+    return () => {
+      cancelAnimationFrame(animationId);
+    };
+  }, []);
 
 
   // Paper structured details from co-authored publication context
@@ -132,31 +183,8 @@ export function ResearchSection() {
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
 
-    // Snappy custom crosshair tracking
-    if (cursorRef.current) {
-      gsap.to(cursorRef.current, {
-        x,
-        y,
-        duration: 0.1,
-        ease: "power2.out",
-      });
-    }
-
-    // Intersecting target lines tracking
-    if (lineHRef.current) {
-      gsap.to(lineHRef.current, {
-        y,
-        duration: 0.05,
-        ease: "power1.out",
-      });
-    }
-    if (lineVRef.current) {
-      gsap.to(lineVRef.current, {
-        x,
-        duration: 0.05,
-        ease: "power1.out",
-      });
-    }
+    coordsRef.current.targetX = x;
+    coordsRef.current.targetY = y;
 
     // Direct DOM injection of coordinates for best rendering performance (no React re-renders)
     if (coordsBoxRef.current) {
@@ -171,7 +199,7 @@ export function ResearchSection() {
     }
 
     // 3D Tilting of quadcopter wireframe based on mouse position relative to panel
-    if (droneContainerRef.current && droneRef.current) {
+    if (droneContainerRef.current) {
       const droneRect = droneContainerRef.current.getBoundingClientRect();
       const droneCenterX = droneRect.left + droneRect.width / 2;
       const droneCenterY = droneRect.top + droneRect.height / 2;
@@ -180,15 +208,8 @@ export function ResearchSection() {
       const dy = e.clientY - droneCenterY;
 
       const maxTilt = 22;
-      const rx = Math.max(-maxTilt, Math.min(maxTilt, -dy / 7));
-      const ry = Math.max(-maxTilt, Math.min(maxTilt, dx / 7));
-
-      gsap.to(droneRef.current, {
-        rotateX: rx,
-        rotateY: ry,
-        duration: 0.4,
-        ease: "power2.out",
-      });
+      coordsRef.current.droneTargetRotateX = Math.max(-maxTilt, Math.min(maxTilt, -dy / 7));
+      coordsRef.current.droneTargetRotateY = Math.max(-maxTilt, Math.min(maxTilt, dx / 7));
     }
   };
 
@@ -208,8 +229,14 @@ export function ResearchSection() {
           "radial-gradient(circle at 50% 50%, color-mix(in srgb, var(--accent-primary) 7%, transparent), transparent 70%), #020202",
       }}
       onMouseMove={handleMouseMove}
-      onMouseEnter={() => setIsHovering(true)}
-      onMouseLeave={() => setIsHovering(false)}
+      onMouseEnter={() => {
+        setIsHovering(true);
+        coordsRef.current.isHovering = true;
+      }}
+      onMouseLeave={() => {
+        setIsHovering(false);
+        coordsRef.current.isHovering = false;
+      }}
     >
       {/* CSS Animation Keyframes */}
       <style>{`

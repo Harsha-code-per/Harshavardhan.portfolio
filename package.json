@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "NODE_OPTIONS='--no-deprecation' next dev --webpack",
-    "build": "NODE_OPTIONS='--no-deprecation' next build",
-    "start": "NODE_OPTIONS='--no-deprecation' next start",
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
     "lint": "eslint"
   },
   "dependencies": {
@@ -23,7 +23,7 @@
     "sonner": "^2.0.7",
     "split-type": "^0.3.4",
     "tailwind-merge": "^3.6.0",
-    "three": "^0.184.0",
+    "three": "0.182.0",
     "three-stdlib": "^2.36.1",
     "zustand": "^5.0.13"
   },
@@ -32,7 +32,7 @@
     "@types/node": "^25.9.1",
     "@types/react": "^19.2.15",
     "@types/react-dom": "^19.2.3",
-    "@types/three": "^0.183.1",
+    "@types/three": "^0.182.0",
     "eslint": "^9.39.4",
     "eslint-config-next": "16.2.3",
     "tailwindcss": "^4.3.0",

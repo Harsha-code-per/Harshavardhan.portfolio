@@ -2,40 +2,54 @@
 
 import { Resend } from "resend";
 import { PRIMARY_EMAIL } from "@/data/profile";
-
-const resend = new Resend(process.env.RESEND_API_KEY);
+import { validateContactInput } from "@/lib/validation";
 
 type SendContactEmailResult = { success: true } | { error: string };
 
 export async function sendContactEmail(
   formData: FormData
 ): Promise<SendContactEmailResult> {
-  const name = String(formData.get("name") ?? "").trim();
-  const email = String(formData.get("email") ?? "").trim();
-  const message = String(formData.get("message") ?? "").trim();
+  const name = String(formData.get("name") ?? "");
+  const email = String(formData.get("email") ?? "");
+  const message = String(formData.get("message") ?? "");
+  const botField = String(formData.get("botField") ?? "");
 
-  if (!name || !email || !message) {
-    return { error: "Name, email, and message are required." };
+  // 1. Perform validation (Honeypot, Presence, Lengths, Email Format)
+  const validation = validateContactInput({ name, email, message, botField });
+  if (!validation.isValid) {
+    return { error: validation.error || "Validation failed." };
+  }
+
+  // 2. Perform safe Resend config verification
+  const apiKey = process.env.RESEND_API_KEY;
+  if (!apiKey) {
+    console.error("[ERROR] Contact system cannot route email: RESEND_API_KEY is not configured.");
+    return { error: "Email service is temporarily offline. Please try again later." };
   }
 
   const toEmail = process.env.RESEND_TO_EMAIL || PRIMARY_EMAIL;
-
   if (!toEmail) {
     return { error: "Recipient email address is not configured." };
   }
 
-  const { error } = await resend.emails.send({
-    from: "onboarding@resend.dev",
-    to: [toEmail],
-    replyTo: email,
-    subject: `New portfolio contact from ${name}`,
-    text: `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`,
-  });
+  try {
+    const resend = new Resend(apiKey);
+    const { error } = await resend.emails.send({
+      from: "onboarding@resend.dev",
+      to: [toEmail],
+      replyTo: email.trim(),
+      subject: `New portfolio contact from ${name.trim()}`,
+      text: `Name: ${name.trim()}\nEmail: ${email.trim()}\n\nMessage:\n${message.trim()}`,
+    });
 
-  if (error) {
-    return { error: error.message };
+    if (error) {
+      return { error: error.message };
+    }
+
+    return { success: true };
+  } catch (err: unknown) {
+    console.error("[ERROR] Unhandled exception sending email:", err);
+    return { error: "Failed to route message. Transceiver gateway error." };
   }
-
-  return { success: true };
 }
 

@@ -141,6 +141,16 @@ export function ContactForm() {
 
       {/* Cockpit inputs */}
       <div className="space-y-4">
+        {/* Honeypot field for bot spam detection */}
+        <input
+          type="text"
+          name="botField"
+          className="hidden"
+          style={{ display: "none" }}
+          tabIndex={-1}
+          autoComplete="off"
+        />
+
         <div className="space-y-1">
           <label htmlFor="name" className="font-mono text-[0.625rem] uppercase tracking-wider text-white/40">
             NAME://

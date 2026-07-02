@@ -81,12 +81,12 @@ export function TimelineExperience() {
   const sectionRef = useRef<HTMLElement | null>(null);
   const pathRef = useRef<SVGPathElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const probeRef = useRef<SVGGElement | null>(null);
+  const velocityTextRef = useRef<HTMLSpanElement | null>(null);
   const prefersReducedMotion = useReducedMotionPreference();
 
   const [activeIndex, setActiveIndex] = useState(0);
   const activeIndexRef = useRef(0);
-  const [probePos, setProbePos] = useState<{ x: number; y: number } | null>(null);
-  const [velocity, setVelocity] = useState(0);
   const velocityRef = useRef(0);
   const [isSectionVisible, setIsSectionVisible] = useState(false);
 
@@ -112,7 +112,9 @@ export function TimelineExperience() {
     const path = pathRef.current;
     if (path) {
       const point = path.getPointAtLength(0);
-      setProbePos({ x: point.x, y: point.y });
+      if (probeRef.current) {
+        probeRef.current.setAttribute("transform", `translate(${point.x}, ${point.y})`);
+      }
     }
   }, []);
 
@@ -167,6 +169,9 @@ export function TimelineExperience() {
 
       // Smooth decay on velocity
       velocityRef.current *= 0.94;
+      if (velocityTextRef.current) {
+        velocityTextRef.current.textContent = `${Math.round(Math.abs(velocityRef.current) * 100)} km/s`;
+      }
 
       particles.forEach((p) => {
         const directionFactor = currentVelocity >= 0 ? 1 : -1;
@@ -226,7 +231,9 @@ export function TimelineExperience() {
           const vel = self.getVelocity() / 1500; // Normalize velocity scale
           
           velocityRef.current = vel;
-          setVelocity(vel);
+          if (velocityTextRef.current) {
+            velocityTextRef.current.textContent = `${Math.round(Math.abs(vel) * 100)} km/s`;
+          }
 
           // 1. Draw glowing SVG path line dynamically
           const drawLength = totalLength * progress;
@@ -235,7 +242,9 @@ export function TimelineExperience() {
 
           // 2. Translate Time Probe along coordinates
           const point = path.getPointAtLength(progress * totalLength);
-          setProbePos({ x: point.x, y: point.y });
+          if (probeRef.current) {
+            probeRef.current.setAttribute("transform", `translate(${point.x}, ${point.y})`);
+          }
 
           // 3. Update active index stop dynamically
           let currentActive = Math.floor(progress / (1 / journeyMilestones.length));
@@ -337,12 +346,10 @@ export function TimelineExperience() {
           })}
 
           {/* Time Probe Marker */}
-          {probePos && (
-            <g transform={`translate(${probePos.x}, ${probePos.y})`}>
-              <circle r="6.5" fill="#ffffff" style={{ filter: "drop-shadow(0 0 12px var(--accent-primary))" }} />
-              <circle r="13" fill="none" stroke="var(--accent-primary)" strokeWidth="1.2" className="animate-pulse" />
-            </g>
-          )}
+          <g ref={probeRef}>
+            <circle r="6.5" fill="#ffffff" style={{ filter: "drop-shadow(0 0 12px var(--accent-primary))" }} />
+            <circle r="13" fill="none" stroke="var(--accent-primary)" strokeWidth="1.2" className="animate-pulse" />
+          </g>
         </svg>
       </div>
 
@@ -382,7 +389,7 @@ export function TimelineExperience() {
             </div>
             <div className="flex justify-between">
               <span>WARP SPEED FACTOR</span>
-              <span className="text-zinc-300 font-bold">{Math.round(Math.abs(velocity) * 100)} km/s</span>
+              <span ref={velocityTextRef} className="text-zinc-300 font-bold">0 km/s</span>
             </div>
             <div className="flex justify-between">
               <span>CURRENT LOG INDEX</span>

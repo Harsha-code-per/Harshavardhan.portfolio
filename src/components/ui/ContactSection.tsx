@@ -73,7 +73,8 @@ export function ContactSection() {
             const rect = element.getBoundingClientRect();
             const x = (event.clientX - rect.left - rect.width / 2) * 0.18;
             const y = (event.clientY - rect.top - rect.height / 2) * 0.18;
-            gsap.to(element, { x, y, duration: 0.35, ease: "power2.out", overwrite: true });
+            element.style.transform = `translate3d(${x}px, ${y}px, 0)`;
+            element.style.transition = "transform 0.15s cubic-bezier(0.25, 0.8, 0.25, 1)";
             rafId = null;
           });
         };
@@ -83,7 +84,8 @@ export function ContactSection() {
             cancelAnimationFrame(rafId);
             rafId = null;
           }
-          gsap.to(element, { x: 0, y: 0, duration: 0.5, ease: "power2.out", overwrite: true });
+          element.style.transform = "translate3d(0px, 0px, 0px)";
+          element.style.transition = "transform 0.5s cubic-bezier(0.25, 1, 0.5, 1)";
         };
 
         element.addEventListener("mousemove", onMove);
