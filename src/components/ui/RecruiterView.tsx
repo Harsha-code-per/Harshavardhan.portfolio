@@ -4,6 +4,14 @@ import { useModeStore } from "@/lib/store";
 import { workExperience } from "@/data/work";
 import { projects } from "@/data/projects";
 import { skillCategories } from "@/data/skills";
+import { publications } from "@/data/publications";
+import { 
+  PROFILE_NAME, 
+  SITE_URL, 
+  PRIMARY_EMAIL, 
+  LINKEDIN_URL, 
+  GITHUB_URL 
+} from "@/data/profile";
 import { ContactForm } from "@/components/ui/ContactForm";
 import { Badge } from "@/components/ui/badge";
 import { 
@@ -13,8 +21,19 @@ import {
   Mail, 
   ExternalLink, 
   ChevronRight,
-  Compass
+  Compass,
+  BookOpen
 } from "lucide-react";
+
+const LinkedinIcon = (props: React.ComponentProps<"svg">) => (
+  <svg
+    viewBox="0 0 24 24"
+    fill="currentColor"
+    {...props}
+  >
+    <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.779-1.75-1.75s.784-1.75 1.75-1.75 1.75.779 1.75 1.75-.784 1.75-1.75 1.75zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+  </svg>
+);
 
 export function RecruiterView() {
   const toggleRecruiterMode = useModeStore((state) => state.toggleRecruiterMode);
@@ -246,12 +265,13 @@ export function RecruiterView() {
   </button>
 
   <header>
-    <h1>Harshavardhan K</h1>
+    <h1>${PROFILE_NAME}</h1>
     <div class="title">AI Engineer & Full-Stack Architect</div>
     <div class="contact-info">
-      <span>Email: <a href="mailto:harshak1805@gmail.com">harshak1805@gmail.com</a></span>
-      <span>Portfolio: <a href="https://www.harshavardhan-k.me" target="_blank">harshavardhan-k.me</a></span>
-      <span>GitHub: <a href="https://github.com/Harsha-code-per" target="_blank">github.com/Harsha-code-per</a></span>
+      <span>Email: <a href="mailto:${PRIMARY_EMAIL}">${PRIMARY_EMAIL}</a></span>
+      <span>Portfolio: <a href="${SITE_URL}" target="_blank">${SITE_URL.replace("https://", "")}</a></span>
+      <span>GitHub: <a href="${GITHUB_URL}" target="_blank">${GITHUB_URL.replace("https://github.com/", "github.com/")}</a></span>
+      <span>LinkedIn: <a href="${LINKEDIN_URL}" target="_blank">${LINKEDIN_URL.replace("https://www.linkedin.com/in/", "linkedin.com/in/")}</a></span>
       <span>Chennai, India</span>
     </div>
   </header>
@@ -292,6 +312,20 @@ export function RecruiterView() {
         <div class="tech-stack">
           ${project.stack.map(tech => `<span class="tech-badge">${tech}</span>`).join("")}
         </div>
+      </div>
+    `).join("")}
+  </section>
+
+  <section>
+    <h2>Research & Publications</h2>
+    ${publications.map(pub => `
+      <div class="item">
+        <div class="item-header">
+          <span class="item-title">${pub.title} <span style="color:#d1d5db;font-weight:normal;">&bull;</span> <span class="item-org">${pub.publisher}</span></span>
+          <span class="item-period">${pub.year}</span>
+        </div>
+        <p class="item-overview" style="margin-top: 4px;">${pub.summary}</p>
+        ${pub.url ? `<a href="${pub.url}" target="_blank" style="font-size:12px;">View Publication &rarr;</a>` : ""}
       </div>
     `).join("")}
   </section>
@@ -347,7 +381,7 @@ export function RecruiterView() {
         <header className="flex flex-col md:flex-row md:items-start justify-between gap-6 border-b border-zinc-800 pb-8">
           <div>
             <h1 className="text-4xl font-extrabold tracking-tight text-white sm:text-5xl">
-              Harshavardhan K
+              {PROFILE_NAME}
             </h1>
             <p className="mt-2.5 text-lg text-amber-400 font-mono">
               AI Engineer & Full-Stack Architect
@@ -355,6 +389,22 @@ export function RecruiterView() {
             <p className="mt-4 text-zinc-400 max-w-2xl leading-relaxed text-sm md:text-base">
               I specialize in building intelligent, production-ready AI systems and high-performance, responsive web architectures. Focused on engineering clean data flows and micro-interactions that elevate product storytelling.
             </p>
+            
+            {/* Contact details */}
+            <div className="mt-6 flex flex-wrap gap-4 text-xs font-mono text-zinc-400">
+              <a href={`mailto:${PRIMARY_EMAIL}`} className="flex items-center gap-1.5 hover:text-amber-400 transition-colors">
+                <Mail className="h-3.5 w-3.5" /> {PRIMARY_EMAIL}
+              </a>
+              <a href={SITE_URL} target="_blank" rel="noreferrer" className="flex items-center gap-1.5 hover:text-amber-400 transition-colors">
+                <ExternalLink className="h-3.5 w-3.5" /> Portfolio
+              </a>
+              <a href={GITHUB_URL} target="_blank" rel="noreferrer" className="flex items-center gap-1.5 hover:text-amber-400 transition-colors">
+                <GithubIcon className="h-3.5 w-3.5" /> GitHub
+              </a>
+              <a href={LINKEDIN_URL} target="_blank" rel="noreferrer" className="flex items-center gap-1.5 hover:text-amber-400 transition-colors">
+                <LinkedinIcon className="h-3.5 w-3.5" /> LinkedIn
+              </a>
+            </div>
           </div>
 
           <button 
@@ -464,6 +514,41 @@ export function RecruiterView() {
                     ))}
                   </div>
                 </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Section: Research & Publications */}
+        <section className="space-y-6">
+          <div className="flex items-center gap-3 border-b border-zinc-850 pb-2">
+            <BookOpen className="h-5 w-5 text-amber-400" />
+            <h2 className="text-xl font-bold uppercase tracking-wider text-white">
+              Research & Publications
+            </h2>
+          </div>
+
+          <div className="space-y-8">
+            {publications.map((pub) => (
+              <div key={pub.title} className="group relative pl-4 sm:pl-6 border-l border-zinc-800">
+                <div className="absolute left-[-4.5px] top-1.5 h-2 w-2 rounded-full bg-zinc-800 group-hover:bg-amber-400 transition-colors" />
+                <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-1.5">
+                  <h3 className="text-lg font-bold text-white leading-none">
+                    {pub.title} <span className="text-zinc-500 font-medium">&bull;</span> <span className="text-zinc-400 font-medium">{pub.publisher}</span>
+                  </h3>
+                  <span className="text-xs font-mono text-amber-400 font-semibold shrink-0">{pub.year}</span>
+                </div>
+                <p className="mt-3 text-sm text-zinc-450 leading-relaxed max-w-3xl">{pub.summary}</p>
+                {pub.url && (
+                  <a 
+                    href={pub.url} 
+                    target="_blank" 
+                    rel="noreferrer" 
+                    className="inline-flex items-center gap-1 mt-3 text-xs text-amber-400 hover:text-amber-300 transition-colors font-mono"
+                  >
+                    View Publication <ExternalLink className="h-3 w-3" />
+                  </a>
+                )}
               </div>
             ))}
           </div>
